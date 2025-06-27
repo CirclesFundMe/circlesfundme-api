@@ -1,1 +1,24 @@
-﻿
+﻿global using CirclesFundMe.Domain.Entities;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.EntityFrameworkCore;
+global using CirclesFundMe.Domain.Entities.Users;
+global using CirclesFundMe.Domain.Enums.Users;
+global using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+global using CirclesFundMe.Domain.Entities.Notifications;
+global using CirclesFundMe.Domain.Enums.Notifications;
+global using CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Notifications;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using CirclesFundMe.Domain.RepositoryContracts.Common;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using System.Linq.Expressions;
+global using CirclesFundMe.Domain.RepositoryContracts.Users;
+global using CirclesFundMe.Infrastructure.Persistence.Repositories.Common;
+global using CirclesFundMe.Domain.Pagination;
+global using CirclesFundMe.Domain.Pagination.QueryParams.Users;
+global using CirclesFundMe.Infrastructure.Data.DbContexts;
+global using CirclesFundMe.Infrastructure.Persistence.Repositories.Users;
+global using Microsoft.EntityFrameworkCore.Storage;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Configuration;

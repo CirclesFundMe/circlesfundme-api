@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CirclesFundMe.Infrastructure
+﻿namespace CirclesFundMe.Infrastructure
 {
-    internal class DependencyInjection
+    public static class DependencyInjection
     {
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddDbContext<SqlDbContext>(options =>
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            return services;
+        }
     }
 }

@@ -1,1 +1,14 @@
-﻿
+﻿global using Microsoft.AspNetCore.Identity;
+global using CirclesFundMe.Domain.Enums.Notifications;
+global using CirclesFundMe.Domain.Entities.Users;
+global using CirclesFundMe.Domain.Enums.Users;
+global using CirclesFundMe.Domain.Entities.Notifications;
+global using Newtonsoft.Json;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using System.Linq.Expressions;
+global using Microsoft.EntityFrameworkCore;
+global using CirclesFundMe.Domain.Pagination;
+global using CirclesFundMe.Domain.Pagination.QueryParams.Users;
+global using CirclesFundMe.Domain.RepositoryContracts.Common;
+global using CirclesFundMe.Domain.RepositoryContracts.Users;
+global using System.ComponentModel;

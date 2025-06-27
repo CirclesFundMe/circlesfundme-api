@@ -17,9 +17,4 @@
     <ProjectReference Include="..\CirclesFundMe.Domain\CirclesFundMe.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Persistence\" />
-  </ItemGroup>
-
 </Project>

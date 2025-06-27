@@ -1,0 +1,108 @@
+﻿namespace CirclesFundMe.Infrastructure.Persistence
+{
+    public class SeedData(ILogger<SeedData> logger)
+    {
+        private readonly ILogger<SeedData> _logger = logger;
+
+        public async Task Initialize(IServiceProvider serviceProvider)
+        {
+            try
+            {
+                var dbContext = serviceProvider.GetRequiredService<SqlDbContext>();
+
+                // Ensure the database is created.
+                await dbContext.Database.EnsureCreatedAsync();
+
+                // Initialize
+                await InitializeRoles(serviceProvider);
+                await InitializeAccount(serviceProvider);
+                await InitializeDefaults(serviceProvider);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred during data initialization: {ex.Message}\nInner Exception: {ex.InnerException}\n");
+            }
+        }
+
+        private static async Task InitializeRoles(IServiceProvider serviceProvider)
+        {
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            List<string> roles =
+            [
+                Roles.SuperAdmin,
+                Roles.Admin,
+                Roles.Member,
+            ];
+
+            foreach (string role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole { Name = role });
+                }
+            }
+        }
+
+        private static async Task InitializeAccount(IServiceProvider serviceProvider)
+        {
+            UserManager<AppUser> userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            SqlDbContext dbContext = serviceProvider.GetRequiredService<SqlDbContext>();
+
+            CFMAccount account = new()
+            {
+                Id = Guid.Parse("82bd43c1-683a-4f66-accb-b68760606a45"),
+                Name = "Circles Fund Me",
+                AccountType = AccountTypeEnums.Admin,
+                AccountStatus = AccountStatusEnums.Active,
+                CreatedBy = "System",
+            };
+
+            if (await dbContext.CFMAccounts.FindAsync(account.Id) == null)
+            {
+                await dbContext.CFMAccounts.AddAsync(account);
+                await dbContext.SaveChangesAsync();
+            }
+
+            List<AppUser> users =
+            [
+                new AppUser
+                {
+                    FirstName = "Dev",
+                    LastName = "CirclesFundMe",
+                    MiddleName = "",
+                    DateOfBirth = new DateTime(1995, 10, 21),
+                    Email = "dev.circlesfundme@gmail.com",
+                    PhoneNumber = "08144001908",
+                    UserName = "dev.circlesfundme@gmail.com",
+                    EmailConfirmed = true,
+                    CFMAccountId = account.Id,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedBy = "System",
+                    UserType = UserTypeEnums.Staff,
+                    TimeZone = "Africa/Lagos"
+                }
+            ];
+
+            foreach (AppUser user in users)
+            {
+                if (await userManager.FindByEmailAsync(user.Email!) == null)
+                {
+                    IdentityResult result = await userManager.CreateAsync(user, "Test@1234");
+
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRolesAsync(user, [Roles.Admin, Roles.SuperAdmin, Roles.Member]);
+                    }
+                }
+            }
+        }
+
+        private static async Task InitializeDefaults(IServiceProvider serviceProvider)
+        {
+            SqlDbContext dbContext = serviceProvider.GetRequiredService<SqlDbContext>();
+            await Task.CompletedTask;
+            return;
+        }
+    }
+}

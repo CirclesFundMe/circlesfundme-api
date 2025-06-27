@@ -15,11 +15,7 @@
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-    <Folder Include="wwwroot\" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
