@@ -7,13 +7,15 @@
         public string? LastName { get; set; }
         public string? MiddleName { get; set; }
         public string? PhoneNumber { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public ContributionSchemeMiniModel? ContributionScheme { get; set; }
+        public decimal? ContributionAmount { get; set; }
+        public decimal? IncomeAmount { get; set; }
         public string? Email { get; set; }
-        public UserTypeEnums UserType { get; set; }
-        public string? UserTypeName => UserType.ToString();
         public string? ProfilePictureUrl { get; set; }
         public string? OnboardingStatus { get; set; }
 
-        public bool AllowPushNotifications { get; set; }
-        public bool AllowBiometricLogin { get; set; }
+        public bool? AllowPushNotifications { get; set; }
+        public bool? AllowEmailNotifications { get; set; }
     }
 }

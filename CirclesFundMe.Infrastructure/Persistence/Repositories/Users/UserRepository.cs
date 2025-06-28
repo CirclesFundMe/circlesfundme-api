@@ -19,7 +19,21 @@
                     UserType = u.UserType,
                     ProfilePictureUrl = u.ProfilePictureUrl,
                     AllowPushNotifications = u.AllowPushNotifications,
+                    AllowEmailNotifications = u.AllowEmailNotifications,
                     OnboardingStatus = u.OnboardingStatus,
+                    DateOfBirth = u.DateOfBirth,
+                    Gender = u.Gender,
+                    UserContributionScheme = u.UserContributionScheme == null ? null : new UserContributionScheme
+                    {
+                        Id = u.UserContributionScheme.Id,
+                        ContributionScheme = new()
+                        {
+                            Id = u.UserContributionScheme.ContributionScheme!.Id,
+                            Name = u.UserContributionScheme.ContributionScheme.Name,
+                        },
+                        ContributionAmount = u.UserContributionScheme.ContributionAmount,
+                        IncomeAmount = u.UserContributionScheme.IncomeAmount
+                    },
                 })
                 .FirstOrDefaultAsync(cancellation);
 

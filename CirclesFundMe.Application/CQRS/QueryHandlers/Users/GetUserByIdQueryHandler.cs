@@ -12,7 +12,7 @@
                 return BaseResponse<UserModel>.Forbidden("You do not have permission to access this user.");
             }
 
-            AppUser? user = await _unitOfWork.Users.GetUserByIdAsync(request.UserId, cancellationToken);
+            AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(request.UserId, cancellationToken);
 
             if (user == null)
             {
@@ -24,12 +24,22 @@
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
                 MiddleName = user.MiddleName,
                 PhoneNumber = user.PhoneNumber,
-                UserType = user.UserType,
+                DateOfBirth = user.DateOfBirth,
+                ContributionScheme = user.UserContributionScheme != null ? new ContributionSchemeMiniModel
+                {
+                    Id = user.UserContributionScheme.Id,
+                    Name = user.UserContributionScheme.ContributionScheme?.Name,
+                    Type = user.UserContributionScheme.ContributionScheme?.SchemeType.ToString(),
+                } : null,
+                ContributionAmount = user.UserContributionScheme?.ContributionAmount,
+                IncomeAmount = user.UserContributionScheme?.IncomeAmount,
+                Email = user.Email,
                 ProfilePictureUrl = user.ProfilePictureUrl,
                 OnboardingStatus = user.OnboardingStatus.ToString(),
+                AllowPushNotifications = user.AllowPushNotifications,
+                AllowEmailNotifications = user.AllowEmailNotifications
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

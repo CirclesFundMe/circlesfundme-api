@@ -21,13 +21,22 @@
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
                 MiddleName = user.MiddleName,
-                UserType = user.UserType,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = user.DateOfBirth,
+                ContributionScheme = user.UserContributionScheme != null ? new ContributionSchemeMiniModel
+                {
+                    Id = user.UserContributionScheme.Id,
+                    Name = user.UserContributionScheme.ContributionScheme?.Name,
+                    Type = user.UserContributionScheme.ContributionScheme?.SchemeType.ToString(),
+                } : null,
+                ContributionAmount = user.UserContributionScheme?.ContributionAmount,
+                IncomeAmount = user.UserContributionScheme?.IncomeAmount,
+                Email = user.Email,
                 ProfilePictureUrl = user.ProfilePictureUrl,
-                AllowPushNotifications = user.AllowPushNotifications,
                 OnboardingStatus = user.OnboardingStatus.ToString(),
+                AllowPushNotifications = user.AllowPushNotifications,
+                AllowEmailNotifications = user.AllowEmailNotifications
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
