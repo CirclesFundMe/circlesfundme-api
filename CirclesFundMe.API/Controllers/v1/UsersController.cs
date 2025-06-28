@@ -41,5 +41,14 @@
             BaseResponse<string> response = await _sender.Send(command, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpPost("change-profile-picture")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Change Profile Picture")]
+        public async Task<IActionResult> ChangeProfilePicture([FromForm] ChangeProfilePictureCommand command, CancellationToken cancellation)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellation);
+            return HandleResponse(response);
+        }
     }
 }
