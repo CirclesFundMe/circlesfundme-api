@@ -34,3 +34,4 @@ global using CirclesFundMe.Domain.Pagination;
 global using Microsoft.AspNetCore.Authorization;
 global using CirclesFundMe.Application.CQRS.Queries.Contributions;
 global using CirclesFundMe.Application.Models.Contributions;
+global using CirclesFundMe.Application.CQRS.Commands.Contributions;

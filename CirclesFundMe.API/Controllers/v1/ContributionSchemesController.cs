@@ -13,7 +13,18 @@
             BaseResponse<List<ContributionSchemeModel>> response = await _sender.Send(new GetContributionSchemesQuery(), cancellationToken);
             return HandleResponse(response);
         }
-        
+
+        [HttpPut("{contributionSchemeId}")]
+        [ProducesResponseType<BaseResponse<ContributionSchemeModel>>(200)]
+        [SwaggerOperation(Summary = "Update Contribution Scheme")]
+        [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> UpdateContributionScheme(Guid contributionSchemeId, UpdateContributionSchemeCommand command, CancellationToken cancellationToken)
+        {
+            command.ContributionSchemeId = contributionSchemeId;
+            BaseResponse<ContributionSchemeModel> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
+
         [HttpGet("mini")]
         [ProducesResponseType<BaseResponse<List<ContributionSchemeMiniModel>>>(200)]
         [SwaggerOperation(Summary = "Get Contribution Schemes Mini Data for Onboarding")]

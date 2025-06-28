@@ -45,3 +45,4 @@ global using Newtonsoft.Json.Serialization;
 global using Newtonsoft.Json;
 global using CirclesFundMe.Application.Models.Contributions;
 global using CirclesFundMe.Application.CQRS.Queries.Contributions;
+global using CirclesFundMe.Application.CQRS.Commands.Contributions;
