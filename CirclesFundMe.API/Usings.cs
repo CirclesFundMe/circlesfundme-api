@@ -35,3 +35,7 @@ global using Microsoft.AspNetCore.Authorization;
 global using CirclesFundMe.Application.CQRS.Queries.Contributions;
 global using CirclesFundMe.Application.Models.Contributions;
 global using CirclesFundMe.Application.CQRS.Commands.Contributions;
+global using CirclesFundMe.Application.CQRS.Commands.Notifications;
+global using CirclesFundMe.Application.CQRS.Queries.Notifications;
+global using CirclesFundMe.Application.Models.Notifications;
+global using CirclesFundMe.Domain.Pagination.QueryParams.Notifications;

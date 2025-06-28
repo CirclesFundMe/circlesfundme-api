@@ -20,6 +20,10 @@
         private IContributionSchemeRepository? _contributionSchemes;
         #endregion
 
+        #region Notifications
+        private INotificationRepository? _notifications;
+        #endregion
+
         // Repositories
         #region Users
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
@@ -33,6 +37,10 @@
 
         #region Contributions
         public IContributionSchemeRepository ContributionSchemes => _contributionSchemes ??= new ContributionSchemeRepository(_sqlDbContext.ContributionSchemes);
+        #endregion
+
+        #region Notifications
+        public INotificationRepository Notifications => _notifications ??= new NotificationRepository(_sqlDbContext.Notifications, _sqlDbContext);
         #endregion
 
         #region Required Methods

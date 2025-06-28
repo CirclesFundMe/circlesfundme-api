@@ -7,6 +7,9 @@
             base.Configure(builder);
             builder.ToTable("Notifications");
 
+            builder.HasIndex(n => n.Type, "IX_Notifications_Type");
+            builder.HasIndex(n => n.UserId, "IX_Notifications_UserId");
+
             builder.Property(n => n.SourceName)
                 .HasMaxLength(100);
 

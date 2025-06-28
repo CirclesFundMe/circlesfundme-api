@@ -2,5 +2,7 @@
 {
     public record NotificationParams : BaseParam
     {
+        public NotificationTypeEnums NotificationTypeEnums { get; set; }
+        public bool? IsRead { get; set; }
     }
 }

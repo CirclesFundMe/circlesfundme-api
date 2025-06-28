@@ -26,3 +26,6 @@ global using CirclesFundMe.Domain.Entities.Contributions;
 global using CirclesFundMe.Domain.RepositoryContracts.Contributions;
 global using CirclesFundMe.Infrastructure.Persistence.Repositories.Contributions;
 global using CirclesFundMe.Domain.Enums.Contributions;
+global using CirclesFundMe.Domain.RepositoryContracts.Notifications;
+global using CirclesFundMe.Domain.Pagination.QueryParams.Notifications;
+global using CirclesFundMe.Infrastructure.Persistence.Repositories.Notifications;

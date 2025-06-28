@@ -16,6 +16,10 @@
         IContributionSchemeRepository ContributionSchemes { get; }
         #endregion
 
+        #region Notifications
+        INotificationRepository Notifications { get; }
+        #endregion
+
         #region Required Contracts
         Task BeginTransactionAsync(CancellationToken cancellationToken);
         Task CommitTransactionAsync(CancellationToken cancellationToken);
