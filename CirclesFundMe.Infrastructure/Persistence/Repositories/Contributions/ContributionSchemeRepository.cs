@@ -5,7 +5,14 @@
     {
         private readonly DbSet<ContributionScheme> _contributionSchemes = contributionSchemes;
 
-        public async Task<List<ContributionScheme>> GetContributionSchemesAsync(CancellationToken cancellationTokens)
+        public async Task<List<ContributionScheme>> GetContributionSchemes(CancellationToken cancellationToken)
+        {
+            return await _contributionSchemes
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<ContributionScheme>> GetContributionSchemesMini(CancellationToken cancellationTokens)
         {
             return await _contributionSchemes
                 .AsNoTracking()
