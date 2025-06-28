@@ -3,8 +3,17 @@
     public interface IUnitOfWork : IDisposable
     {
         #region Users
+        ICFMAccountRepository Accounts { get; }
         IUserRepository Users { get; }
         IUserOtpRepository UserOtps { get; }
+        IUserDocumentRepository UserDocuments { get; }
+        IUserAddressRepository UserAddresses { get; }
+        IUserKYCRepository UserKYC { get; }
+        IUserContributionSchemeRepository UserContributionSchemes { get; }
+        #endregion
+
+        #region Contributions
+        IContributionSchemeRepository ContributionSchemes { get; }
         #endregion
 
         #region Required Contracts

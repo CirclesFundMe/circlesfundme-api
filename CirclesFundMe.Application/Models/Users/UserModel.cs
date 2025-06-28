@@ -11,6 +11,7 @@
         public UserTypeEnums UserType { get; set; }
         public string? UserTypeName => UserType.ToString();
         public string? ProfilePictureUrl { get; set; }
+        public string? OnboardingStatus { get; set; }
 
         public bool AllowPushNotifications { get; set; }
         public bool AllowBiometricLogin { get; set; }

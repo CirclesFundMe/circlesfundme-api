@@ -80,7 +80,8 @@
                     CreatedDate = DateTime.UtcNow,
                     CreatedBy = "System",
                     UserType = UserTypeEnums.Staff,
-                    TimeZone = "Africa/Lagos"
+                    TimeZone = "Africa/Lagos",
+                    OnboardingStatus = OnboardingStatusEnums.Completed,
                 }
             ];
 
@@ -101,7 +102,57 @@
         private static async Task InitializeDefaults(IServiceProvider serviceProvider)
         {
             SqlDbContext dbContext = serviceProvider.GetRequiredService<SqlDbContext>();
-            await Task.CompletedTask;
+
+            // Ensure default contribution schemes exist
+            List<ContributionScheme> contributionSchemes =
+            [
+                new ContributionScheme
+                {
+                    Id = Guid.Parse("a803034d-5f72-45e2-91fc-a2979d74852c"),
+                    Name = "Weekly Contribution Scheme",
+                    Description = "A weekly contribution scheme where members contribute weekly.",
+                    SchemeType = SchemeTypeEnums.Weekly,
+                    ContributionPercent = 20.0,
+                    EligibleLoanMultiple = 52,
+                    ServiceCharge = 2500.0,
+                    LoanManagementFee = 6.0,
+                    DefaultPenaltyPercent = 25.0,
+                },
+                new ContributionScheme
+                {
+                    Id = Guid.Parse("b803034d-5f72-45e2-91fc-a2979d74852c"),
+                    Name = "Monthly Contribution Scheme",
+                    Description = "A monthly contribution scheme where members contribute monthly.",
+                    SchemeType = SchemeTypeEnums.Monthly,
+                    ContributionPercent = 20,
+                    EligibleLoanMultiple = 12,
+                    ServiceCharge = 2500.0,
+                    LoanManagementFee = 6.0,
+                    DefaultPenaltyPercent = 25.0,
+                },
+                new ContributionScheme
+                {
+                    Id = Guid.Parse("c803034d-5f72-45e2-91fc-a2979d74852c"),
+                    Name = "Asset Finance",
+                    Description = "A contribution to help you get asset loans",
+                    SchemeType = SchemeTypeEnums.AssetFinance,
+                    EquityPercent = 10.0,
+                    LoanTerm = 208.0,
+                    LoanManagementFee = 6.0,
+                    PreLoanServiceChargePercent = 0.025,
+                    PostLoanServiceChargePercent = 0.025,
+                }
+            ];
+
+            foreach (ContributionScheme scheme in contributionSchemes)
+            {
+                if (await dbContext.ContributionSchemes.FindAsync(scheme.Id) == null)
+                {
+                    await dbContext.ContributionSchemes.AddAsync(scheme);
+                    await dbContext.SaveChangesAsync();
+                }
+            }
+
             return;
         }
     }

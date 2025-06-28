@@ -22,3 +22,7 @@ global using Microsoft.AspNetCore.Identity;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Configuration;
+global using CirclesFundMe.Domain.Entities.Contributions;
+global using CirclesFundMe.Domain.RepositoryContracts.Contributions;
+global using CirclesFundMe.Infrastructure.Persistence.Repositories.Contributions;
+global using CirclesFundMe.Domain.Enums.Contributions;

@@ -46,6 +46,14 @@
 
             builder.Property(u => u.DeletedBy)
                 .HasMaxLength(100);
+
+            builder.Property(u => u.OnboardingStatus)
+                .HasConversion<EnumToStringConverter<OnboardingStatusEnums>>()
+                .HasMaxLength(50);
+
+            builder.Property(u => u.Gender)
+                .HasConversion<EnumToStringConverter<GenderEnums>>()
+                .HasMaxLength(50);
         }
     }
 }

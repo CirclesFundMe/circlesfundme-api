@@ -72,6 +72,7 @@
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IFileUploadService, FileUploadService>();
             #endregion
 
             #region Hangfire Setup

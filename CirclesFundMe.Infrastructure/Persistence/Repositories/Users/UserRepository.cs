@@ -18,7 +18,8 @@
                     Email = u.Email,
                     UserType = u.UserType,
                     ProfilePictureUrl = u.ProfilePictureUrl,
-                    AllowPushNotifications = u.AllowPushNotifications
+                    AllowPushNotifications = u.AllowPushNotifications,
+                    OnboardingStatus = u.OnboardingStatus,
                 })
                 .FirstOrDefaultAsync(cancellation);
 

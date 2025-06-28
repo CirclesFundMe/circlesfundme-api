@@ -26,7 +26,8 @@
                 MiddleName = user.MiddleName,
                 UserType = user.UserType,
                 ProfilePictureUrl = user.ProfilePictureUrl,
-                AllowPushNotifications = user.AllowPushNotifications
+                AllowPushNotifications = user.AllowPushNotifications,
+                OnboardingStatus = user.OnboardingStatus.ToString(),
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

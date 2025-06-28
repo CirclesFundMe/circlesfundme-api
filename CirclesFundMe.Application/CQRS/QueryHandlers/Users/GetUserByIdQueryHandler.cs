@@ -28,7 +28,8 @@
                 MiddleName = user.MiddleName,
                 PhoneNumber = user.PhoneNumber,
                 UserType = user.UserType,
-                ProfilePictureUrl = user.ProfilePictureUrl
+                ProfilePictureUrl = user.ProfilePictureUrl,
+                OnboardingStatus = user.OnboardingStatus.ToString(),
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

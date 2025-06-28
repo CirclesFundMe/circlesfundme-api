@@ -7,7 +7,7 @@
 
         public async Task SendOTP(string emailAddress, string otp, string? firstName)
         {
-            string userName = firstName ?? "User";
+            string userName = firstName ?? "Member";
 
             StringBuilder sb = new(_emailService.LoadHtmlTemplate("otp"));
             sb.Replace("{{FirstName}}", userName);

@@ -8,5 +8,6 @@
         public required string RefreshToken { get; set; }
         public DateTime Expiry { get; set; }
         public string? Role { get; set; }
+        public string? OnboardingStatus { get; set; }
     }
 }

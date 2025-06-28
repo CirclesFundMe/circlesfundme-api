@@ -12,3 +12,6 @@ global using CirclesFundMe.Domain.Pagination.QueryParams.Users;
 global using CirclesFundMe.Domain.RepositoryContracts.Common;
 global using CirclesFundMe.Domain.RepositoryContracts.Users;
 global using System.ComponentModel;
+global using CirclesFundMe.Domain.Enums.Contributions;
+global using CirclesFundMe.Domain.Entities.Contributions;
+global using CirclesFundMe.Domain.RepositoryContracts.Contributions;

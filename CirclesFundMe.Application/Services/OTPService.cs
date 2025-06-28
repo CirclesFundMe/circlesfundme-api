@@ -3,7 +3,7 @@
     public interface IOTPService
     {
         Task<(bool result, string message)> ValidateOtp(string email, string otp, CancellationToken cancellation);
-        Task<(bool result, string message)> SendOtp(string email, string otp, string name, CancellationToken cancellation);
+        Task<(bool result, string message)> SendOtp(string email, string otp, string? name, CancellationToken cancellation);
         Task<bool> VerifyOtp(string email, string otp, CancellationToken cancellation);
     }
 
@@ -13,7 +13,7 @@
         private readonly IQueueService _queueService = queueService;
         private readonly EncryptionService _encryptionService = encryptionService;
 
-        public async Task<(bool result, string message)> SendOtp(string email, string otp, string name, CancellationToken cancellation)
+        public async Task<(bool result, string message)> SendOtp(string email, string otp, string? name, CancellationToken cancellation)
         {
             UserOtp? userOtp = await _unitOfWork.UserOtps.GetByPrimaryKey(email, cancellation);
 

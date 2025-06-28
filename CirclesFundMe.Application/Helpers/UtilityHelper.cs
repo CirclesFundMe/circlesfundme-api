@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using System.Text;
-
-namespace CirclesFundMe.Application.Helpers
+﻿namespace CirclesFundMe.Application.Helpers
 {
     public class UtilityHelper(ILogger<UtilityHelper> logger)
     {

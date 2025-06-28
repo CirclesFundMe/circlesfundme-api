@@ -49,9 +49,9 @@
             List<Claim> claims =
             [
                 new(ClaimTypes.Email, user.Email!),
-            new("userId", user.Id),
-            new("accountId", user.CFMAccountId.ToString()),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new("userId", user.Id),
+                new("accountId", user.CFMAccountId.ToString()),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             ];
 
             foreach (string role in roles)
@@ -69,6 +69,7 @@
                 Expiry = expiry,
                 RefreshToken = refreshToken,
                 Role = roles.First(),
+                OnboardingStatus = user.OnboardingStatus.ToString()
             };
         }
 

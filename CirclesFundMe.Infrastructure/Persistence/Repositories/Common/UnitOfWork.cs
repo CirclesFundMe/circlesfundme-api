@@ -10,6 +10,14 @@
         private IUserRepository? _users;
         private ICFMAccountRepository? _accounts;
         private IUserOtpRepository? _userOtps;
+        private IUserDocumentRepository? _userDocuments;
+        private IUserAddressRepository? _userAddresses;
+        private IUserContributionSchemeRepository? _userContributionSchemes;
+        private IUserKYCRepository? _userKYC;
+        #endregion
+
+        #region Contributions
+        private IContributionSchemeRepository? _contributionSchemes;
         #endregion
 
         // Repositories
@@ -17,6 +25,14 @@
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
         public ICFMAccountRepository Accounts => _accounts ??= new CFMAccountRepository(_sqlDbContext.CFMAccounts);
         public IUserOtpRepository UserOtps => _userOtps ??= new UserOtpRepository(_sqlDbContext.UserOtps);
+        public IUserDocumentRepository UserDocuments => _userDocuments ??= new UserDocumentRepository(_sqlDbContext.UserDocuments);
+        public IUserAddressRepository UserAddresses => _userAddresses ??= new UserAddressRepository(_sqlDbContext.UserAddresses);
+        public IUserContributionSchemeRepository UserContributionSchemes => _userContributionSchemes ??= new UserContributionSchemeRepository(_sqlDbContext.UserContributionSchemes);
+        public IUserKYCRepository UserKYC => _userKYC ??= new UserKYCRepository(_sqlDbContext.UserKYCs);
+        #endregion
+
+        #region Contributions
+        public IContributionSchemeRepository ContributionSchemes => _contributionSchemes ??= new ContributionSchemeRepository(_sqlDbContext.ContributionSchemes);
         #endregion
 
         #region Required Methods

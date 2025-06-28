@@ -32,3 +32,5 @@ global using CirclesFundMe.Domain.Entities.Users;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Users;
 global using CirclesFundMe.Domain.Pagination;
 global using Microsoft.AspNetCore.Authorization;
+global using CirclesFundMe.Application.CQRS.Queries.Contributions;
+global using CirclesFundMe.Application.Models.Contributions;
