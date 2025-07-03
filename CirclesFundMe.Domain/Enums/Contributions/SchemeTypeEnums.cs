@@ -4,6 +4,6 @@
     {
         Weekly = 1,
         Monthly = 2,
-        AssetFinance = 3,
+        AutoFinance = 3,
     }
 }

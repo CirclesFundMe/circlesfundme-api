@@ -19,6 +19,12 @@
                 return BaseResponse<bool>.BadRequest("You have already completed your onboarding for this contribution scheme.");
             }
 
+            ContributionScheme? contributionScheme = await _unitOfWork.ContributionSchemes.GetByPrimaryKey(request.ContributionSchemeId, cancellationToken);
+            if (contributionScheme == null)
+            {
+                return BaseResponse<bool>.NotFound("Contribution scheme not found.");
+            }
+
             AppUser? user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -112,6 +118,16 @@
                     UserId = user.Id
                 };
                 await _unitOfWork.UserDocuments.AddAsync(utilityDoc, cancellationToken);
+            }
+
+            if (contributionScheme.SchemeType == SchemeTypeEnums.AutoFinance)
+            {
+                AutoFinanceBreakdown? autoFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle, cancellationToken);
+                if (autoFinanceBreakdown == null)
+                {
+                    return BaseResponse<bool>.BadRequest("Failed to calculate auto finance breakdown. Please try again.");
+                }
+                request.ContributionAmount = autoFinanceBreakdown.MinimumWeeklyContribution;
             }
 
             UserContributionScheme userContributionScheme = new()

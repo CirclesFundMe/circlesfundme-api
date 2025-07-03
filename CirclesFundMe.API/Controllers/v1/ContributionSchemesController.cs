@@ -42,5 +42,14 @@
             BaseResponse<EligibleLoanDetailModel> response = await _sender.Send(new GetEligibleLoanDetailQuery() { ContributionSchemeId = contributionSchemeId }, cancellationToken);
             return HandleResponse(response);
         }
+
+        [HttpPost("auto-finance-breakdown")]
+        [ProducesResponseType<BaseResponse<AutoFinanceBreakdownModel>>(200)]
+        [SwaggerOperation(Summary = "Get Auto Finance Breakdown")]
+        public async Task<IActionResult> GetAutoFinanceBreakdown([FromBody] GetAutoFinanceBreakdownQuery query, CancellationToken cancellationToken)
+        {
+            BaseResponse<AutoFinanceBreakdownModel> response = await _sender.Send(query, cancellationToken);
+            return HandleResponse(response);
+        }
     }
 }

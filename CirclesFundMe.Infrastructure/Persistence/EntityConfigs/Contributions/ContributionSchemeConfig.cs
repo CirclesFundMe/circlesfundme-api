@@ -17,6 +17,10 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
             builder.Property(x => x.Description)
                 .HasMaxLength(500);
 
+            builder.Property(x => x.SchemeType)
+                .HasConversion<EnumToStringConverter<SchemeTypeEnums>>()
+                .HasMaxLength(50);
+
             builder.Property(x => x.ContributionPercent)
                 .HasPrecision(18, 2);
 
@@ -26,7 +30,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
             builder.Property(x => x.ServiceCharge)
                 .HasPrecision(18, 2);
 
-            builder.Property(x => x.LoanManagementFee)
+            builder.Property(x => x.LoanManagementFeePercent)
                 .HasPrecision(18, 2);
 
             builder.Property(x => x.DefaultPenaltyPercent)
@@ -42,6 +46,21 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
                 .HasPrecision(18, 2);
 
             builder.Property(x => x.PostLoanServiceChargePercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.ExtraEnginePercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.ExtraTyrePercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.InsurancePerAnnumPercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.ProcessingFeePercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.EligibleLoanPercent)
                 .HasPrecision(18, 2);
         }
     }

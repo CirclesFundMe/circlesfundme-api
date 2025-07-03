@@ -4,6 +4,22 @@
     {
         private readonly ILogger<UtilityHelper> _logger = logger;
 
+        public static Dictionary<string, string> FormatDecimalProperties(object obj)
+        {
+            return obj.GetType()
+                .GetProperties()
+                .Where(p => p.PropertyType == typeof(decimal) || p.PropertyType == typeof(decimal?))
+                .ToDictionary(
+                    p => p.Name,
+                    p =>
+                    {
+                        object? value = p.GetValue(obj);
+                        decimal decimalValue = value == null ? 0 : Convert.ToDecimal(value);
+                        return Math.Round(decimalValue).ToString("N0", CultureInfo.InvariantCulture);
+                    }
+                );
+        }
+
         public static string GenerateOtp()
         {
             byte[] randomNumber = new byte[4];

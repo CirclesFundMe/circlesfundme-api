@@ -52,3 +52,4 @@ global using CirclesFundMe.Domain.Pagination.QueryParams.Notifications;
 global using CirclesFundMe.Application.CQRS.Queries.Notifications;
 global using CirclesFundMe.Domain.Entities.Notifications;
 global using CirclesFundMe.Application.CQRS.Commands.Notifications;
+global using System.Globalization;

@@ -17,3 +17,4 @@ global using CirclesFundMe.Domain.Entities.Contributions;
 global using CirclesFundMe.Domain.RepositoryContracts.Contributions;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Notifications;
 global using CirclesFundMe.Domain.RepositoryContracts.Notifications;
+global using System.ComponentModel.DataAnnotations.Schema;

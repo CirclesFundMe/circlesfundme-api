@@ -115,7 +115,7 @@
                     ContributionPercent = 20.0,
                     EligibleLoanMultiple = 52,
                     ServiceCharge = 2500.0,
-                    LoanManagementFee = 6.0,
+                    LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
                 },
                 new ContributionScheme
@@ -127,20 +127,26 @@
                     ContributionPercent = 20,
                     EligibleLoanMultiple = 12,
                     ServiceCharge = 2500.0,
-                    LoanManagementFee = 6.0,
+                    LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
                 },
                 new ContributionScheme
                 {
                     Id = Guid.Parse("c803034d-5f72-45e2-91fc-a2979d74852c"),
-                    Name = "Asset Finance",
-                    Description = "A contribution to help you get asset loans",
-                    SchemeType = SchemeTypeEnums.AssetFinance,
+                    Name = "Auto Financing",
+                    Description = "A contribution to help you get car loans",
+                    SchemeType = SchemeTypeEnums.AutoFinance,
                     EquityPercent = 10.0,
                     LoanTerm = 208.0,
-                    LoanManagementFee = 6.0,
+                    LoanManagementFeePercent = 6.0,
                     PreLoanServiceChargePercent = 0.025,
-                    PostLoanServiceChargePercent = 0.025,
+                    PostLoanServiceChargePercent = 0.05,
+                    ExtraEnginePercent = 10,
+                    ExtraTyrePercent = 10,
+                    InsurancePerAnnumPercent = 0.05,
+                    ProcessingFeePercent = 10,
+                    EligibleLoanPercent = 90,
+                    DownPaymentPercent = 10,
                 }
             ];
 
@@ -149,6 +155,12 @@
                 if (await dbContext.ContributionSchemes.FindAsync(scheme.Id) == null)
                 {
                     await dbContext.ContributionSchemes.AddAsync(scheme);
+                    await dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    // Update existing scheme if necessary
+                    dbContext.ContributionSchemes.Update(scheme);
                     await dbContext.SaveChangesAsync();
                 }
             }

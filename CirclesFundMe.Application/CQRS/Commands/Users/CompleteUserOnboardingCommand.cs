@@ -14,5 +14,6 @@
         public Guid ContributionSchemeId { get; set; }
         public decimal Income { get; set; }
         public decimal ContributionAmount { get; set; }
+        public decimal CostOfVehicle { get; set; }
     }
 }

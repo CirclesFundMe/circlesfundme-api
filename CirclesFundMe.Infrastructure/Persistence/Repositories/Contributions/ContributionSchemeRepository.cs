@@ -5,6 +5,49 @@
     {
         private readonly DbSet<ContributionScheme> _contributionSchemes = contributionSchemes;
 
+        public async Task<AutoFinanceBreakdown?> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation)
+        {
+            ContributionScheme? scheme = await _contributionSchemes
+                .AsNoTracking()
+                .Where(cs => cs.SchemeType == SchemeTypeEnums.AutoFinance)
+                .FirstOrDefaultAsync(cancellationToken: cancellation);
+
+            if (scheme == null)
+            {
+                return null;
+            }
+
+            decimal extraEngine = (costOfVehicle * (decimal)scheme.ExtraEnginePercent) / 100;
+            decimal extraTyre = (costOfVehicle * (decimal)scheme.ExtraTyrePercent) / 100;
+            decimal insurance = (costOfVehicle * (decimal)scheme.InsurancePerAnnumPercent) / 100;
+            decimal processingFee = (costOfVehicle * (decimal)scheme.ProcessingFeePercent) / 100;
+            decimal totalAssetValue = costOfVehicle + extraEngine + extraTyre + insurance + processingFee;
+            decimal downPayment = (totalAssetValue * (decimal)scheme.DownPaymentPercent) / 100;
+            decimal loanManagementFee = (totalAssetValue * (decimal)scheme.LoanManagementFeePercent / 100) * 4;
+
+            decimal totalFee = ((totalAssetValue * (decimal)scheme.EligibleLoanPercent) / 100) + loanManagementFee;
+            decimal preLoanServiceCharge = (totalAssetValue * (decimal)scheme.PreLoanServiceChargePercent) / 100;
+            decimal postLoanServiceCharge = (totalAssetValue * (decimal)scheme.PostLoanServiceChargePercent) / 100;
+            decimal totalRepaymentAmount = totalFee + postLoanServiceCharge;
+
+            decimal minimumWeeklyContribution = (totalAssetValue / 208) + preLoanServiceCharge;
+            decimal postLoanWeeklyContribution = (totalRepaymentAmount / 208) + postLoanServiceCharge;
+
+            return new AutoFinanceBreakdown
+            {
+                CostOfVehicle = costOfVehicle,
+                ExtraEngine = extraEngine,
+                ExtraTyre = extraTyre,
+                Insurance = insurance,
+                ProcessingFee = processingFee,
+                TotalAssetValue = totalAssetValue,
+                DownPayment = downPayment,
+                LoanManagementFee = loanManagementFee,
+                MinimumWeeklyContribution = minimumWeeklyContribution,
+                PostLoanWeeklyContribution = postLoanWeeklyContribution
+            };
+        }
+
         public async Task<List<ContributionScheme>> GetContributionSchemes(CancellationToken cancellationToken)
         {
             return await _contributionSchemes
