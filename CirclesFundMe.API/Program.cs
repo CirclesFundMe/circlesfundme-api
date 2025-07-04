@@ -57,6 +57,12 @@ app.UseHangfireDashboard(builder.Configuration["AppSettings:HangfireEndpoint"], 
     Authorization = new[] { new HangfireDashboardAuthorizationFilter(builder.Configuration) }
 });
 
+RecurringJob.AddOrUpdate<PaystackJobs>(
+    "SynchronizeBanks",
+    job => job.SynchronizeBanks(),
+    "0 0 * * *" // Every day at midnight
+);
+
 app.Run();
 #endregion
 /*

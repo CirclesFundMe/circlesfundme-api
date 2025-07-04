@@ -19,6 +19,10 @@
         public DbSet<Notification> Notifications { get; set; }
         #endregion
 
+        #region Finances
+        public DbSet<Bank> Banks { get; set; }
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

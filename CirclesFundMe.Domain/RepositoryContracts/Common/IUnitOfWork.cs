@@ -20,6 +20,10 @@
         INotificationRepository Notifications { get; }
         #endregion
 
+        #region Finances
+        IBankRepository Banks { get; }
+        #endregion
+
         #region Required Contracts
         Task BeginTransactionAsync(CancellationToken cancellationToken);
         Task CommitTransactionAsync(CancellationToken cancellationToken);

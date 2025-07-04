@@ -1,0 +1,85 @@
+﻿namespace CirclesFundMe.Application.HttpClients.Paystack
+{
+    public interface IPaystackClient
+    {
+        Task<BasePaystackResponse<List<BankData>>> GetBanksList(BankDataQuery query, CancellationToken cancellationToken = default);
+
+        Task<BasePaystackResponse<VerifyAccountNumberData>> VerifyAccountNumberData(VerifyAccountNumberQuery query, CancellationToken cancellationToken = default);
+    }
+
+    public class PaystackClient(IHttpClientFactory factory, ILogger<PaystackClient> logger) : IPaystackClient
+    {
+        private readonly ILogger<PaystackClient> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly RestClientService _restClientService = new(factory.CreateClient("PaystackService"), logger);
+
+        public async Task<BasePaystackResponse<List<BankData>>> GetBanksList(BankDataQuery query, CancellationToken cancellationToken = default)
+        {
+            string uri = $"bank?country=nigeria&perPage={query.PerPage}&use_cursor=true";
+            if (query.UseCursor && !string.IsNullOrEmpty(query.Next))
+            {
+                uri += $"&next={query.Next}";
+            }
+
+            try
+            {
+                var response = await _restClientService.GetAsync<BasePaystackResponse<List<BankData>>>(uri, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<List<BankData>>
+                    {
+                        Status = false,
+                        Message = "No data received for bank list Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<List<BankData>>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<BasePaystackResponse<VerifyAccountNumberData>> VerifyAccountNumberData(VerifyAccountNumberQuery query, CancellationToken cancellationToken = default)
+        {
+            string uri = $"bank/resolve?account_number={query.AccountNumber}&bank_code={query.BankCode}";
+
+            try
+            {
+                var response = await _restClientService.GetAsync<BasePaystackResponse<VerifyAccountNumberData>>(uri, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<VerifyAccountNumberData>
+                    {
+                        Status = false,
+                        Message = "No data received for account verification from Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<VerifyAccountNumberData>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+    }
+}

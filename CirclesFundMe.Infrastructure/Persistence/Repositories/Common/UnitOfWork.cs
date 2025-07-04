@@ -24,6 +24,10 @@
         private INotificationRepository? _notifications;
         #endregion
 
+        #region Finances
+        private IBankRepository? _banks;
+        #endregion
+
         // Repositories
         #region Users
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
@@ -41,6 +45,10 @@
 
         #region Notifications
         public INotificationRepository Notifications => _notifications ??= new NotificationRepository(_sqlDbContext.Notifications, _sqlDbContext);
+        #endregion
+
+        #region Finances
+        public IBankRepository Banks => _banks ??= new BankRepository(_sqlDbContext.Banks);
         #endregion
 
         #region Required Methods

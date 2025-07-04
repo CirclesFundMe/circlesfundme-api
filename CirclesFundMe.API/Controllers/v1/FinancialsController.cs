@@ -1,0 +1,16 @@
+﻿namespace CirclesFundMe.API.Controllers.v1
+{
+    public class FinancialsController(ISender sender) : BaseControllerV1
+    {
+        private readonly ISender _sender = sender;
+
+        [HttpGet("banks")]
+        [ProducesResponseType<BaseResponse<IEnumerable<BankModel>>>(200)]
+        [SwaggerOperation(Summary = "Get Banks")]
+        public async Task<IActionResult> GetBanks(CancellationToken cancellationToken)
+        {
+            BaseResponse<IEnumerable<BankModel>> response = await _sender.Send(new GetBankQuery(), cancellationToken);
+            return HandleResponse(response);
+        }
+    }
+}

@@ -4,6 +4,18 @@
     {
         private readonly ILogger<UtilityHelper> _logger = logger;
 
+        public async Task ExecuteWithRetryAsync(Func<Task> action)
+        {
+            AsyncRetryPolicy policy = Policy.Handle<Exception>()
+                                           .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                                               (exception, timeSpan, retryCount, context) =>
+                                               {
+                                                   _logger.LogWarning($"Retry {retryCount} encountered an error: {exception.Message}. Waiting {timeSpan} before next retry.");
+                                               });
+
+            await policy.ExecuteAsync(action);
+        }
+
         public static Dictionary<string, string> FormatDecimalProperties(object obj)
         {
             return obj.GetType()

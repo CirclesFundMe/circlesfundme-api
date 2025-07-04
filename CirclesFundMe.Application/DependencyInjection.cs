@@ -118,6 +118,17 @@
             services.AddSingleton(new EncryptionService(encryptionSettings.Key, encryptionSettings.IV));
             #endregion
 
+            #region Http Clients
+            services.AddHttpClient<IRestClientService, RestClientService>("PaystackService", client =>
+            {
+                client.BaseAddress = new Uri(config["PaystackService:BaseUrl"] ?? string.Empty);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", config["PaystackService:SecretKey"] ?? string.Empty);
+            })
+            .AddPolicyHandler(PollyPoliciesHelper.GetRetryPolicy())
+            .AddPolicyHandler(PollyPoliciesHelper.GetCircuitBreakerPolicy());
+            services.AddScoped<IPaystackClient, PaystackClient>();
+            #endregion
+
             return services;
         }
     }
