@@ -59,16 +59,22 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    SchemeType = table.Column<int>(type: "int", nullable: false),
+                    SchemeType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ContributionPercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     EligibleLoanMultiple = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     ServiceCharge = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
-                    LoanManagementFee = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    LoanManagementFeePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     DefaultPenaltyPercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     EquityPercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     LoanTerm = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     PreLoanServiceChargePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
                     PostLoanServiceChargePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    ExtraEnginePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    ExtraTyrePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    InsurancePerAnnumPercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    ProcessingFeePercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    EligibleLoanPercent = table.Column<double>(type: "float(18)", precision: 18, scale: 2, nullable: false),
+                    DownPaymentPercent = table.Column<double>(type: "float", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -516,6 +522,12 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 schema: "CFM",
                 table: "Notifications",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_Type",
+                schema: "CFM",
+                table: "Notifications",
+                column: "Type");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId",

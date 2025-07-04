@@ -143,7 +143,7 @@
                     PostLoanServiceChargePercent = 0.05,
                     ExtraEnginePercent = 10,
                     ExtraTyrePercent = 10,
-                    InsurancePerAnnumPercent = 0.05,
+                    InsurancePerAnnumPercent = 5,
                     ProcessingFeePercent = 10,
                     EligibleLoanPercent = 90,
                     DownPaymentPercent = 10,
@@ -155,12 +155,6 @@
                 if (await dbContext.ContributionSchemes.FindAsync(scheme.Id) == null)
                 {
                     await dbContext.ContributionSchemes.AddAsync(scheme);
-                    await dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    // Update existing scheme if necessary
-                    dbContext.ContributionSchemes.Update(scheme);
                     await dbContext.SaveChangesAsync();
                 }
             }

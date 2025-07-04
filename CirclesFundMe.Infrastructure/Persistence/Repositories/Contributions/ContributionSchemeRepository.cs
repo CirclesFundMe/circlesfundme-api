@@ -19,19 +19,21 @@
 
             decimal extraEngine = (costOfVehicle * (decimal)scheme.ExtraEnginePercent) / 100;
             decimal extraTyre = (costOfVehicle * (decimal)scheme.ExtraTyrePercent) / 100;
-            decimal insurance = (costOfVehicle * (decimal)scheme.InsurancePerAnnumPercent) / 100;
+            decimal insurance = ((costOfVehicle * (decimal)scheme.InsurancePerAnnumPercent) / 100) * 4;
             decimal processingFee = (costOfVehicle * (decimal)scheme.ProcessingFeePercent) / 100;
             decimal totalAssetValue = costOfVehicle + extraEngine + extraTyre + insurance + processingFee;
             decimal downPayment = (totalAssetValue * (decimal)scheme.DownPaymentPercent) / 100;
-            decimal loanManagementFee = (totalAssetValue * (decimal)scheme.LoanManagementFeePercent / 100) * 4;
 
-            decimal totalFee = ((totalAssetValue * (decimal)scheme.EligibleLoanPercent) / 100) + loanManagementFee;
+            decimal actualLoanAmount = totalAssetValue - downPayment;
+            decimal loanManagementFee = actualLoanAmount * (decimal)scheme.LoanManagementFeePercent / 100 * 4;
+
             decimal preLoanServiceCharge = (totalAssetValue * (decimal)scheme.PreLoanServiceChargePercent) / 100;
-            decimal postLoanServiceCharge = (totalAssetValue * (decimal)scheme.PostLoanServiceChargePercent) / 100;
-            decimal totalRepaymentAmount = totalFee + postLoanServiceCharge;
+
+            decimal postLoanServiceCharge = (actualLoanAmount + loanManagementFee) * (decimal)scheme.PostLoanServiceChargePercent / 100;
+            decimal totalRepaymentAmount = (postLoanServiceCharge * 48) + actualLoanAmount + loanManagementFee;
 
             decimal minimumWeeklyContribution = (totalAssetValue / 208) + preLoanServiceCharge;
-            decimal postLoanWeeklyContribution = (totalRepaymentAmount / 208) + postLoanServiceCharge;
+            decimal postLoanWeeklyContribution = (totalRepaymentAmount / 208);
 
             return new AutoFinanceBreakdown
             {

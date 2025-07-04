@@ -13,6 +13,11 @@
                 return BaseResponse<EligibleLoanDetailModel>.NotFound("Contribution scheme not found. Please check the ID and try again.");
             }
 
+            if (scheme.SchemeType == SchemeTypeEnums.AutoFinance)
+            {
+                return BaseResponse<EligibleLoanDetailModel>.NotFound("Eligible loan details are not available for Auto Finance schemes.");
+            }
+
             EligibleLoanDetailModel eligibleLoanDetail = new()
             {
                 ContributionSchemeName = scheme.SchemeType.ToString(),

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CirclesFundMe.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250703220650_UpdateSchemeTbl")]
-    partial class UpdateSchemeTbl
+    [Migration("20250704042541_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
