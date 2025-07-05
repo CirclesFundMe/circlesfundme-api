@@ -17,5 +17,6 @@
 
         public bool? AllowPushNotifications { get; set; }
         public bool? AllowEmailNotifications { get; set; }
+        public bool IsPaymentSetupComplete { get; set; }
     }
 }

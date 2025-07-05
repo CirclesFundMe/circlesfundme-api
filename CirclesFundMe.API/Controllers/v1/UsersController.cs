@@ -50,5 +50,23 @@
             BaseResponse<bool> response = await _sender.Send(command, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpPost("create-withdrawal-setting")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Create Withdrawal Setting")]
+        public async Task<IActionResult> CreateWithdrawalSetting(CreateWithdrawalSettingCommand command, CancellationToken cancellation)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellation);
+            return HandleResponse(response);
+        }
+
+        [HttpPut("update-withdrawal-setting")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Update Withdrawal Setting")]
+        public async Task<IActionResult> UpdateWithdrawalSetting(UpdateWithdrawalSettingCommand command, CancellationToken cancellation)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellation);
+            return HandleResponse(response);
+        }
     }
 }

@@ -36,7 +36,8 @@
                 ProfilePictureUrl = user.ProfilePictureUrl,
                 OnboardingStatus = user.OnboardingStatus.ToString(),
                 AllowPushNotifications = user.AllowPushNotifications,
-                AllowEmailNotifications = user.AllowEmailNotifications
+                AllowEmailNotifications = user.AllowEmailNotifications,
+                IsPaymentSetupComplete = user.IsPaymentSetupComplete
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

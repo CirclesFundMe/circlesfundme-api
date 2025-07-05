@@ -9,6 +9,7 @@
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<UserDocument> UserDocuments { get; set; }
         public DbSet<UserKYC> UserKYCs { get; set; }
+        public DbSet<UserWithdrawalSetting> UserWithdrawalSettings { get; set; }
         #endregion
 
         #region Contributions

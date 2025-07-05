@@ -17,6 +17,7 @@
         public string? RefreshToken { get; set; }
         public bool AllowPushNotifications { get; set; }
         public bool AllowEmailNotifications { get; set; }
+        public bool IsPaymentSetupComplete { get; set; }
 
         public DateTime RefreshTokenExpiryTime { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -31,6 +32,7 @@
         public virtual CFMAccount? CFMAccount { get; set; }
 
         public virtual UserAddress? UserAddress { get; set; }
+        public virtual UserWithdrawalSetting? WithdrawalSetting { get; set; }
         public virtual UserContributionScheme? UserContributionScheme { get; set; }
         public virtual UserKYC? UserKYC { get; set; }
 

@@ -14,6 +14,7 @@
         private IUserAddressRepository? _userAddresses;
         private IUserContributionSchemeRepository? _userContributionSchemes;
         private IUserKYCRepository? _userKYC;
+        private IUserWithdrawalSettingRepository? _userWithdrawalSettings;
         #endregion
 
         #region Contributions
@@ -37,6 +38,7 @@
         public IUserAddressRepository UserAddresses => _userAddresses ??= new UserAddressRepository(_sqlDbContext.UserAddresses);
         public IUserContributionSchemeRepository UserContributionSchemes => _userContributionSchemes ??= new UserContributionSchemeRepository(_sqlDbContext.UserContributionSchemes);
         public IUserKYCRepository UserKYC => _userKYC ??= new UserKYCRepository(_sqlDbContext.UserKYCs);
+        public IUserWithdrawalSettingRepository UserWithdrawalSettings => _userWithdrawalSettings ??= new UserWithdrawalSettingRepository(_sqlDbContext.UserWithdrawalSettings);
         #endregion
 
         #region Contributions

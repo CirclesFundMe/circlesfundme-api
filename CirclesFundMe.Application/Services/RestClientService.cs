@@ -44,8 +44,19 @@
 
         public async Task<TResult?> PostAsync<TResult>(string uri, HttpContent data, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage response = await _httpClient.PostAsync(uri, data, cancellationToken);
-            return await response.Content.ReadFromJsonAsync<TResult>(_serializerOptions, cancellationToken);
+            try
+            {
+                _logger.LogInformation("Sending POST request to {Uri}", uri);
+
+                HttpResponseMessage response = await _httpClient.PostAsync(uri, data, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<TResult>(_serializerOptions, cancellationToken);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request error while posting data to {Uri}", uri);
+                throw new Exception($"Error posting data to {uri}: {ex.Message}", ex);
+            }
         }
 
         public async Task<TResult?> PutAsync<TRequest, TResult>(string uri, TRequest data, CancellationToken cancellationToken = default)
@@ -56,8 +67,19 @@
 
         public async Task<bool> DeleteAsync(string uri, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage response = await _httpClient.DeleteAsync(uri, cancellationToken);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                _logger.LogInformation("Sending DELETE request to {Uri}", uri);
+
+                HttpResponseMessage response = await _httpClient.DeleteAsync(uri, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request error while deleting data from {Uri}", uri);
+                throw new Exception($"Error deleting data from {uri}: {ex.Message}", ex);
+            }
         }
     }
 }

@@ -21,6 +21,12 @@
         public string? AccountName { get; set; }
     }
 
+    public record AddRecipientData
+    {
+        [JsonProperty("recipient_code")]
+        public string? RecipientCode { get; set; }
+    }
+
     #region Shared
     public record BasePaystackResponse<T>
     {

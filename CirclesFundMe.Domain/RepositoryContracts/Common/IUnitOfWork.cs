@@ -10,6 +10,7 @@
         IUserAddressRepository UserAddresses { get; }
         IUserKYCRepository UserKYC { get; }
         IUserContributionSchemeRepository UserContributionSchemes { get; }
+        IUserWithdrawalSettingRepository UserWithdrawalSettings { get; }
         #endregion
 
         #region Contributions

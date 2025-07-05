@@ -21,6 +21,7 @@
                     AllowPushNotifications = u.AllowPushNotifications,
                     AllowEmailNotifications = u.AllowEmailNotifications,
                     OnboardingStatus = u.OnboardingStatus,
+                    IsPaymentSetupComplete = u.IsPaymentSetupComplete,
                     DateOfBirth = u.DateOfBirth,
                     Gender = u.Gender,
                     UserContributionScheme = u.UserContributionScheme == null ? null : new UserContributionScheme
