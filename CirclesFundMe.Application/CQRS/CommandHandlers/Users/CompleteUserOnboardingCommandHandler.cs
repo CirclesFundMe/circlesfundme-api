@@ -148,6 +148,16 @@
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _queueService.EnqueueFireAndForgetJob<CFMJobs>(j => j.CreateWalletsForNewUser(user.Id));
+            _queueService.EnqueueFireAndForgetJob<CFMJobs>(j => j.SendNotification(new List<CreateNotificationModel>
+            {
+                new()
+                {
+                    Title = "Congratulations! Your onboarding is completed",
+                    Type = NotificationTypeEnums.Info,
+                    ObjectId = user.Id,
+                    UserId = user.Id
+                }
+            }));
 
             return BaseResponse<bool>.Success(true, "Onboarding completed successfully.");
         }

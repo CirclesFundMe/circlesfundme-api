@@ -15,9 +15,9 @@
         {
             return type switch
             {
-                NotificationTypeEnums.Contribution => "#00A86B0D",
-                NotificationTypeEnums.Withdrawal => "#C608080D",
-                _ => "#E6BB1D0D"
+                NotificationTypeEnums.Contribution => "#00A86B",
+                NotificationTypeEnums.Withdrawal => "#C60808",
+                _ => "#E6BB1D"
             };
         }
     }

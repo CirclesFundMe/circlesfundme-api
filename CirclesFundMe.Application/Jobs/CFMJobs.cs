@@ -77,5 +77,59 @@
                 _logger.LogError(ex, $"An error occurred while creating wallet for user {userId}.");
             }
         }
+
+        public async Task SendNotification(IEnumerable<CreateNotificationModel> models)
+        {
+            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            SqlDbContext dbContext = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
+
+            try
+            {
+                await _utility.ExecuteWithRetryAsync(async () =>
+                {
+                    if (models == null || !models.Any())
+                    {
+                        _logger.LogWarning("No notification models provided to send.");
+                        return;
+                    }
+
+                    List<Notification> notifications = [];
+                    foreach (CreateNotificationModel model in models)
+                    {
+                        if (string.IsNullOrWhiteSpace(model.UserId))
+                        {
+                            _logger.LogWarning("Notification model does not have a UserId. Skipping notification creation.");
+                            continue;
+                        }
+
+                        Notification notification = new()
+                        {
+                            Title = model.Title,
+                            Metadata = model.Metadata,
+                            Type = model.Type,
+                            ObjectId = model.ObjectId,
+                            UserId = model.UserId,
+                            IsRead = false,
+                            ShouldSendEmailNotification = true,
+                            EmailNotificationSubject = "New Notification"
+                        };
+                        notifications.Add(notification);
+                    }
+
+                    if (notifications.Count == 0)
+                    {
+                        _logger.LogWarning("No valid notifications to create.");
+                        return;
+                    }
+
+                    await dbContext.Notifications.AddRangeAsync(notifications, CancellationToken.None);
+                    await dbContext.SaveChangesAsync(CancellationToken.None);
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while sending notifications");
+            }
+        }
     }
 }

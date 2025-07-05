@@ -1,11 +1,12 @@
 ﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
 {
-    public class CreateWithdrawalSettingCommandHandler(IUnitOfWork unitOfWork, IPaystackClient paystackClients, ICurrentUserService currentUserService, ILogger<CreateWithdrawalSettingCommandHandler> logger) : IRequestHandler<CreateWithdrawalSettingCommand, BaseResponse<bool>>
+    public class CreateWithdrawalSettingCommandHandler(IUnitOfWork unitOfWork, IPaystackClient paystackClients, ICurrentUserService currentUserService, ILogger<CreateWithdrawalSettingCommandHandler> logger, IQueueService queueService) : IRequestHandler<CreateWithdrawalSettingCommand, BaseResponse<bool>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IPaystackClient _paystackClients = paystackClients;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly ILogger<CreateWithdrawalSettingCommandHandler> _logger = logger;
+        private readonly IQueueService _queueService = queueService;
 
         public async Task<BaseResponse<bool>> Handle(CreateWithdrawalSettingCommand request, CancellationToken cancellationToken)
         {
@@ -58,6 +59,17 @@
             {
                 await _unitOfWork.UserWithdrawalSettings.AddAsync(withdrawalSetting, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+                _queueService.EnqueueFireAndForgetJob<CFMJobs>(j => j.SendNotification(new List<CreateNotificationModel>
+                {
+                    new()
+                    {
+                        Title = "Your withdrawal account setup was successful",
+                        Type = NotificationTypeEnums.Info,
+                        ObjectId = withdrawalSetting.UserId,
+                        UserId = _currentUserService.UserId
+                    }
+                }));
 
                 return BaseResponse<bool>.Success(true, "Withdrawal setting created successfully.");
             }

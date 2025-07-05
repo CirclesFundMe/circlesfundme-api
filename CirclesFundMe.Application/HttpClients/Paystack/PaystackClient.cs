@@ -11,13 +11,27 @@
         Task<BasePaystackResponse<Unit>> DeleteTransferRecipient(string recipientCode, CancellationToken cancellationToken = default);
     }
 
-    public class PaystackClient(IHttpClientFactory factory, ILogger<PaystackClient> logger) : IPaystackClient
+    public class PaystackClient(IHttpClientFactory factory, ILogger<PaystackClient> logger, IConfiguration config) : IPaystackClient
     {
         private readonly ILogger<PaystackClient> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         private readonly RestClientService _restClientService = new(factory.CreateClient("PaystackService"), logger);
+        private readonly bool _isPaystackEnabled = config.GetValue<bool>("PaystackService:IsEnabled");
 
         public async Task<BasePaystackResponse<AddRecipientData>> AddTransferRecipient(AddTransferRecipientPayload payload, CancellationToken cancellationToken = default)
         {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<AddRecipientData>
+                {
+                    Status = true,
+                    Message = "Test recipient added",
+                    Data = new AddRecipientData
+                    {
+                        RecipientCode = Guid.NewGuid().ToString()
+                    }
+                };
+            }
+
             string uri = "transferrecipient";
 
             try
@@ -53,6 +67,16 @@
 
         public async Task<BasePaystackResponse<Unit>> DeleteTransferRecipient(string recipientCode, CancellationToken cancellationToken = default)
         {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<Unit>
+                {
+                    Status = true,
+                    Message = "Test recipient deleted",
+                    Data = Unit.Value
+                };
+            }
+
             string uri = $"transferrecipient/{recipientCode}";
 
             try
@@ -91,6 +115,16 @@
 
         public async Task<BasePaystackResponse<List<BankData>>> GetBanksList(BankDataQuery query, CancellationToken cancellationToken = default)
         {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<List<BankData>>
+                {
+                    Status = true,
+                    Message = "No test bank",
+                    Data = []
+                };
+            }
+
             string uri = $"bank?country=nigeria&perPage={query.PerPage}&use_cursor=true";
             if (query.UseCursor && !string.IsNullOrEmpty(query.Next))
             {
@@ -128,6 +162,16 @@
 
         public async Task<BasePaystackResponse<VerifyAccountNumberData>> VerifyAccountNumberData(VerifyAccountNumberQuery query, CancellationToken cancellationToken = default)
         {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<VerifyAccountNumberData>
+                {
+                    Status = true,
+                    Message = "Test Account Name",
+                    Data = null
+                };
+            }
+
             string uri = $"bank/resolve?account_number={query.AccountNumber}&bank_code={query.BankCode}";
 
             try

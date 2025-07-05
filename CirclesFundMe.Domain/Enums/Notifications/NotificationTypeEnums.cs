@@ -2,7 +2,8 @@
 {
     public enum NotificationTypeEnums
     {
-        Contribution = 1,
+        Info = 1,
+        Contribution,
         Withdrawal
     }
 }
