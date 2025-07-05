@@ -27,6 +27,7 @@
 
         #region Finances
         private IBankRepository? _banks;
+        private IWalletRepository? _wallets;
         #endregion
 
         // Repositories
@@ -51,6 +52,7 @@
 
         #region Finances
         public IBankRepository Banks => _banks ??= new BankRepository(_sqlDbContext.Banks);
+        public IWalletRepository Wallets => _wallets ??= new WalletRepository(_sqlDbContext.Wallets);
         #endregion
 
         #region Required Methods

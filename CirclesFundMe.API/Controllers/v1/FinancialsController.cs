@@ -21,5 +21,15 @@
             BaseResponse<string> response = await _sender.Send(query, cancellationToken);
             return HandleResponse(response);
         }
+
+        [HttpGet("my-wallets")]
+        [ProducesResponseType<BaseResponse<List<WalletModel>>>(200)]
+        [SwaggerOperation(Summary = "Get My Wallets")]
+        [Authorize]
+        public async Task<IActionResult> GetMyWallets(CancellationToken cancellationToken)
+        {
+            BaseResponse<List<WalletModel>> response = await _sender.Send(new GetMyWalletsQuery(), cancellationToken);
+            return HandleResponse(response);
+        }
     }
 }

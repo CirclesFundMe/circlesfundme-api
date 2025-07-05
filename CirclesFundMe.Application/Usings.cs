@@ -62,6 +62,6 @@ global using System.Net.Http.Headers;
 global using CirclesFundMe.Application.Models.Finances;
 global using CirclesFundMe.Application.CQRS.Queries.Finances;
 global using CirclesFundMe.Domain.Entities.Finances;
-global using CirclesFundMe.Domain.RepositoryContracts.Finances;
 global using Polly.Retry;
 global using Microsoft.EntityFrameworkCore;
+global using CirclesFundMe.Domain.Enums.Finances;

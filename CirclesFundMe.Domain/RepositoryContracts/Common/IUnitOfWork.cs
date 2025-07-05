@@ -23,6 +23,7 @@
 
         #region Finances
         IBankRepository Banks { get; }
+        IWalletRepository Wallets { get; }
         #endregion
 
         #region Required Contracts

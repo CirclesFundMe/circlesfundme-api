@@ -1,12 +1,13 @@
 ﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
 {
-    public class CompleteUserOnboardingCommandHandler(IUnitOfWork unitOfWork, IFileUploadService fileUploadService, IImageService imageService, ICurrentUserService currentUserService, UserManager<AppUser> userManager) : IRequestHandler<CompleteUserOnboardingCommand, BaseResponse<bool>>
+    public class CompleteUserOnboardingCommandHandler(IUnitOfWork unitOfWork, IFileUploadService fileUploadService, IImageService imageService, ICurrentUserService currentUserService, UserManager<AppUser> userManager, IQueueService queueService) : IRequestHandler<CompleteUserOnboardingCommand, BaseResponse<bool>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IFileUploadService _fileUploadService = fileUploadService;
         private readonly IImageService _imageService = imageService;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly IQueueService _queueService = queueService;
 
         public async Task<BaseResponse<bool>> Handle(CompleteUserOnboardingCommand request, CancellationToken cancellationToken)
         {
@@ -145,6 +146,8 @@
 
             await _userManager.UpdateAsync(user);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            _queueService.EnqueueFireAndForgetJob<CFMJobs>(j => j.CreateWalletsForNewUser(user.Id));
 
             return BaseResponse<bool>.Success(true, "Onboarding completed successfully.");
         }

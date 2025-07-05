@@ -32,3 +32,4 @@ global using CirclesFundMe.Infrastructure.Persistence.Repositories.Notifications
 global using CirclesFundMe.Domain.Entities.Finances;
 global using CirclesFundMe.Domain.RepositoryContracts.Finances;
 global using CirclesFundMe.Infrastructure.Persistence.Repositories.Finances;
+global using CirclesFundMe.Domain.Enums.Finances;

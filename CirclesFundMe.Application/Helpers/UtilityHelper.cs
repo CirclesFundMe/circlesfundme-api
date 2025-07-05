@@ -32,6 +32,11 @@
                 );
         }
 
+        public static string FormatDecimalToNairaWithSymbol(decimal value)
+        {
+            return $"₦ {value:N0}";
+        }   
+
         public static string GenerateOtp()
         {
             byte[] randomNumber = new byte[4];

@@ -87,13 +87,49 @@
 
             foreach (AppUser user in users)
             {
-                if (await userManager.FindByEmailAsync(user.Email!) == null)
+                AppUser? existingUser = await userManager.FindByEmailAsync(user.Email!);
+
+                if (existingUser == null)
                 {
                     IdentityResult result = await userManager.CreateAsync(user, "Test@1234");
 
                     if (result.Succeeded)
                     {
                         await userManager.AddToRolesAsync(user, [Roles.Admin, Roles.SuperAdmin, Roles.Member]);
+                    }
+
+                    Wallet wallet = new()
+                    {
+                        Id = Guid.Parse("c9b2bb75-1cff-4393-b57d-27b2a9fccf8b"),
+                        Name = "Main Wallet",
+                        Balance = 0.0m,
+                        Type = WalletTypeEnums.GeneralLedger,
+                        Status = WalletStatusEnums.Active,
+                        UserId = user.Id,
+                    };
+
+                    if (await dbContext.Wallets.FindAsync(wallet.Id) == null)
+                    {
+                        await dbContext.Wallets.AddAsync(wallet);
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    Wallet existingWallet = new()
+                    {
+                        Id = Guid.Parse("c9b2bb75-1cff-4393-b57d-27b2a9fccf8b"),
+                        Name = "Main Wallet",
+                        Balance = 0.0m,
+                        Type = WalletTypeEnums.GeneralLedger,
+                        Status = WalletStatusEnums.Active,
+                        UserId = existingUser.Id,
+                    };
+
+                    if (await dbContext.Wallets.FindAsync(existingWallet.Id) == null)
+                    {
+                        await dbContext.Wallets.AddAsync(existingWallet);
+                        await dbContext.SaveChangesAsync();
                     }
                 }
             }

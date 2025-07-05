@@ -22,6 +22,7 @@
 
         #region Finances
         public DbSet<Bank> Banks { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
