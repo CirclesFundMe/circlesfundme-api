@@ -167,8 +167,12 @@
                 return new BasePaystackResponse<VerifyAccountNumberData>
                 {
                     Status = true,
-                    Message = "Test Account Name",
-                    Data = null
+                    Message = "Successfully retrieved test account",
+                    Data = new VerifyAccountNumberData
+                    {
+                        AccountNumber = "0248090000",
+                        AccountName = "Test Account Name"
+                    }
                 };
             }
 

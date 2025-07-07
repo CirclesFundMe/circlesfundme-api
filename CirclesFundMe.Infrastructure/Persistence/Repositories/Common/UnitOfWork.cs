@@ -28,6 +28,9 @@
         #region Finances
         private IBankRepository? _banks;
         private IWalletRepository? _wallets;
+        private ITransactionRepository? _transactions;
+        private IPaymentRepository? _payments;
+        private ILinkedCardRepository? _linkedCards;
         #endregion
 
         // Repositories
@@ -53,6 +56,9 @@
         #region Finances
         public IBankRepository Banks => _banks ??= new BankRepository(_sqlDbContext.Banks);
         public IWalletRepository Wallets => _wallets ??= new WalletRepository(_sqlDbContext.Wallets);
+        public ITransactionRepository Transactions => _transactions ??= new TransactionRepository(_sqlDbContext.Transactions);
+        public IPaymentRepository Payments => _payments ??= new PaymentRepository(_sqlDbContext.Payments);
+        public ILinkedCardRepository LinkedCards => _linkedCards ??= new LinkedCardRepository(_sqlDbContext.LinkedCards);
         #endregion
 
         #region Required Methods

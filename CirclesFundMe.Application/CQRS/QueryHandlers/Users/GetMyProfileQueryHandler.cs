@@ -37,7 +37,8 @@
                 OnboardingStatus = user.OnboardingStatus.ToString(),
                 AllowPushNotifications = user.AllowPushNotifications,
                 AllowEmailNotifications = user.AllowEmailNotifications,
-                IsPaymentSetupComplete = user.IsPaymentSetupComplete
+                IsPaymentSetupComplete = user.IsPaymentSetupComplete,
+                Gender = user.Gender.ToString()
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

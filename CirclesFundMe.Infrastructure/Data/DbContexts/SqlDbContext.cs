@@ -23,6 +23,9 @@
         #region Finances
         public DbSet<Bank> Banks { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<LinkedCard> LinkedCards { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

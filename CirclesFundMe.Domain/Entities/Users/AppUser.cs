@@ -35,6 +35,7 @@
         public virtual UserWithdrawalSetting? WithdrawalSetting { get; set; }
         public virtual UserContributionScheme? UserContributionScheme { get; set; }
         public virtual UserKYC? UserKYC { get; set; }
+        public virtual LinkedCard? LinkedCard { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; } = [];
         public virtual ICollection<UserDocument> UserDocuments { get; set; } = [];

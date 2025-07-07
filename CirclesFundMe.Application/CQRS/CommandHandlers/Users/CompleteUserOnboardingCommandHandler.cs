@@ -78,14 +78,14 @@
             UserKYC userKYC = new()
             {
                 UserId = user.Id,
-                BVN = request.BVN
+                BVN = request.BVN ?? string.Empty
             };
             await _unitOfWork.UserKYC.AddAsync(userKYC, cancellationToken);
 
-            if (!string.IsNullOrEmpty(request.Selfie))
+            if (request.Selfie != null)
             {
                 string selfieFileName = "Selfie-" + userId;
-                string selfieUrl = await _imageService.UploadImageFromBase64(request.Selfie, selfieFileName);
+                string selfieUrl = await _imageService.UploadImage(request.Selfie);
 
                 UserDocument selfieDoc = new()
                 {
@@ -101,7 +101,7 @@
 
             UserAddress userAddress = new()
             {
-                FullAddress = request.Address,
+                FullAddress = request.Address ?? string.Empty,
                 UserId = user.Id
             };
             await _unitOfWork.UserAddresses.AddAsync(userAddress, cancellationToken);

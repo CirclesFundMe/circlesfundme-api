@@ -8,7 +8,7 @@
         public GenderEnums Gender { get; set; }
         public IFormFile? GovernmentIssuedID { get; set; }
         public string? BVN { get; set; }
-        public string? Selfie { get; set; }
+        public IFormFile? Selfie { get; set; }
         public string? Address { get; set; }
         public IFormFile? UtilityBill { get; set; }
         public Guid ContributionSchemeId { get; set; }

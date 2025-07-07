@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
 {
     public record BankConfig : BaseEntityConfig<Bank>
     {

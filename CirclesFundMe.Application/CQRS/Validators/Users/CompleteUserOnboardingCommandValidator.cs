@@ -13,10 +13,6 @@
                 .MaximumLength(256).WithMessage("Full name cannot exceed 256 characters.")
                 .Must(name => name != null && name.Contains(' ')).WithMessage("Full name must contain at least a space.");
 
-            RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("Phone number is required.")
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Phone number must be in a valid format.");
-
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty().WithMessage("Date of birth is required.")
                 .Must(date => date.HasValue && date.Value <= DateTime.UtcNow.AddYears(-18))
@@ -26,63 +22,56 @@
                 .IsInEnum()
                 .WithMessage($"Gender must be one of the following values: {string.Join(", ", Enum.GetNames<GenderEnums>())}.");
 
-            RuleFor(x => x.GovernmentIssuedID)
-                .NotNull().WithMessage("Government issued ID is required.")
+            When(x => x.GovernmentIssuedID != null, () =>
+            {
+                RuleFor(x => x.GovernmentIssuedID)
                 .Must(file => file != null && file.ContentType == "application/pdf")
                 .WithMessage("Government issued ID must be a PDF file.")
                 .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
                 .WithMessage("Government issued ID must not exceed 5MB.");
+            });
 
-            RuleFor(x => x.BVN)
-                .NotEmpty().WithMessage("BVN is required.")
+            When(x => !string.IsNullOrEmpty(x.BVN), () =>
+            {
+                RuleFor(x => x.BVN)
                 .Matches(@"^\d{11}$").WithMessage("BVN must be exactly 11 digits.");
+            });
 
-            RuleFor(x => x.Selfie)
-                .NotEmpty().WithMessage("Selfie is required.")
-                .Must(selfie => !string.IsNullOrEmpty(selfie) && IsBase64String(selfie));
+            When(x => x.Selfie != null, () =>
+            {
+                RuleFor(x => x.Selfie)
+                .Must(file => file != null && (file.ContentType == "image/png" || file.ContentType == "image/jpeg"))
+                .WithMessage("Selfie must be a PNG or JPEG file.")
+                .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
+                .WithMessage("Selfie must not exceed 5MB.");
+            });
 
-            RuleFor(x => x.Address)
-                .NotEmpty().WithMessage("Address is required.")
+            When(x => !string.IsNullOrEmpty(x.Address), () =>
+            {
+                RuleFor(x => x.Address)
                 .MaximumLength(256).WithMessage("Address cannot exceed 256 characters.");
+            });
 
-            RuleFor(x => x.UtilityBill)
-                .NotNull().WithMessage("Utility bill is required.")
+            When(x => x.UtilityBill != null, () =>
+            {
+                RuleFor(x => x.UtilityBill)
                 .Must(file => file != null && (file.ContentType == "application/pdf" || file.ContentType == "image/png" || file.ContentType == "image/jpeg"))
                 .WithMessage("Utility bill must be a PDF, PNG, or JPEG file.")
                 .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
                 .WithMessage("Utility bill must not exceed 5MB.");
+            });
 
             RuleFor(x => x.ContributionSchemeId)
                 .NotEmpty().WithMessage("Contribution scheme ID is required.")
                 .Must(id => id != Guid.Empty).WithMessage("Contribution scheme ID must be a valid GUID.");
 
-            RuleFor(x => x.Income)
-                .GreaterThan(0).WithMessage("Income must be a positive amount.");
+            //RuleFor(x => x.Income)
+            //    .GreaterThan(0).WithMessage("Income must be a positive amount.");
 
-            RuleFor(x => x.ContributionAmount)
-                .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.")
-                .LessThanOrEqualTo(x => x.Income * (decimal)_appSettings.IncomeToContributionPercentage)
-                .WithMessage($"Contribution amount must not exceed {_appSettings.IncomeToContributionPercentage * 100}% of income.");
-        }
-
-        private static bool IsBase64String(string? selfie)
-        {
-            if (string.IsNullOrEmpty(selfie))
-                return false;
-
-            selfie = selfie.Trim();
-            if ((selfie.Length % 4) != 0 || selfie.Contains(' ') || selfie.Contains('\n') || selfie.Contains('\r'))
-                return false;
-
-            try
-            {
-                Convert.FromBase64String(selfie);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            //RuleFor(x => x.ContributionAmount)
+            //    .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.")
+            //    .LessThanOrEqualTo(x => x.Income * (decimal)_appSettings.IncomeToContributionPercentage)
+            //    .WithMessage($"Contribution amount must not exceed {_appSettings.IncomeToContributionPercentage * 100}% of income.");
         }
     }
 }

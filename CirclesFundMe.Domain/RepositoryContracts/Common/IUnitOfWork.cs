@@ -24,6 +24,9 @@
         #region Finances
         IBankRepository Banks { get; }
         IWalletRepository Wallets { get; }
+        ITransactionRepository Transactions { get; }
+        IPaymentRepository Payments { get; }
+        ILinkedCardRepository LinkedCards { get; }
         #endregion
 
         #region Required Contracts

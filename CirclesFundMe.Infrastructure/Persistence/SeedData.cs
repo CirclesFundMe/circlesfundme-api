@@ -82,6 +82,7 @@
                     UserType = UserTypeEnums.Staff,
                     TimeZone = "Africa/Lagos",
                     OnboardingStatus = OnboardingStatusEnums.Completed,
+                    Gender = GenderEnums.Male
                 }
             ];
 

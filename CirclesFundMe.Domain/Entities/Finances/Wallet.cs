@@ -12,5 +12,7 @@
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }
+
+        public virtual ICollection<Transaction> Transactions { get; set; } = [];
     }
 }
