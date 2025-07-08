@@ -11,7 +11,7 @@
         public string? ProfilePictureUrl { get; set; }
         public string? CoverPictureUrl { get; set; }
         public OnboardingStatusEnums OnboardingStatus { get; set; }
-        public GenderEnums Gender { get; set; }
+        public GenderEnums? Gender { get; set; }
 
         public bool AgreedToTerms { get; set; }
         public string? RefreshToken { get; set; }

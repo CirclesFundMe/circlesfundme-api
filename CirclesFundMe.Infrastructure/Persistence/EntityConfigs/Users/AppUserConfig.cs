@@ -53,7 +53,8 @@
 
             builder.Property(u => u.Gender)
                 .HasConversion<EnumToStringConverter<GenderEnums>>()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
         }
     }
 }

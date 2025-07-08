@@ -2,6 +2,7 @@
 {
     public enum GenderEnums
     {
+        NotSet = 0,
         Female = 1,
         Male = 2,
     }
