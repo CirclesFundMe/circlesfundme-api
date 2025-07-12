@@ -33,6 +33,15 @@
             return HandleResponse(response);
         }
 
+        [HttpPut("update")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Update User")]
+        public async Task<IActionResult> UpdateUser(UpdateUserCommand command, CancellationToken cancellation)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellation);
+            return HandleResponse(response);
+        }
+
         [HttpPost("change-password")]
         [ProducesResponseType<BaseResponse<string>>(200)]
         [SwaggerOperation(Summary = "Change Password")]

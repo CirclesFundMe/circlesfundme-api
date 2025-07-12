@@ -30,6 +30,13 @@
                     Name = user.UserContributionScheme.ContributionScheme?.Name,
                     Type = user.UserContributionScheme.ContributionScheme?.SchemeType.ToString(),
                 } : null,
+                WithdrawalSetting = user.WithdrawalSetting != null ? new WithdrawalSettingModel
+                {
+                    Id = user.WithdrawalSetting.Id,
+                    AccountNumber = user.WithdrawalSetting.AccountNumber,
+                    AccountName = user.WithdrawalSetting.AccountName,
+                    BankCode = user.WithdrawalSetting.BankCode
+                } : null,
                 ContributionAmount = user.UserContributionScheme?.ContributionAmount,
                 IncomeAmount = user.UserContributionScheme?.IncomeAmount,
                 Email = user.Email,

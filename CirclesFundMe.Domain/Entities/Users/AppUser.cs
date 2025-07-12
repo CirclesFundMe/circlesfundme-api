@@ -40,6 +40,12 @@
         public virtual ICollection<Notification> Notifications { get; set; } = [];
         public virtual ICollection<UserDocument> UserDocuments { get; set; } = [];
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
+
+        public void UpdateAuditFields(string userId)
+        {
+            ModifiedBy = userId;
+            ModifiedDate = DateTime.UtcNow;
+        }
     }
 
     public class AppUserExtension : AppUser

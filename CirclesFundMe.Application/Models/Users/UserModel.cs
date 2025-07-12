@@ -9,6 +9,7 @@
         public string? PhoneNumber { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public ContributionSchemeMiniModel? ContributionScheme { get; set; }
+        public WithdrawalSettingModel? WithdrawalSetting { get; set; }
         public decimal? ContributionAmount { get; set; }
         public decimal? IncomeAmount { get; set; }
         public string? Email { get; set; }

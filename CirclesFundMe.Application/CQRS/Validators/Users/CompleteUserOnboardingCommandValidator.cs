@@ -65,13 +65,10 @@
                 .NotEmpty().WithMessage("Contribution scheme ID is required.")
                 .Must(id => id != Guid.Empty).WithMessage("Contribution scheme ID must be a valid GUID.");
 
-            //RuleFor(x => x.Income)
-            //    .GreaterThan(0).WithMessage("Income must be a positive amount.");
-
-            //RuleFor(x => x.ContributionAmount)
-            //    .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.")
-            //    .LessThanOrEqualTo(x => x.Income * (decimal)_appSettings.IncomeToContributionPercentage)
-            //    .WithMessage($"Contribution amount must not exceed {_appSettings.IncomeToContributionPercentage * 100}% of income.");
+            RuleFor(x => x.ContributionAmount)
+                .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.")
+                .LessThanOrEqualTo(x => x.Income * (decimal)_appSettings.IncomeToContributionPercentage)
+                .WithMessage($"Contribution amount must not exceed {_appSettings.IncomeToContributionPercentage * 100}% of income.");
         }
     }
 }

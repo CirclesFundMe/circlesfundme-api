@@ -35,10 +35,25 @@
                         ContributionAmount = u.UserContributionScheme.ContributionAmount,
                         IncomeAmount = u.UserContributionScheme.IncomeAmount
                     },
+                    WithdrawalSetting = u.WithdrawalSetting == null ? null : new UserWithdrawalSetting
+                    {
+                        Id = u.WithdrawalSetting.Id,
+                        AccountNumber = u.WithdrawalSetting.AccountNumber,
+                        AccountName = u.WithdrawalSetting.AccountName,
+                        BankCode = u.WithdrawalSetting.BankCode
+                    },
                 })
                 .FirstOrDefaultAsync(cancellation);
 
             return user;
+        }
+
+        public async Task<AppUser?> GetUserByIdMiniAsync(string id, CancellationToken cancellation)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == id && !u.IsDeleted)
+                .FirstOrDefaultAsync(cancellation);
         }
 
         public async Task<PagedList<AppUser>> GetUsersAsync(UserParams userParams, CancellationToken cancellation)

@@ -62,6 +62,12 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
 
             builder.Property(x => x.EligibleLoanPercent)
                 .HasPrecision(18, 2);
+
+            builder.Property(x => x.DownPaymentPercent)
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.BaseFee)
+                .HasPrecision(18, 2);
         }
     }
 }

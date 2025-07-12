@@ -22,6 +22,7 @@
         public double ProcessingFeePercent { get; set; }
         public double EligibleLoanPercent { get; set; }
         public double DownPaymentPercent { get; set; }
+        public double BaseFee { get; set; }
 
         public virtual ICollection<UserContributionScheme> UserContributionSchemes { get; set; } = [];
     }
