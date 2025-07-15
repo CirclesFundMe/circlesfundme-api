@@ -41,6 +41,7 @@
         public decimal LoanManagementFee { get; set; }
         public decimal PreLoanServiceCharge { get; set; }
         public decimal PostLoanWeeklyContribution { get; set; }
+        public decimal BaseFee { get; set; }
         public decimal EligibleLoan => TotalAssetValue - DownPayment;
     }
 

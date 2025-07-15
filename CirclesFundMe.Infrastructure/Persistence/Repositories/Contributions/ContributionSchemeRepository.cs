@@ -5,7 +5,7 @@
     {
         private readonly DbSet<ContributionScheme> _contributionSchemes = contributionSchemes;
 
-        public async Task<AutoFinanceBreakdown?> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation)
+        public async Task<(AutoFinanceBreakdown? breakdown, string? message)> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation)
         {
             ContributionScheme? scheme = await _contributionSchemes
                 .AsNoTracking()
@@ -14,12 +14,12 @@
 
             if (scheme == null)
             {
-                return null;
+                return (null, "Contribution scheme not found");
             }
 
             if (costOfVehicle < (decimal)scheme.MinimumVehicleCost)
             {
-                return null;
+                return (null, $"Cost of Vehicle must be at least {Math.Round(scheme.MinimumVehicleCost).ToString("N0", CultureInfo.InvariantCulture)}");
             }
 
             decimal extraEngine = costOfVehicle * (decimal)scheme.ExtraEnginePercent / 100;
@@ -38,7 +38,7 @@
 
             decimal postLoanWeeklyContribution = totalRepaymentAmount / 208;
 
-            return new AutoFinanceBreakdown
+            return (new AutoFinanceBreakdown
             {
                 CostOfVehicle = costOfVehicle,
                 ExtraEngine = extraEngine,
@@ -49,8 +49,9 @@
                 DownPayment = downPayment,
                 LoanManagementFee = loanManagementFee,
                 PreLoanServiceCharge = preLoanServiceCharge,
-                PostLoanWeeklyContribution = postLoanWeeklyContribution
-            };
+                PostLoanWeeklyContribution = postLoanWeeklyContribution,
+                BaseFee = (decimal)scheme.BaseFee
+            }, "Here is your auto breakdown");
         }
 
         public async Task<List<ContributionScheme>> GetContributionSchemes(CancellationToken cancellationToken)

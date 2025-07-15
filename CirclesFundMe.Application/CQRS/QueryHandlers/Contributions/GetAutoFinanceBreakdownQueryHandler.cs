@@ -13,16 +13,17 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
                 return BaseResponse<AutoFinanceBreakdownModel>.BadRequest("Cost of vehicle must be greater than zero.");
             }
 
-            AutoFinanceBreakdown? breakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle, cancellationToken);
+            (AutoFinanceBreakdown? breakdown, string? message) = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle, cancellationToken);
             if (breakdown == null)
             {
-                return BaseResponse<AutoFinanceBreakdownModel>.NotFound("No auto finance breakdown found for the given cost of vehicle.");
+                return BaseResponse<AutoFinanceBreakdownModel>.BadRequest(message!);
             }
 
             Dictionary<string, string> formatted = UtilityHelper.FormatDecimalProperties(breakdown);
 
             AutoFinanceBreakdownModel breakdownModel = new()
             {
+                BaseContributionAmount = breakdown.BaseFee,
                 CostOfVehicle = formatted["CostOfVehicle"],
                 ExtraEngine = formatted["ExtraEngine"],
                 ExtraTyre = formatted["ExtraTyre"],

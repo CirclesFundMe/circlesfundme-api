@@ -2,6 +2,7 @@
 {
     public record AutoFinanceBreakdownModel
     {
+        public decimal BaseContributionAmount { get; set; }
         public string? CostOfVehicle { get; set; }
         public string? ExtraEngine { get; set; }
         public string? ExtraTyre { get; set; }

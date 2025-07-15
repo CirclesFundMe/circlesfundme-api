@@ -4,7 +4,7 @@
     {
         Task<List<ContributionScheme>> GetContributionSchemesMini(CancellationToken cancellationTokens);
         Task<List<ContributionScheme>> GetContributionSchemes(CancellationToken cancellationToken);
-        Task<AutoFinanceBreakdown?> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation);
+        Task<(AutoFinanceBreakdown? breakdown, string? message)> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation);
         Task<RegularFinanceBreakdown?> GetRegularFinanceBreakdown(Guid schemeId, decimal amount, CancellationToken cancellation);
     }
 }
