@@ -4,7 +4,7 @@
     {
         public decimal ContributionAmount { get; set; }
         public decimal IncomeAmount { get; set; }
-        public string? CopyOfCurrentAutoBreakdownAtOnboarding { get; set; }
+        public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
         public WeekDayEnums ContributionWeekDay { get; set; }
         public MonthDayEnums ContributionMonthDay { get; set; }
 

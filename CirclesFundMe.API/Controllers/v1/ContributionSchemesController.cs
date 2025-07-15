@@ -34,7 +34,7 @@
             return HandleResponse(response);
         }
 
-        [HttpGet("regular-finance-breakdown")]
+        [HttpPost("regular-finance-breakdown")]
         [ProducesResponseType<BaseResponse<EligibleLoanDetailModel>>(200)]
         [SwaggerOperation(Summary = "Get Eligible Loan Detail by Contribution Scheme ID")]
         public async Task<IActionResult> GetEligibleLoanDetail([FromBody] GetEligibleLoanDetailQuery query, CancellationToken cancellationToken)

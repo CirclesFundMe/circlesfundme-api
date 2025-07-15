@@ -16,7 +16,7 @@
                 .HasPrecision(18, 2)
                 .IsRequired();
 
-            builder.Property(x => x.CopyOfCurrentAutoBreakdownAtOnboarding)
+            builder.Property(x => x.CopyOfCurrentBreakdownAtOnboarding)
                 .HasMaxLength(2000)
                 .IsRequired(false);
 

@@ -31,7 +31,7 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
                 TotalAssetValue = formatted["TotalAssetValue"],
                 DownPayment = formatted["DownPayment"],
                 LoanManagementFee = formatted["LoanManagementFee"],
-                MinimumWeeklyContribution = formatted["MinimumWeeklyContribution"],
+                PreLoanServiceCharge = formatted["PreLoanServiceCharge"],
                 PostLoanWeeklyContribution = formatted["PostLoanWeeklyContribution"],
                 EligibleLoan = formatted["EligibleLoan"]
             };

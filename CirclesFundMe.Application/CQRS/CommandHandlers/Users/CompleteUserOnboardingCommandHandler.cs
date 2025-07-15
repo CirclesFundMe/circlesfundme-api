@@ -11,17 +11,23 @@
 
         public async Task<BaseResponse<bool>> Handle(CompleteUserOnboardingCommand request, CancellationToken cancellationToken)
         {
-            bool isWeekDayDefined = Enum.IsDefined(request.WeekDay);
-            bool isMonthDayDefined = Enum.IsDefined(request.MonthDay);
+            bool isWeekDayDefined = Enum.TryParse(request.WeekDay.ToString(), out WeekDayEnums weekDay) && Enum.IsDefined(typeof(WeekDayEnums), weekDay);
+
+            bool isMonthDayDefined = Enum.TryParse(request.MonthDay.ToString(), out MonthDayEnums monthDay) && Enum.IsDefined(typeof(MonthDayEnums), monthDay);
+
+            if (request.WeekDay != null && !isWeekDayDefined)
+            {
+                return BaseResponse<bool>.BadRequest("Invalid weekday selected for contribution.");
+            }
+
+            if (request.MonthDay != null && !isMonthDayDefined)
+            {
+                return BaseResponse<bool>.BadRequest("Invalid month day selected for contribution.");
+            }
 
             if (!isWeekDayDefined && !isMonthDayDefined)
             {
                 return BaseResponse<bool>.BadRequest("Please select a preferred payment day (either weekday or month day).");
-            }
-
-            if (isWeekDayDefined && isMonthDayDefined)
-            {
-                return BaseResponse<bool>.BadRequest("Please select only one preferred payment day (either weekday or month day, not both).");
             }
 
             string userId = _currentUserService.UserId;
@@ -34,15 +40,29 @@
             }
 
             ContributionScheme? contributionScheme = await _unitOfWork.ContributionSchemes.GetByPrimaryKey(request.ContributionSchemeId, cancellationToken);
+
             if (contributionScheme == null)
             {
                 return BaseResponse<bool>.NotFound("Contribution scheme not found.");
             }
 
-            // Check that the contribution amount entered is not more than the contributionPercent of your income
-            if (request.ContributionAmount > ((decimal)contributionScheme.ContributionPercent / 100) * request.Income)
+            if (contributionScheme.SchemeType == SchemeTypeEnums.Weekly && !isWeekDayDefined)
             {
-                return BaseResponse<bool>.BadRequest($"Contribution amount cannot be more than {contributionScheme.ContributionPercent}% of your income.");
+                return BaseResponse<bool>.BadRequest("Please select a preferred weekday for weekly contributions.");
+            }
+
+            if (contributionScheme.SchemeType == SchemeTypeEnums.Monthly && !isMonthDayDefined)
+            {
+                return BaseResponse<bool>.BadRequest("Please select a preferred day of the month for monthly contributions.");
+            }
+
+            // Check that the contribution amount entered is not more than the contributionPercent of your income
+            if (contributionScheme.SchemeType != SchemeTypeEnums.AutoFinance)
+            {
+                if (request.ContributionAmount > ((decimal)contributionScheme.ContributionPercent / 100) * request.Income)
+                {
+                    return BaseResponse<bool>.BadRequest($"Contribution amount cannot be more than {contributionScheme.ContributionPercent}% of your income.");
+                }
             }
 
             AppUser? user = await _userManager.FindByIdAsync(userId);
@@ -144,17 +164,22 @@
             {
                 UserId = user.Id,
                 ContributionSchemeId = request.ContributionSchemeId,
-                IncomeAmount = request.Income
+                IncomeAmount = request.Income ?? 0
             };
 
             if (contributionScheme.SchemeType == SchemeTypeEnums.AutoFinance)
             {
+                if (request.CostOfVehicle == null || request.CostOfVehicle <= 0)
+                {
+                    return BaseResponse<bool>.BadRequest("Cost of vehicle must be greater than zero.");
+                }
+
                 if (request.CostOfVehicle < (decimal)contributionScheme.MinimumVehicleCost)
                 {
                     return BaseResponse<bool>.BadRequest($"Cost of vehicle must be at least {contributionScheme.MinimumVehicleCost:C}.");
                 }
 
-                AutoFinanceBreakdown? autoFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle, cancellationToken);
+                AutoFinanceBreakdown? autoFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle ?? 0, cancellationToken);
 
                 if (autoFinanceBreakdown == null)
                 {
@@ -163,30 +188,45 @@
 
                 decimal preloanServiceCharge = autoFinanceBreakdown.PreLoanServiceCharge;
 
-                if (Enum.IsDefined(request.WeekDay))
+                if (isWeekDayDefined)
                 {
-                    userContributionScheme.ContributionWeekDay = request.WeekDay;
+                    userContributionScheme.ContributionWeekDay = weekDay;
                     preloanServiceCharge /= 4; // Divide by 4 for weekly contributions
                 }
 
-                if (Enum.IsDefined(request.MonthDay))
+                if (isMonthDayDefined)
                 {
-                    userContributionScheme.ContributionMonthDay = request.MonthDay;
+                    userContributionScheme.ContributionMonthDay = monthDay;
                 }
 
-                userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
-                userContributionScheme.CopyOfCurrentAutoBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
+                if (request.ContributionAmount == null || request.ContributionAmount <= 0)
+                {
+                    return BaseResponse<bool>.BadRequest("Contribution amount must be greater than zero.");
+                }
+
+                userContributionScheme.ContributionAmount = request.ContributionAmount ?? 0 + preloanServiceCharge;
+                userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
             }
             else
             {
-                RegularFinanceBreakdown? regularFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.ContributionAmount, cancellationToken);
+                RegularFinanceBreakdown? regularFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.ContributionAmount ?? 0, cancellationToken);
 
                 if (regularFinanceBreakdown == null)
                 {
                     return BaseResponse<bool>.BadRequest("Failed to calculate regular finance breakdown. Please try again.");
                 }
 
-                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
+                if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Weekly)
+                {
+                    userContributionScheme.ContributionWeekDay = weekDay;
+                }
+                else if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Monthly)
+                {
+                    userContributionScheme.ContributionMonthDay = monthDay;
+                }
+
+                userContributionScheme.ContributionAmount = request.ContributionAmount ?? 0 + regularFinanceBreakdown.ServiceCharge;
+                userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
             }
             await _unitOfWork.UserContributionSchemes.AddAsync(userContributionScheme, cancellationToken);
 

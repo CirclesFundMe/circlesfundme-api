@@ -10,7 +10,7 @@
         public string? TotalAssetValue { get; set; }
         public string? DownPayment { get; set; }
         public string? LoanManagementFee { get; set; }
-        public string? MinimumWeeklyContribution { get; set; }
+        public string? PreLoanServiceCharge { get; set; }
         public string? PostLoanWeeklyContribution { get; set; }
         public string? EligibleLoan { get; set; }
     }
