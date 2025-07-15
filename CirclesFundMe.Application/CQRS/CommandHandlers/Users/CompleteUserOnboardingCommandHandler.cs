@@ -179,11 +179,11 @@
                     return BaseResponse<bool>.BadRequest($"Cost of vehicle must be at least {contributionScheme.MinimumVehicleCost:C}.");
                 }
 
-                AutoFinanceBreakdown? autoFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle ?? 0, cancellationToken);
+                (AutoFinanceBreakdown? autoFinanceBreakdown, string? message) = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle ?? 0, cancellationToken);
 
                 if (autoFinanceBreakdown == null)
                 {
-                    return BaseResponse<bool>.BadRequest("Failed to calculate auto finance breakdown. Please try again.");
+                    return BaseResponse<bool>.BadRequest(message!);
                 }
 
                 decimal preloanServiceCharge = autoFinanceBreakdown.PreLoanServiceCharge;
