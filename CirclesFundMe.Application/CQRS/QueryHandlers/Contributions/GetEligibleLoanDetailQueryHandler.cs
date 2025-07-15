@@ -6,47 +6,35 @@
 
         public async Task<BaseResponse<EligibleLoanDetailModel>> Handle(GetEligibleLoanDetailQuery request, CancellationToken cancellationToken)
         {
-            ContributionScheme? scheme = await _unitOfWork.ContributionSchemes.GetByPrimaryKey(request.ContributionSchemeId, cancellationToken);
+            RegularFinanceBreakdown? financeBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.Amount, cancellationToken);
 
-            if (scheme == null)
+            if (financeBreakdown == null)
             {
-                return BaseResponse<EligibleLoanDetailModel>.NotFound("Contribution scheme not found. Please check the ID and try again.");
+                return BaseResponse<EligibleLoanDetailModel>.NotFound("Unable to get finance breakdown. Invalid parameter(s)");
             }
 
-            if (scheme.SchemeType == SchemeTypeEnums.AutoFinance)
-            {
-                return BaseResponse<EligibleLoanDetailModel>.NotFound("Eligible loan details are not available for Auto Finance schemes.");
-            }
+            string weekOrMonth = financeBreakdown.SchemeType == SchemeTypeEnums.Weekly ? "week" : "month";
 
             EligibleLoanDetailModel eligibleLoanDetail = new()
             {
-                ContributionSchemeName = scheme.SchemeType.ToString(),
-                EligibleLoanMultiple = scheme.EligibleLoanMultiple,
-                EligibleLoanDescription = FormEligibilityDescriptionByScheme(scheme),
-                ServiceChargeAmount = (decimal)scheme.ServiceCharge,
-                ServiceChargeDescription = FormServiceChargeDescriptionByScheme(scheme)
+                PrincipalLoan = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.PrincipalLoan),
+                PrincipalLoanDescription = FormServiceValueDescription(financeBreakdown),
+                LoanManagementFee = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.LoanManagementFee),
+                LoanManagementFeeDescription = "Loan Mgt. Fee",
+                EligibleLoan = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.EligibleLoan),
+                EligibleLoanDescription = "Principal Loan - Loan Mgt. Fee",
+                ServiceCharge = $"{UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.ServiceCharge)}/{weekOrMonth}"
             };
 
             return BaseResponse<EligibleLoanDetailModel>.Success(eligibleLoanDetail, "Eligible loan details retrieved successfully.");
         }
 
-        private static string FormServiceChargeDescriptionByScheme(ContributionScheme scheme)
+        private static string FormServiceValueDescription(RegularFinanceBreakdown breakdown)
         {
-            if (scheme.SchemeType == SchemeTypeEnums.Weekly || scheme.SchemeType == SchemeTypeEnums.Monthly)
+            if (breakdown.SchemeType == SchemeTypeEnums.Weekly || breakdown.SchemeType == SchemeTypeEnums.Monthly)
             {
-                return scheme.SchemeType == SchemeTypeEnums.Weekly ? "/week" : "/month";
-            }
-
-            return string.Empty;
-        }
-
-        private static string FormEligibilityDescriptionByScheme(ContributionScheme scheme)
-        {
-            if (scheme.SchemeType == SchemeTypeEnums.Weekly || scheme.SchemeType == SchemeTypeEnums.Monthly)
-            {
-                string word = scheme.SchemeType == SchemeTypeEnums.Weekly ? "weekly contribution" : "monthly contribution";
-
-                return $"{scheme.EligibleLoanMultiple}x of your {word}";
+                string word = breakdown.SchemeType == SchemeTypeEnums.Weekly ? "weekly" : "monthly";
+                return $"{breakdown.LoanMultiple}x of your {word} contribution";
             }
 
             return string.Empty;

@@ -34,12 +34,12 @@
             return HandleResponse(response);
         }
 
-        [HttpGet("{contributionSchemeId}/eligible-loan-detail")]
+        [HttpGet("regular-finance-breakdown")]
         [ProducesResponseType<BaseResponse<EligibleLoanDetailModel>>(200)]
         [SwaggerOperation(Summary = "Get Eligible Loan Detail by Contribution Scheme ID")]
-        public async Task<IActionResult> GetEligibleLoanDetail(Guid contributionSchemeId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetEligibleLoanDetail([FromBody] GetEligibleLoanDetailQuery query, CancellationToken cancellationToken)
         {
-            BaseResponse<EligibleLoanDetailModel> response = await _sender.Send(new GetEligibleLoanDetailQuery() { ContributionSchemeId = contributionSchemeId }, cancellationToken);
+            BaseResponse<EligibleLoanDetailModel> response = await _sender.Send(query, cancellationToken);
             return HandleResponse(response);
         }
 

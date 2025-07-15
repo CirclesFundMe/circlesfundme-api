@@ -3,7 +3,6 @@
     public record AppSettings
     {
         public required string FrontendBaseUrl { get; set; }
-        public double IncomeToContributionPercentage { get; set; }
         public required MailSettings MailSettings { get; set; }
         public required string GLWalletId { get; set; }
     }

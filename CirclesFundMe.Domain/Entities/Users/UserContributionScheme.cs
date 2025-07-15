@@ -4,6 +4,9 @@
     {
         public decimal ContributionAmount { get; set; }
         public decimal IncomeAmount { get; set; }
+        public string? CopyOfCurrentAutoBreakdownAtOnboarding { get; set; }
+        public WeekDayEnums ContributionWeekDay { get; set; }
+        public MonthDayEnums ContributionMonthDay { get; set; }
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }

@@ -2,12 +2,8 @@
 {
     public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
-        private readonly AppSettings _appSettings;
-
-        public UpdateUserCommandValidator(IOptions<AppSettings> options)
+        public UpdateUserCommandValidator()
         {
-            _appSettings = options.Value;
-
             When(x => !string.IsNullOrEmpty(x.FirstName), () =>
             {
                 RuleFor(x => x.FirstName)
@@ -50,9 +46,7 @@
 
                 RuleFor(x => x.ContributionAmount)
                 .NotNull().WithMessage("Contribution amount is required.")
-                .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.")
-                .LessThanOrEqualTo(x => x.IncomeAmount * (decimal)_appSettings.IncomeToContributionPercentage)
-                .WithMessage($"Contribution amount must not exceed {_appSettings.IncomeToContributionPercentage * 100}% of income.");
+                .GreaterThan(0).WithMessage("Contribution amount must be a positive amount.");
             });
 
             When(x => Enum.IsDefined(x.Gender), () =>

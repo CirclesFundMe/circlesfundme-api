@@ -98,6 +98,10 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("float(18)");
 
+                    b.Property<double>("MinimumVehicleCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("float(18)");
+
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -891,6 +895,20 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<decimal>("ContributionAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ContributionMonthDay")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ContributionWeekDay")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("CopyOfCurrentAutoBreakdownAtOnboarding")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(100)

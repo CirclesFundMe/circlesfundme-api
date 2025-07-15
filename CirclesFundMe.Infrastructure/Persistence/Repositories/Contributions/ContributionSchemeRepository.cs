@@ -17,23 +17,26 @@
                 return null;
             }
 
-            decimal extraEngine = (costOfVehicle * (decimal)scheme.ExtraEnginePercent) / 100;
-            decimal extraTyre = (costOfVehicle * (decimal)scheme.ExtraTyrePercent) / 100;
-            decimal insurance = ((costOfVehicle * (decimal)scheme.InsurancePerAnnumPercent) / 100) * 4;
-            decimal processingFee = (costOfVehicle * (decimal)scheme.ProcessingFeePercent) / 100;
+            if (costOfVehicle < (decimal)scheme.MinimumVehicleCost)
+            {
+                return null;
+            }
+
+            decimal extraEngine = costOfVehicle * (decimal)scheme.ExtraEnginePercent / 100;
+            decimal extraTyre = costOfVehicle * (decimal)scheme.ExtraTyrePercent / 100;
+            decimal insurance = (costOfVehicle * (decimal)scheme.InsurancePerAnnumPercent / 100) * 4;
+            decimal processingFee = (costOfVehicle + extraEngine + extraTyre + insurance) * (decimal)scheme.ProcessingFeePercent / 100;
             decimal totalAssetValue = costOfVehicle + extraEngine + extraTyre + insurance + processingFee;
-            decimal downPayment = (totalAssetValue * (decimal)scheme.DownPaymentPercent) / 100;
+            decimal preLoanServiceCharge = (totalAssetValue * (decimal)scheme.PreLoanServiceChargePercent) / 100;
+            decimal downPayment = totalAssetValue * (decimal)scheme.DownPaymentPercent / 100;
 
             decimal actualLoanAmount = totalAssetValue - downPayment;
             decimal loanManagementFee = actualLoanAmount * (decimal)scheme.LoanManagementFeePercent / 100 * 4;
 
-            decimal preLoanServiceCharge = (totalAssetValue * (decimal)scheme.PreLoanServiceChargePercent) / 100;
-
             decimal postLoanServiceCharge = (actualLoanAmount + loanManagementFee) * (decimal)scheme.PostLoanServiceChargePercent / 100;
             decimal totalRepaymentAmount = (postLoanServiceCharge * 48) + actualLoanAmount + loanManagementFee;
 
-            decimal minimumWeeklyContribution = (totalAssetValue / 208) + preLoanServiceCharge;
-            decimal postLoanWeeklyContribution = (totalRepaymentAmount / 208);
+            decimal postLoanWeeklyContribution = totalRepaymentAmount / 208;
 
             return new AutoFinanceBreakdown
             {
@@ -45,7 +48,7 @@
                 TotalAssetValue = totalAssetValue,
                 DownPayment = downPayment,
                 LoanManagementFee = loanManagementFee,
-                MinimumWeeklyContribution = minimumWeeklyContribution,
+                PreLoanServiceCharge = preLoanServiceCharge,
                 PostLoanWeeklyContribution = postLoanWeeklyContribution
             };
         }
@@ -68,6 +71,36 @@
                     SchemeType = cs.SchemeType
                 })
                 .ToListAsync(cancellationTokens);
+        }
+
+        public async Task<RegularFinanceBreakdown?> GetRegularFinanceBreakdown(Guid schemeId, decimal amount, CancellationToken cancellation)
+        {
+            ContributionScheme? scheme = await _contributionSchemes
+                .AsNoTracking()
+                .Where(cs => cs.Id == schemeId)
+                .FirstOrDefaultAsync(cancellationToken: cancellation);
+
+            if (scheme == null)
+            {
+                return null;
+            }
+
+            if (scheme.SchemeType != SchemeTypeEnums.Weekly && scheme.SchemeType != SchemeTypeEnums.Monthly)
+            {
+                return null;
+            }
+
+            decimal principalLoan = amount * (decimal)scheme.EligibleLoanMultiple;
+            decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
+
+            return new RegularFinanceBreakdown
+            {
+                PrincipalLoan = principalLoan,
+                LoanManagementFee = loanManagementFee,
+                ServiceCharge = (decimal)scheme.ServiceCharge,
+                SchemeType = scheme.SchemeType,
+                LoanMultiple = (int)scheme.EligibleLoanMultiple,
+            };
         }
     }
 }

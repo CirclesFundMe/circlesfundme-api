@@ -12,5 +12,6 @@
         public string? LoanManagementFee { get; set; }
         public string? MinimumWeeklyContribution { get; set; }
         public string? PostLoanWeeklyContribution { get; set; }
+        public string? EligibleLoan { get; set; }
     }
 }

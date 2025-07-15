@@ -21,6 +21,9 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
                 .HasConversion<EnumToStringConverter<SchemeTypeEnums>>()
                 .HasMaxLength(50);
 
+            builder.Property(x => x.MinimumVehicleCost)
+                .HasPrecision(18, 2);
+
             builder.Property(x => x.ContributionPercent)
                 .HasPrecision(18, 2);
 

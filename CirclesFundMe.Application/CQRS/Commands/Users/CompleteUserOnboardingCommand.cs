@@ -15,5 +15,7 @@
         public decimal Income { get; set; }
         public decimal ContributionAmount { get; set; }
         public decimal CostOfVehicle { get; set; }
+        public WeekDayEnums WeekDay { get; set; }
+        public MonthDayEnums MonthDay { get; set; }
     }
 }

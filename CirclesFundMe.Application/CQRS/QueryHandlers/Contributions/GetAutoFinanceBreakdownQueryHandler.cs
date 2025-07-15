@@ -12,6 +12,7 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
             {
                 return BaseResponse<AutoFinanceBreakdownModel>.BadRequest("Cost of vehicle must be greater than zero.");
             }
+
             AutoFinanceBreakdown? breakdown = await _unitOfWork.ContributionSchemes.GetAutoFinanceBreakdown(request.CostOfVehicle, cancellationToken);
             if (breakdown == null)
             {
@@ -31,7 +32,8 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
                 DownPayment = formatted["DownPayment"],
                 LoanManagementFee = formatted["LoanManagementFee"],
                 MinimumWeeklyContribution = formatted["MinimumWeeklyContribution"],
-                PostLoanWeeklyContribution = formatted["PostLoanWeeklyContribution"]
+                PostLoanWeeklyContribution = formatted["PostLoanWeeklyContribution"],
+                EligibleLoan = formatted["EligibleLoan"]
             };
 
             return BaseResponse<AutoFinanceBreakdownModel>.Success(breakdownModel, "Auto finance breakdown calculated successfully.");

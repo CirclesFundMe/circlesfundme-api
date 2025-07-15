@@ -5,7 +5,8 @@
         public string? Name { get; set; }
         public string? Description { get; set; }
         public SchemeTypeEnums SchemeType { get; set; }
-
+        public double MinimumVehicleCost { get; set; }
+        
         public double ContributionPercent { get; set; }
         public double EligibleLoanMultiple { get; set; }
         public double ServiceCharge { get; set; }
@@ -38,7 +39,19 @@
         public decimal TotalAssetValue { get; set; }
         public decimal DownPayment { get; set; }
         public decimal LoanManagementFee { get; set; }
-        public decimal MinimumWeeklyContribution { get; set; }
+        public decimal PreLoanServiceCharge { get; set; }
         public decimal PostLoanWeeklyContribution { get; set; }
+        public decimal EligibleLoan => TotalAssetValue - DownPayment;
+    }
+
+    [NotMapped]
+    public record RegularFinanceBreakdown
+    {
+        public decimal PrincipalLoan { get; set; }
+        public decimal LoanManagementFee { get; set; }
+        public decimal ServiceCharge { get; set; }
+        public SchemeTypeEnums SchemeType { get; set; }
+        public int LoanMultiple {  get; set; }
+        public decimal EligibleLoan => PrincipalLoan - LoanManagementFee;
     }
 }

@@ -33,9 +33,23 @@
                     return BaseResponse<bool>.NotFound("Contribution scheme not found.");
                 }
 
+                if (contributionScheme.SchemeType != SchemeTypeEnums.AutoFinance && request.IncomeAmount == null)
+                {
+                    return BaseResponse<bool>.BadRequest("Income amount is required for this contribution scheme type.");
+                }
+
+                if (contributionScheme.SchemeType == SchemeTypeEnums.Weekly || contributionScheme.SchemeType == SchemeTypeEnums.Monthly)
+                {
+                    if (request.ContributionAmount > ((decimal)contributionScheme.ContributionPercent / 100) * request.IncomeAmount)
+                    {
+                        return BaseResponse<bool>.BadRequest($"Contribution amount cannot be more than {contributionScheme.ContributionPercent}% of your income.");
+                    }
+
+                    userContributionScheme.IncomeAmount = request.IncomeAmount!.Value;
+                }
+
                 userContributionScheme.ContributionSchemeId = contributionScheme.Id;
                 userContributionScheme.ContributionAmount = request.ContributionAmount!.Value;
-                userContributionScheme.IncomeAmount = request.IncomeAmount!.Value;
                 userContributionScheme.UpdateAudit(_currentUserService.UserId);
 
                 _unitOfWork.UserContributionSchemes.Update(userContributionScheme);

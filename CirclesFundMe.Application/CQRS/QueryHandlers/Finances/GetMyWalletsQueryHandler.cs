@@ -14,7 +14,7 @@
                 Id = wallet.Id,
                 Title = wallet.Type == WalletTypeEnums.Contribution ? "Your contribution" : "Maximum Loan Eligible",
                 Balance = UtilityHelper.FormatDecimalToNairaWithSymbol(wallet.Balance),
-                Scheme = wallet.User!.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.Weekly ? "Weekly Scheme" : "Monthly Scheme",
+                Scheme = wallet.User!.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.Weekly ? "Weekly Contribution" : "Monthly Contribution",
                 Action = wallet.Type == WalletTypeEnums.Contribution ? "Withdraw" : "Apply for Loan",
                 NextTranDate = wallet.NextTranDate?.ToString("d MMMM, yyyy")
             }).ToList();

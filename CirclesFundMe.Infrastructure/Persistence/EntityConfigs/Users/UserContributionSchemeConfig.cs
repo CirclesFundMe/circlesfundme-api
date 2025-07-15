@@ -16,6 +16,18 @@
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(x => x.CopyOfCurrentAutoBreakdownAtOnboarding)
+                .HasMaxLength(2000)
+                .IsRequired(false);
+
+            builder.Property(x => x.ContributionWeekDay)
+                .HasConversion<EnumToStringConverter<WeekDayEnums>>()
+                .HasMaxLength(20);
+
+            builder.Property(x => x.ContributionMonthDay)
+                .HasConversion<EnumToStringConverter<MonthDayEnums>>()
+                .HasMaxLength(20);
+
             builder.HasOne(x => x.User)
                 .WithOne(x => x.UserContributionScheme)
                 .HasForeignKey<UserContributionScheme>(x => x.UserId)
