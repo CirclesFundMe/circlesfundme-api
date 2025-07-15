@@ -185,6 +185,7 @@
                     ProcessingFeePercent = 5,
                     EligibleLoanPercent = 90,
                     DownPaymentPercent = 10,
+                    BaseFee = 30000.0
                 }
             ];
 
