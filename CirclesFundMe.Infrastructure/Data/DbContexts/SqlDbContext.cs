@@ -28,6 +28,10 @@
         public DbSet<LinkedCard> LinkedCards { get; set; }
         #endregion
 
+        #region Utility
+        public DbSet<ContactUsMail> ContactUsMails { get; set; }
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

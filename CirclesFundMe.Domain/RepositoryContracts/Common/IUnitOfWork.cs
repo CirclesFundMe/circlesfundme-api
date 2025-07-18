@@ -29,6 +29,10 @@
         ILinkedCardRepository LinkedCards { get; }
         #endregion
 
+        #region Utility
+        IContactUsMailRepository ContactUsMails { get; }
+        #endregion
+
         #region Required Contracts
         Task BeginTransactionAsync(CancellationToken cancellationToken);
         Task CommitTransactionAsync(CancellationToken cancellationToken);

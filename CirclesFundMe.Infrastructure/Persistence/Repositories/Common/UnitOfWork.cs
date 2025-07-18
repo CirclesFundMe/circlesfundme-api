@@ -33,6 +33,10 @@
         private ILinkedCardRepository? _linkedCards;
         #endregion
 
+        #region Utility
+        private IContactUsMailRepository? _contactUsMails;
+        #endregion
+
         // Repositories
         #region Users
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
@@ -59,6 +63,10 @@
         public ITransactionRepository Transactions => _transactions ??= new TransactionRepository(_sqlDbContext.Transactions);
         public IPaymentRepository Payments => _payments ??= new PaymentRepository(_sqlDbContext.Payments);
         public ILinkedCardRepository LinkedCards => _linkedCards ??= new LinkedCardRepository(_sqlDbContext.LinkedCards);
+        #endregion
+
+        #region Utility
+        public IContactUsMailRepository ContactUsMails => _contactUsMails ??= new ContactUsMailRepository(_sqlDbContext.ContactUsMails);
         #endregion
 
         #region Required Methods

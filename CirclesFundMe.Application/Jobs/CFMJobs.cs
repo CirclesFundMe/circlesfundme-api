@@ -1,11 +1,12 @@
 ﻿namespace CirclesFundMe.Application.Jobs
 {
-    public class CFMJobs(EmailService emailService, IServiceScopeFactory serviceScopeFactory, ILogger<CFMJobs> logger, UtilityHelper utility)
+    public class CFMJobs(EmailService emailService, IServiceScopeFactory serviceScopeFactory, ILogger<CFMJobs> logger, UtilityHelper utility, IOptions<AppSettings> options)
     {
         private readonly EmailService _emailService = emailService;
         private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
         private readonly ILogger<CFMJobs> _logger = logger;
         private readonly UtilityHelper _utility = utility;
+        private readonly AppSettings _appSettings = options.Value;
 
         public async Task SendOTP(string emailAddress, string otp, string? firstName)
         {
@@ -129,6 +130,61 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while sending notifications");
+            }
+        }
+
+        public async Task SendContactUsMail(string? firstName, string? lastName, string? email, string? phone, string? title, string? message)
+        {
+            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            SqlDbContext dbContext = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
+
+            try
+            {
+                await _utility.ExecuteWithRetryAsync(async () =>
+                {
+                    ContactUsMail contactUsMail = new()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phone,
+                        Title = title,
+                        Message = message,
+                        IsMailSentToAdmin = false
+                    };
+
+                    await dbContext.ContactUsMails.AddAsync(contactUsMail, CancellationToken.None);
+                    await dbContext.SaveChangesAsync(CancellationToken.None);
+
+                    _logger.LogInformation("Contact Us mail saved successfully.");
+
+                    foreach (AdminContact adminContact in _appSettings.AdminContacts)
+                    {
+                        StringBuilder sb = new(_emailService.LoadHtmlTemplate("contactus"));
+                        sb.Replace("{{FirstName}}", firstName);
+                        sb.Replace("{{LastName}}", lastName);
+                        sb.Replace("{{Email}}", email);
+                        sb.Replace("{{Phone}}", phone);
+                        sb.Replace("{{Title}}", title);
+                        sb.Replace("{{Message}}", message);
+                        sb.Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+                        sb.Replace("{{AdminName}}", adminContact.Name);
+
+                        EmailMessage msg = new(adminContact.Email, "New Contact Us Message", sb.ToString(), null);
+                        await _emailService.SendEmail(msg);
+                    }
+
+                    contactUsMail.IsMailSentToAdmin = true;
+                    contactUsMail.ModifiedDate = DateTime.UtcNow;
+
+                    dbContext.ContactUsMails.Update(contactUsMail);
+                    await dbContext.SaveChangesAsync(CancellationToken.None);
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while sending Contact Us mail.");
             }
         }
     }
