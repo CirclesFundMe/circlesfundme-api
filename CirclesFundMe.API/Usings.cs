@@ -43,3 +43,6 @@ global using CirclesFundMe.Application.CQRS.Queries.Finances;
 global using CirclesFundMe.Application.Models.Finances;
 global using CirclesFundMe.Application.Jobs;
 global using CirclesFundMe.Application.CQRS.Commands.Utility;
+global using CirclesFundMe.Application.CQRS.Commands.Finances;
+global using System.Security.Cryptography;
+global using System.Text;

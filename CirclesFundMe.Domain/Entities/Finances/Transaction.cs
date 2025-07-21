@@ -10,6 +10,7 @@
         public decimal BalanceAfterTransaction { get; set; }
         public DateTime TransactionDate { get; set; }
         public TimeSpan TransactionTime { get; set; }
+        public string? SessionId { get; set; }
 
         public Guid WalletId { get; set; }
         public virtual Wallet? Wallet { get; set; }

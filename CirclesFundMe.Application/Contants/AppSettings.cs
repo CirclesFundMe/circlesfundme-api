@@ -5,6 +5,7 @@
         public required string FrontendBaseUrl { get; set; }
         public required MailSettings MailSettings { get; set; }
         public required string GLWalletId { get; set; }
+        public required decimal WithdrawalCharge { get; set; }
         public List<AdminContact> AdminContacts { get; set; } = [];
     }
 

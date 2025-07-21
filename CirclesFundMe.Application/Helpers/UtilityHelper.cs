@@ -4,6 +4,22 @@
     {
         private readonly ILogger<UtilityHelper> _logger = logger;
 
+        public static string GenerateRandomUnique30DigitSessionID()
+        {
+            Span<byte> buffer = stackalloc byte[20];
+            RandomNumberGenerator.Fill(buffer);
+
+            var digits = new StringBuilder(30);
+            foreach (byte b in buffer)
+            {
+                digits.Append(b % 10);
+                if (digits.Length == 30)
+                    break;
+            }
+
+            return digits.ToString();
+        }
+
         public async Task ExecuteWithRetryAsync(Func<Task> action)
         {
             AsyncRetryPolicy policy = Policy.Handle<Exception>()

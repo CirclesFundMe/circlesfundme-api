@@ -1,8 +1,10 @@
 ﻿namespace CirclesFundMe.API.Controllers.v1
 {
-    public class FinancialsController(ISender sender) : BaseControllerV1
+    public class FinancialsController(ISender sender, IConfiguration config, ILogger<FinancialsController> logger) : BaseControllerV1
     {
         private readonly ISender _sender = sender;
+        private readonly string _paystackWebhookSecret = config["PaystackService:SecretKey"] ?? string.Empty;
+        private readonly ILogger<FinancialsController> _logger = logger;
 
         [HttpGet("banks")]
         [ProducesResponseType<BaseResponse<IEnumerable<BankModel>>>(200)]
@@ -29,6 +31,72 @@
         public async Task<IActionResult> GetMyWallets(CancellationToken cancellationToken)
         {
             BaseResponse<List<WalletModel>> response = await _sender.Send(new GetMyWalletsQuery(), cancellationToken);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("withdraw-contribution")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Withdraw Contribution")]
+        [Authorize]
+        public async Task<IActionResult> WithdrawContribution([FromBody] WithdrawContributionCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("make-initial-contribution")]
+        [ProducesResponseType<BaseResponse<InitializeTransactionModel>>(200)]
+        [SwaggerOperation(Summary = "Make Initial Contribution")]
+        [Authorize]
+        public async Task<IActionResult> MakeInitialContribution([FromBody] MakeInitialContributionCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<InitializeTransactionModel> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("paystack-webhook")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Paystack Webhook")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PaystackWebhook()
+        {
+            using StreamReader reader = new(Request.Body);
+            string? requestBody = await reader.ReadToEndAsync();
+
+            _logger.LogInformation("Received Paystack webhook: {RequestBody}", requestBody);
+
+            foreach (var header in Request.Headers)
+            {
+                _logger.LogInformation("Header: {Key} = {Value}", header.Key, header.Value);
+            }
+
+            if (string.IsNullOrWhiteSpace(requestBody))
+            {
+                return BadRequest("Request body is empty");
+            }
+
+            string? signature = Request.Headers["x-paystack-signature"].FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(signature))
+            {
+                return Unauthorized("Missing Paystack signature header");
+            }
+
+            using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(_paystackWebhookSecret));
+            byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
+            string computedSignature = Convert.ToBase64String(computedHash);
+
+            if (!string.Equals(signature, computedSignature, StringComparison.OrdinalIgnoreCase))
+            {
+                return Unauthorized("Invalid signature");
+            }
+
+            PaystackWebhookCommand command = new()
+            {
+                Event = Request.Headers["x-paystack-event"].FirstOrDefault(),
+                Data = requestBody
+            };
+
+            BaseResponse<bool> response = await _sender.Send(command);
             return HandleResponse(response);
         }
     }

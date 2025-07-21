@@ -15,6 +15,7 @@
         public string? Channel { get; set; }
         public string? IpAddress { get; set; }
         public string? AuthorizationCode { get; set; }
+        public PaymentStatusEnums PaymentStatus { get; set; }
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }

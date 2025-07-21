@@ -1,4 +1,5 @@
-﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.Finances
+﻿
+namespace CirclesFundMe.Application.CQRS.QueryHandlers.Finances
 {
     public class GetMyWalletsQueryHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService) : IRequestHandler<GetMyWalletsQuery, BaseResponse<List<WalletModel>>>
     {
@@ -14,12 +15,23 @@
                 Id = wallet.Id,
                 Title = wallet.Type == WalletTypeEnums.Contribution ? "Your contribution" : "Maximum Loan Eligible",
                 Balance = UtilityHelper.FormatDecimalToNairaWithSymbol(wallet.Balance),
-                Scheme = wallet.User!.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.Weekly ? "Weekly Contribution" : "Monthly Contribution",
+                Scheme = GetSchemeDisplayName(wallet.User!.UserContributionScheme!.ContributionScheme!.SchemeType),
                 Action = wallet.Type == WalletTypeEnums.Contribution ? "Withdraw" : "Apply for Loan",
                 NextTranDate = wallet.NextTranDate?.ToString("d MMMM, yyyy")
             }).ToList();
 
             return BaseResponse<List<WalletModel>>.Success(walletModels, "Wallets retrieved successfully.");
+        }
+
+        private static string GetSchemeDisplayName(SchemeTypeEnums schemeType)
+        {
+            return schemeType switch
+            {
+                SchemeTypeEnums.Weekly => "Weekly Contribution",
+                SchemeTypeEnums.Monthly => "Monthly Contribution",
+                SchemeTypeEnums.AutoFinance => "Auto Finance Contribution",
+                _ => "Unknown Scheme"
+            };
         }
     }
 }

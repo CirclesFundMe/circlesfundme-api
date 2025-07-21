@@ -46,6 +46,10 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
 
             builder.Property(p => p.AuthorizationCode)
                 .HasMaxLength(256);
+
+            builder.Property(p => p.PaymentStatus)
+                .HasConversion<EnumToStringConverter<PaymentStatusEnums>>()
+                .HasMaxLength(50);
         }
     }
 }

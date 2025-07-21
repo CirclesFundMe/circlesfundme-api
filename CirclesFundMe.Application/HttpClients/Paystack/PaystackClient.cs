@@ -9,6 +9,14 @@
         Task<BasePaystackResponse<AddRecipientData>> AddTransferRecipient(AddTransferRecipientPayload payload, CancellationToken cancellationToken = default);
 
         Task<BasePaystackResponse<Unit>> DeleteTransferRecipient(string recipientCode, CancellationToken cancellationToken = default);
+
+        Task<BasePaystackResponse<InitializeTransactionData>> InitializeTransaction(InitializeTransactionPayload payload, CancellationToken cancellationToken = default);
+
+        Task<BasePaystackResponse<VerifyTransactionData>> VerifyTransaction(string reference, CancellationToken cancellationToken = default);
+
+        Task<BasePaystackResponse<TransferFundData>> TransferFund(TransferFundPayload payload, CancellationToken cancellationToken = default);
+
+        Task<BasePaystackResponse<ChargeAuthorizationData>> ChargeAuthorization(ChargeAuthorizationPayload payload, CancellationToken cancellationToken = default);
     }
 
     public class PaystackClient(IHttpClientFactory factory, ILogger<PaystackClient> logger, IConfiguration config) : IPaystackClient
@@ -57,6 +65,58 @@
                 _logger.LogError(ex.Message);
 
                 return new BasePaystackResponse<AddRecipientData>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<BasePaystackResponse<ChargeAuthorizationData>> ChargeAuthorization(ChargeAuthorizationPayload payload, CancellationToken cancellationToken = default)
+        {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<ChargeAuthorizationData>
+                {
+                    Status = true,
+                    Message = "Test authorization charged",
+                    Data = new ChargeAuthorizationData
+                    {
+                        Reference = Guid.NewGuid().ToString(),
+                        Status = "success",
+                        Amount = payload.Amount,
+                        Currency = "NGN",
+                        GatewayResponse = "Test gateway response"
+                    }
+                };
+            }
+
+            string uri = "transaction/charge_authorization";
+
+            try
+            {
+                StringContent content = new(UtilityHelper.Serializer(payload), Encoding.UTF8, "application/json");
+
+                BasePaystackResponse<ChargeAuthorizationData>? response = await _restClientService.PostAsync<BasePaystackResponse<ChargeAuthorizationData>>(uri, content, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<ChargeAuthorizationData>
+                    {
+                        Status = false,
+                        Message = "No data received for authorization charge Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<ChargeAuthorizationData>
                 {
                     Status = false,
                     Message = ex.Message,
@@ -160,6 +220,105 @@
             }
         }
 
+        public async Task<BasePaystackResponse<InitializeTransactionData>> InitializeTransaction(InitializeTransactionPayload payload, CancellationToken cancellationToken = default)
+        {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<InitializeTransactionData>
+                {
+                    Status = true,
+                    Message = "Test transaction initialized",
+                    Data = new InitializeTransactionData
+                    {
+                        AuthorizationUrl = "https://test.paystack.co/authorize",
+                        AccessCode = Guid.NewGuid().ToString(),
+                        Reference = Guid.NewGuid().ToString()
+                    }
+                };
+            }
+
+            string uri = "transaction/initialize";
+
+            try
+            {
+                StringContent content = new(UtilityHelper.Serializer(payload), Encoding.UTF8, "application/json");
+
+                var response = await _restClientService.PostAsync<BasePaystackResponse<InitializeTransactionData>>(uri, content, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<InitializeTransactionData>
+                    {
+                        Status = false,
+                        Message = "No data received for transaction initialization from Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<InitializeTransactionData>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<BasePaystackResponse<TransferFundData>> TransferFund(TransferFundPayload payload, CancellationToken cancellationToken = default)
+        {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<TransferFundData>
+                {
+                    Status = true,
+                    Message = "Test fund transfer successful",
+                    Data = new TransferFundData
+                    {
+                        Reference = Guid.NewGuid().ToString(),
+                        Status = "success"
+                    }
+                };
+            }
+
+            string uri = "transfer";
+
+            try
+            {
+                StringContent content = new(UtilityHelper.Serializer(payload), Encoding.UTF8, "application/json");
+
+                var response = await _restClientService.PostAsync<BasePaystackResponse<TransferFundData>>(uri, content, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<TransferFundData>
+                    {
+                        Status = false,
+                        Message = "No data received for fund transfer from Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<TransferFundData>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
         public async Task<BasePaystackResponse<VerifyAccountNumberData>> VerifyAccountNumberData(VerifyAccountNumberQuery query, CancellationToken cancellationToken = default)
         {
             if (!_isPaystackEnabled)
@@ -199,6 +358,58 @@
                 _logger.LogError(ex.Message);
 
                 return new BasePaystackResponse<VerifyAccountNumberData>
+                {
+                    Status = false,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<BasePaystackResponse<VerifyTransactionData>> VerifyTransaction(string reference, CancellationToken cancellationToken = default)
+        {
+            if (!_isPaystackEnabled)
+            {
+                return new BasePaystackResponse<VerifyTransactionData>
+                {
+                    Status = true,
+                    Message = "Test transaction verified",
+                    Data = new VerifyTransactionData
+                    {
+                        Amount = 10000,
+                        Currency = "NGN",
+                        TransactionDate = DateTime.UtcNow,
+                        Status = "success",
+                        Reference = reference,
+                        Domain = "test",
+                        GatewayResponse = "Test gateway response"
+                    }
+                };
+            }
+
+            string uri = $"transaction/verify/{reference}";
+
+            try
+            {
+                var response = await _restClientService.GetAsync<BasePaystackResponse<VerifyTransactionData>>(uri, cancellationToken);
+
+                if (response == null)
+                {
+                    return new BasePaystackResponse<VerifyTransactionData>
+                    {
+                        Status = false,
+                        Message = "No data received for transaction verification from Paystack",
+                        Data = null
+                    };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return new BasePaystackResponse<VerifyTransactionData>
                 {
                     Status = false,
                     Message = ex.Message,

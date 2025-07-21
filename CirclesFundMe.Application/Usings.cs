@@ -67,3 +67,4 @@ global using Microsoft.EntityFrameworkCore;
 global using CirclesFundMe.Domain.Enums.Finances;
 global using CirclesFundMe.Application.CQRS.Commands.Utility;
 global using CirclesFundMe.Domain.Entities.Utility;
+global using CirclesFundMe.Application.CQRS.Commands.Finances;

@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Users
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Users
 {
     public record UserWithdrawalSettingConfig : BaseEntityConfig<UserWithdrawalSetting>
     {

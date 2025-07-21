@@ -8,7 +8,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
             base.Configure(builder);
             builder.ToTable("Transactions");
 
-            builder.HasIndex(p => p.TransactionReference).IsUnique();
+            builder.HasIndex(p => p.TransactionReference);
 
             builder.Property(p => p.TransactionReference)
                 .HasMaxLength(256);
@@ -34,6 +34,9 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
 
             builder.Property(p => p.TransactionTime)
                 .HasColumnType("time");
+
+            builder.Property(p => p.SessionId)
+                .HasMaxLength(256);
 
             builder.HasOne(p => p.Wallet)
                 .WithMany(x => x.Transactions)

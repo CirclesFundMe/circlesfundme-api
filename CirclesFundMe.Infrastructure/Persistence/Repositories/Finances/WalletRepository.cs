@@ -32,5 +32,21 @@
                 })
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<Wallet?> GetUserContributionWallet(string userId, CancellationToken cancellationToken = default)
+        {
+            return await _wallets
+                .AsNoTracking()
+                .Where(wallet => wallet.UserId == userId && wallet.Type == WalletTypeEnums.Contribution)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<bool> HasInsufficientFundOnContributionWallet(string userId, decimal amount, CancellationToken cancellationToken = default)
+        {
+            return await _wallets
+                .AsNoTracking()
+                .Where(wallet => wallet.UserId == userId && wallet.Type == WalletTypeEnums.Contribution)
+                .AnyAsync(wallet => wallet.Balance < amount, cancellationToken);
+        }
     }
 }
