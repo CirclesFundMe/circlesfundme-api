@@ -107,8 +107,13 @@
         public string? channel { get; set; }
         public string? currency { get; set; }
         public string? ip_address { get; set; }
-        public string? metadata { get; set; }
+        public MetaDataObj? metadata { get; set; }
         public AuthorizationData? authorization { get; set; }
+    }
+
+    public record MetaDataObj
+    {
+        public string? userId { get; set; }
     }
 
     #region Shared

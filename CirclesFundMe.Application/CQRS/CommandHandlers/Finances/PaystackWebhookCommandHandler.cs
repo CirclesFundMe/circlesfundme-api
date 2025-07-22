@@ -31,7 +31,8 @@
             string? currentUserId = default;
             if (data.metadata != null)
             {
-                currentUserId = data.metadata.ToString();
+                // metadata was stored as `new { userId = user.Id }` in the InitializeTransactionPayload
+                currentUserId = data.metadata.userId?.ToString();
             }
 
             if (string.IsNullOrEmpty(currentUserId))

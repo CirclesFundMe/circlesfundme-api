@@ -49,6 +49,7 @@
                 _logger.LogInformation("Sending POST request to {Uri}", uri);
 
                 HttpResponseMessage response = await _httpClient.PostAsync(uri, data, cancellationToken);
+                string responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadFromJsonAsync<TResult>(_serializerOptions, cancellationToken);
             }
