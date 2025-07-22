@@ -37,11 +37,8 @@
         public string? message { get; set; }
         public string? channel { get; set; }
         public string? ip_address { get; set; }
-        public LogData? log { get; set; }
-        public object? fees { get; set; }
         public AuthorizationData? authorization { get; set; }
         public CustomerData? customer { get; set; }
-        public string? plan { get; set; }
     }
 
     public class CustomerData
@@ -65,18 +62,6 @@
         public string? channel { get; set; }
         public bool? reusable { get; set; }
         public string? country_code { get; set; }
-    }
-
-    public record LogData
-    {
-        public int? time_spent { get; set; }
-        public int? attempts { get; set; }
-        public object? authentication { get; set; }
-        public int? errors { get; set; }
-        public bool? success { get; set; }
-        public bool? mobile { get; set; }
-        public IList<object>? input { get; set; }
-        public object? channel { get; set; }
     }
 
     public record TransferFundData
@@ -106,17 +91,11 @@
         public string? message { get; set; }
         public string? channel { get; set; }
         public string? ip_address { get; set; }
-        public string? log { get; set; }
-        public int fees { get; set; }
         public AuthorizationData? authorization { get; set; }
-        public CustomerData? customer { get; set; }
-        public string? plan { get; set; }
-        public long id { get; set; }
     }
 
     public class PaymentWebhookData
     {
-        public int? id { get; set; }
         public string? domain { get; set; }
         public string? status { get; set; }
         public string? reference { get; set; }
@@ -129,9 +108,6 @@
         public string? currency { get; set; }
         public string? ip_address { get; set; }
         public string? metadata { get; set; }
-        public LogData? log { get; set; }
-        public object? fees { get; set; }
-        public CustomerData? customer { get; set; }
         public AuthorizationData? authorization { get; set; }
     }
 

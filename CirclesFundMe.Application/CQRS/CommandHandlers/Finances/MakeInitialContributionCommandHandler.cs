@@ -21,10 +21,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 Email = user.Email,
                 Amount = amountToContribute,
                 Reference = Guid.NewGuid().ToString("N"),
-                Metadata = new Dictionary<string, string>
-                {
-                    { "userId", user.Id }
-                },
+                Metadata = user.Id,
             };
 
             BasePaystackResponse<InitializeTransactionData> initializeTransaction = await _paystackClient.InitializeTransaction(payload, cancellationToken);

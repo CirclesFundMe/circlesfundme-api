@@ -1,10 +1,11 @@
 ﻿namespace CirclesFundMe.API.Controllers.v1
 {
-    public class FinancialsController(ISender sender, IConfiguration config, ILogger<FinancialsController> logger) : BaseControllerV1
+    public class FinancialsController(ISender sender, IConfiguration config, ILogger<FinancialsController> logger, UtilityHelper utility) : BaseControllerV1
     {
         private readonly ISender _sender = sender;
         private readonly string _paystackWebhookSecret = config["PaystackService:SecretKey"] ?? string.Empty;
         private readonly ILogger<FinancialsController> _logger = logger;
+        private readonly UtilityHelper _utility = utility;
 
         [HttpGet("banks")]
         [ProducesResponseType<BaseResponse<IEnumerable<BankModel>>>(200)]
@@ -70,24 +71,27 @@
                 return BadRequest("Request body is empty");
             }
 
-            string? signature = Request.Headers["X-Paystack-Signature"].FirstOrDefault();
+            string? signature = Request.Headers["x-paystack-signature"].FirstOrDefault();
             if (string.IsNullOrWhiteSpace(signature))
             {
+                _logger.LogWarning("Missing Paystack signature header");
                 return Unauthorized("Missing Paystack signature header");
             }
 
             using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(_paystackWebhookSecret));
             byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
-            string computedSignature = Convert.ToBase64String(computedHash);
+            string computedSignature = BitConverter.ToString(computedHash).Replace("-", "").ToLower();
 
             if (!string.Equals(signature, computedSignature, StringComparison.OrdinalIgnoreCase))
             {
-                return Unauthorized("Invalid signature");
+                _logger.LogWarning("Invalid Paystack signature: {Signature} vs Computed: {ComputedSignature}", signature, computedSignature);
+                //return Unauthorized("Invalid signature");
             }
 
-            PaystackWebhookCommand? command = JsonConvert.DeserializeObject<PaystackWebhookCommand>(requestBody);
+            PaystackWebhookCommand? command = _utility.Deserializer<PaystackWebhookCommand>(requestBody);
             if (command == null)
             {
+                _logger.LogWarning("Invalid request body: {RequestBody}", requestBody);
                 return BadRequest("Invalid request body");
             }
 

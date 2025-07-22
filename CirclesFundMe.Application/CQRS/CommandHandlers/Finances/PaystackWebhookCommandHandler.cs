@@ -31,11 +31,7 @@
             string? currentUserId = default;
             if (data.metadata != null)
             {
-                Dictionary<string, string>? metadata = _utility.Deserializer<Dictionary<string, string>>(data.metadata.ToString()!);
-                if (metadata != null && metadata.TryGetValue("userId", out string? userId) && !string.IsNullOrEmpty(userId))
-                {
-                    currentUserId = userId;
-                }
+                currentUserId = data.metadata.ToString();
             }
 
             if (string.IsNullOrEmpty(currentUserId))
@@ -91,7 +87,7 @@
             }
 
             // Get Wallet
-            Wallet? wallet = await _unitOfWork.Wallets.GetOneAsync([w => w.UserId == currentUserId], cancellationToken);
+            Wallet? wallet = await _unitOfWork.Wallets.GetOneAsync([w => w.UserId == currentUserId, w => w.Type == WalletTypeEnums.Contribution], cancellationToken);
             if (wallet == null)
             {
                 _logger.LogError("Wallet not found for user ID: {UserId}", currentUserId);
