@@ -1,286 +1,154 @@
-﻿using Serilog;
-using System.Net;
-
-namespace CirclesFundMe.Application.HttpClients.Paystack
+﻿namespace CirclesFundMe.Application.HttpClients.Paystack
 {
     public record BankData
     {
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-
-        [JsonProperty("slug")]
-        public string? Slug { get; set; }
-
-        [JsonProperty("code")]
-        public string? Code { get; set; }
+        public string? name { get; set; }
+        public string? slug { get; set; }
+        public string? code { get; set; }
     }
 
     public record VerifyAccountNumberData
     {
-        [JsonProperty("account_number")]
-        public string? AccountNumber { get; set; }
-
-        [JsonProperty("account_name")]
-        public string? AccountName { get; set; }
+        public string? account_number { get; set; }
+        public string? account_name { get; set; }
     }
 
     public record AddRecipientData
     {
-        [JsonProperty("recipient_code")]
-        public string? RecipientCode { get; set; }
+        public string? recipient_code { get; set; }
     }
 
     public record InitializeTransactionData
     {
-        [JsonProperty("authorization_url")]
-        public string? AuthorizationUrl { get; set; }
-
-        [JsonProperty("access_code")]
-        public string? AccessCode { get; set; }
-
-        [JsonProperty("reference")]
-        public string? Reference { get; set; }
+        public string? authorization_url { get; set; }
+        public string? access_code { get; set; }
+        public string? reference { get; set; }
     }
 
     public record VerifyTransactionData
     {
-        [JsonProperty("amount")]
-        public int? Amount { get; set; }
-
-        [JsonProperty("currency")]
-        public string? Currency { get; set; }
-
-        [JsonProperty("transaction_date")]
-        public DateTime? TransactionDate { get; set; }
-
-        [JsonProperty("status")]
-        public string? Status { get; set; }
-
-        [JsonProperty("reference")]
-        public string? Reference { get; set; }
-
-        [JsonProperty("domain")]
-        public string? Domain { get; set; }
-
-        [JsonProperty("gateway_response")]
-        public string? GatewayResponse { get; set; }
-
-        [JsonProperty("message")]
-        public string? Message { get; set; }
-
-        [JsonProperty("channel")]
-        public string? Channel { get; set; }
-
-        [JsonProperty("ip_address")]
-        public string? IpAddress { get; set; }
-
-        [JsonProperty("log")]
-        public LogData? Log { get; set; }
-
-        [JsonProperty("fees")]
-        public object? Fees { get; set; }
-
-        [JsonProperty("authorization")]
-        public AuthorizationData? Authorization { get; set; }
-
-        [JsonProperty("customer")]
-        public CustomerData? Customer { get; set; }
-
-        [JsonProperty("plan")]
-        public string? Plan { get; set; }
+        public int? amount { get; set; }
+        public string? currency { get; set; }
+        public DateTime? transaction_date { get; set; }
+        public string? status { get; set; }
+        public string? reference { get; set; }
+        public string? domain { get; set; }
+        public string? gateway_response { get; set; }
+        public string? message { get; set; }
+        public string? channel { get; set; }
+        public string? ip_address { get; set; }
+        public LogData? log { get; set; }
+        public object? fees { get; set; }
+        public AuthorizationData? authorization { get; set; }
+        public CustomerData? customer { get; set; }
+        public string? plan { get; set; }
     }
 
     public class CustomerData
     {
-        [JsonProperty("id")]
-        public int? Id { get; set; }
-
-        [JsonProperty("customer_code")]
-        public string? CustomerCode { get; set; }
-
-        [JsonProperty("first_name")]
-        public string? FirstName { get; set; }
-
-        [JsonProperty("last_name")]
-        public string? LastName { get; set; }
-
-        [JsonProperty("email")]
-        public string? Email { get; set; }
+        public int? id { get; set; }
+        public string? customer_code { get; set; }
+        public string? first_name { get; set; }
+        public string? last_name { get; set; }
+        public string? email { get; set; }
     }
 
     public record AuthorizationData
     {
-        [JsonProperty("authorization_code")]
-        public string? AuthorizationCode { get; set; }
-
-        [JsonProperty("card_type")]
-        public string? CardType { get; set; }
-
-        [JsonProperty("last4")]
-        public string? Last4 { get; set; }
-
-        [JsonProperty("exp_month")]
-        public string? ExpMonth { get; set; }
-
-        [JsonProperty("exp_year")]
-        public string? ExpYear { get; set; }
-
-        [JsonProperty("bin")]
-        public string? Bin { get; set; }
-
-        [JsonProperty("bank")]
-        public string? Bank { get; set; }
-
-        [JsonProperty("channel")]
-        public string? Channel { get; set; }
-
-        [JsonProperty("reusable")]
-        public bool? Reusable { get; set; }
-
-        [JsonProperty("country_code")]
-        public string? CountryCode { get; set; }
+        public string? authorization_code { get; set; }
+        public string? card_type { get; set; }
+        public string? last4 { get; set; }
+        public string? exp_month { get; set; }
+        public string? exp_year { get; set; }
+        public string? bin { get; set; }
+        public string? bank { get; set; }
+        public string? channel { get; set; }
+        public bool? reusable { get; set; }
+        public string? country_code { get; set; }
     }
 
     public record LogData
     {
-        [JsonProperty("time_spent")]
-        public int? TimeSpent { get; set; }
-
-        [JsonProperty("attempts")]
-        public int? Attempts { get; set; }
-
-        [JsonProperty("authentication")]
-        public object? Authentication { get; set; }
-
-        [JsonProperty("errors")]
-        public int? Errors { get; set; }
-
-        [JsonProperty("success")]
-        public bool? Success { get; set; }
-
-        [JsonProperty("mobile")]
-        public bool? Mobile { get; set; }
-
-        [JsonProperty("input")]
-        public IList<object>? Input { get; set; }
-
-        [JsonProperty("channel")]
-        public object? Channel { get; set; }
+        public int? time_spent { get; set; }
+        public int? attempts { get; set; }
+        public object? authentication { get; set; }
+        public int? errors { get; set; }
+        public bool? success { get; set; }
+        public bool? mobile { get; set; }
+        public IList<object>? input { get; set; }
+        public object? channel { get; set; }
     }
 
     public record TransferFundData
     {
-        [JsonProperty("integration")]
-        public int? Integration { get; set; }
-
-        [JsonProperty("domain")]
-        public string? Domain { get; set; }
-
-        [JsonProperty("amount")]
+        public int? integration { get; set; }
+        public string? domain { get; set; }
         public decimal? Amount { get; set; }
-
-        [JsonProperty("currency")]
-        public string? Currency { get; set; }
-
-        [JsonProperty("source")]
-        public string? Source { get; set; }
-
-        [JsonProperty("reason")]
-        public string? Reason { get; set; }
-
-        [JsonProperty("reference")]
-        public string? Reference { get; set; }
-
-        [JsonProperty("status")]
-        public string? Status { get; set; }
-
-        [JsonProperty("recipient")]
-        public string? Recipient { get; set; }
-
-        [JsonProperty("transfer_code")]
-        public string? TransferCode { get; set; }
+        public string? currency { get; set; }
+        public string? source { get; set; }
+        public string? reason { get; set; }
+        public string? reference { get; set; }
+        public string? status { get; set; }
+        public string? recipient { get; set; }
+        public string? transfer_code { get; set; }
     }
 
     public record ChargeAuthorizationData
     {
-        [JsonProperty("amount")]
-        public decimal Amount { get; set; }
+        public decimal amount { get; set; }
+        public string? currency { get; set; }
+        public DateTime transaction_date { get; set; }
+        public string? status { get; set; }
+        public string? reference { get; set; }
+        public string? domain { get; set; }
+        public string? metadata { get; set; }
+        public string? gateway_response { get; set; }
+        public string? message { get; set; }
+        public string? channel { get; set; }
+        public string? ip_address { get; set; }
+        public string? log { get; set; }
+        public int fees { get; set; }
+        public AuthorizationData? authorization { get; set; }
+        public CustomerData? customer { get; set; }
+        public string? plan { get; set; }
+        public long id { get; set; }
+    }
 
-        [JsonProperty("currency")]
-        public string? Currency { get; set; }
-
-        [JsonProperty("transaction_date")]
-        public DateTime TransactionDate { get; set; }
-
-        [JsonProperty("status")]
-        public string? Status { get; set; }
-
-        [JsonProperty("reference")]
-        public string? Reference { get; set; }
-
-        [JsonProperty("domain")]
-        public string? Domain { get; set; }
-
-        [JsonProperty("metadata")]
-        public string? Metadata { get; set; }
-
-        [JsonProperty("gateway_response")]
-        public string? GatewayResponse { get; set; }
-
-        [JsonProperty("message")]
-        public string? Message { get; set; }
-
-        [JsonProperty("channel")]
-        public string? Channel { get; set; }
-
-        [JsonProperty("ip_address")]
-        public string? IpAddress { get; set; }
-
-        [JsonProperty("log")]
-        public string? Log { get; set; }
-
-        [JsonProperty("fees")]
-        public int Fees { get; set; }
-
-        [JsonProperty("authorization")]
-        public AuthorizationData? Authorization { get; set; }
-
-        [JsonProperty("customer")]
-        public CustomerData? Customer { get; set; }
-
-        [JsonProperty("plan")]
-        public string? Plan { get; set; }
-
-        [JsonProperty("id")]
-        public long Id { get; set; }
+    public class PaymentWebhookData
+    {
+        public int? id { get; set; }
+        public string? domain { get; set; }
+        public string? status { get; set; }
+        public string? reference { get; set; }
+        public decimal amount { get; set; }
+        public string? message { get; set; }
+        public string? gateway_response { get; set; }
+        public DateTime paid_at { get; set; }
+        public DateTime created_at { get; set; }
+        public string? channel { get; set; }
+        public string? currency { get; set; }
+        public string? ip_address { get; set; }
+        public string? metadata { get; set; }
+        public LogData? log { get; set; }
+        public object? fees { get; set; }
+        public CustomerData? customer { get; set; }
+        public AuthorizationData? authorization { get; set; }
     }
 
     #region Shared
     public record BasePaystackResponse<T>
     {
-        [JsonProperty("status")]
-        public bool Status { get; set; }
-
-        [JsonProperty("message")]
-        public string? Message { get; set; }
-
-        [JsonProperty("data")]
-        public T? Data { get; set; }
-
-        [JsonProperty("meta")]
-        public Meta? Meta { get; set; }
+        public bool status { get; set; }
+        public string? message { get; set; }
+        public T? data { get; set; }
+        public Meta? meta { get; set; }
     }
 
     public record Meta
     {
-        [JsonProperty("next")]
-        public string? Next { get; set; }
-
-        [JsonProperty("previous")]
-        public string? Previous { get; set; }
-
-        [JsonProperty("perPage")]
-        public int? PerPage { get; set; }
+        public string? next { get; set; }
+        public string? previous { get; set; }
+        public int? perPage { get; set; }
     }
     #endregion
 }

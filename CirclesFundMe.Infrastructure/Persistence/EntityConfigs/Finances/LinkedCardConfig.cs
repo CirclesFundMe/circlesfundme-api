@@ -7,6 +7,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
         {
             base.Configure(builder);
             builder.ToTable("LinkedCards");
+            builder.HasIndex(p => p.UserId)
+                .IsUnique();
 
             builder.Property(p => p.AuthorizationCode)
                 .HasMaxLength(256);

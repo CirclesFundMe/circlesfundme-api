@@ -7,6 +7,9 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
         {
             base.Configure(builder);
             builder.ToTable("Payments");
+            builder.HasKey(p => p.Reference);
+            builder.HasIndex(p => p.Reference)
+                .IsUnique();
 
             builder.Property(p => p.AccessCode)
                 .HasMaxLength(256);

@@ -4,6 +4,7 @@
     {
         Awaiting = 1,
         Confirmed,
+        Abandoned,
         Failed
     }
 }

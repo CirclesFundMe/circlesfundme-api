@@ -20,20 +20,24 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
             {
                 Email = user.Email,
                 Amount = amountToContribute,
-                Reference = Guid.NewGuid().ToString("N")
+                Reference = Guid.NewGuid().ToString("N"),
+                Metadata = new Dictionary<string, string>
+                {
+                    { "userId", user.Id }
+                },
             };
 
             BasePaystackResponse<InitializeTransactionData> initializeTransaction = await _paystackClient.InitializeTransaction(payload, cancellationToken);
-            if (!initializeTransaction.Status || initializeTransaction.Data == null)
+            if (!initializeTransaction.status || initializeTransaction.data == null)
             {
-                return BaseResponse<InitializeTransactionModel>.BadRequest(initializeTransaction.Message ?? "Error while initializing payment");
+                return BaseResponse<InitializeTransactionModel>.BadRequest(initializeTransaction.message ?? "Error while initializing payment");
             }
 
             Payment payment = new()
             {
-                AccessCode = initializeTransaction.Data.AccessCode,
-                AuthorizationUrl = initializeTransaction.Data.AuthorizationUrl,
-                Reference = initializeTransaction.Data.Reference,
+                AccessCode = initializeTransaction.data.access_code,
+                AuthorizationUrl = initializeTransaction.data.authorization_url,
+                Reference = initializeTransaction.data.reference,
                 Amount = amountToContribute / 100, // Convert back to Naira
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,

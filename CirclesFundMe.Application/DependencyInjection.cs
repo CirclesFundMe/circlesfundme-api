@@ -123,6 +123,7 @@
             {
                 client.BaseAddress = new Uri(config["PaystackService:BaseUrl"] ?? string.Empty);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", config["PaystackService:SecretKey"] ?? string.Empty);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             })
             .AddPolicyHandler(PollyPoliciesHelper.GetRetryPolicy())
             .AddPolicyHandler(PollyPoliciesHelper.GetCircuitBreakerPolicy());

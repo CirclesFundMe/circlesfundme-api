@@ -65,17 +65,12 @@
 
             _logger.LogInformation("Received Paystack webhook: {RequestBody}", requestBody);
 
-            foreach (var header in Request.Headers)
-            {
-                _logger.LogInformation("Header: {Key} = {Value}", header.Key, header.Value);
-            }
-
             if (string.IsNullOrWhiteSpace(requestBody))
             {
                 return BadRequest("Request body is empty");
             }
 
-            string? signature = Request.Headers["x-paystack-signature"].FirstOrDefault();
+            string? signature = Request.Headers["X-Paystack-Signature"].FirstOrDefault();
             if (string.IsNullOrWhiteSpace(signature))
             {
                 return Unauthorized("Missing Paystack signature header");
@@ -90,11 +85,11 @@
                 return Unauthorized("Invalid signature");
             }
 
-            PaystackWebhookCommand command = new()
+            PaystackWebhookCommand? command = JsonConvert.DeserializeObject<PaystackWebhookCommand>(requestBody);
+            if (command == null)
             {
-                Event = Request.Headers["x-paystack-event"].FirstOrDefault(),
-                Data = requestBody
-            };
+                return BadRequest("Invalid request body");
+            }
 
             BaseResponse<bool> response = await _sender.Send(command);
             return HandleResponse(response);

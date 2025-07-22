@@ -12,10 +12,10 @@
                 BankCode = request.BankCode
             }, cancellationToken);
 
-            if (!res.Status || res.Data == null || res.Data.AccountName == null)
+            if (!res.status || res.data == null || res.data.account_name == null)
                 return BaseResponse<string>.BadRequest("Unable to verify account number");
 
-            return BaseResponse<string>.Success(res.Data.AccountName, "Account name retrieved successfully");
+            return BaseResponse<string>.Success(res.data.account_name, "Account name retrieved successfully");
         }
     }
 }

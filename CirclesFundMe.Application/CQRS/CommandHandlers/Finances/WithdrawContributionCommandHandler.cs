@@ -55,7 +55,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 Reference = Guid.NewGuid().ToString("N")
             }, cancellationToken);
 
-            if (transferResponse.Status == false || transferResponse.Data == null)
+            if (transferResponse.status == false || transferResponse.data == null)
             {
                 return BaseResponse<bool>.BadRequest("Unable to process withdrawal. Please try again later.");
             }
@@ -63,7 +63,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
             // Create the debit transaction record
             Transaction debitTransaction = new()
             {
-                TransactionReference = transferResponse.Data.Reference,
+                TransactionReference = transferResponse.data.reference,
                 Narration = "Contribution Withdrawal",
                 TransactionType = TransactionTypeEnums.Debit,
                 BalanceBeforeTransaction = userContributionWallet.Balance,
@@ -78,7 +78,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
             // Create the credit transaction record for the charge clearance wallet
             Transaction creditTransaction = new()
             {
-                TransactionReference = transferResponse.Data.Reference,
+                TransactionReference = transferResponse.data.reference,
                 Narration = "Contribution Withdrawal Charge",
                 TransactionType = TransactionTypeEnums.Credit,
                 BalanceBeforeTransaction = chargeClearanceWallet.Balance,

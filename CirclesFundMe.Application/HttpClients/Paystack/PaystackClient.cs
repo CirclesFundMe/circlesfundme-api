@@ -27,19 +27,6 @@
 
         public async Task<BasePaystackResponse<AddRecipientData>> AddTransferRecipient(AddTransferRecipientPayload payload, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<AddRecipientData>
-                {
-                    Status = true,
-                    Message = "Test recipient added",
-                    Data = new AddRecipientData
-                    {
-                        RecipientCode = Guid.NewGuid().ToString()
-                    }
-                };
-            }
-
             string uri = "transferrecipient";
 
             try
@@ -52,9 +39,9 @@
                 {
                     return new BasePaystackResponse<AddRecipientData>
                     {
-                        Status = false,
-                        Message = "No data received for transfer recipient Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for transfer recipient Paystack",
+                        data = null
                     };
                 }
 
@@ -66,32 +53,15 @@
 
                 return new BasePaystackResponse<AddRecipientData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<ChargeAuthorizationData>> ChargeAuthorization(ChargeAuthorizationPayload payload, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<ChargeAuthorizationData>
-                {
-                    Status = true,
-                    Message = "Test authorization charged",
-                    Data = new ChargeAuthorizationData
-                    {
-                        Reference = Guid.NewGuid().ToString(),
-                        Status = "success",
-                        Amount = payload.Amount,
-                        Currency = "NGN",
-                        GatewayResponse = "Test gateway response"
-                    }
-                };
-            }
-
             string uri = "transaction/charge_authorization";
 
             try
@@ -104,9 +74,9 @@
                 {
                     return new BasePaystackResponse<ChargeAuthorizationData>
                     {
-                        Status = false,
-                        Message = "No data received for authorization charge Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for authorization charge Paystack",
+                        data = null
                     };
                 }
 
@@ -118,25 +88,15 @@
 
                 return new BasePaystackResponse<ChargeAuthorizationData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<Unit>> DeleteTransferRecipient(string recipientCode, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<Unit>
-                {
-                    Status = true,
-                    Message = "Test recipient deleted",
-                    Data = Unit.Value
-                };
-            }
-
             string uri = $"transferrecipient/{recipientCode}";
 
             try
@@ -147,17 +107,17 @@
                 {
                     return new BasePaystackResponse<Unit>
                     {
-                        Status = false,
-                        Message = "Failed to delete transfer recipient",
-                        Data = Unit.Value
+                        status = false,
+                        message = "Failed to delete transfer recipient",
+                        data = Unit.Value
                     };
                 }
 
                 return new BasePaystackResponse<Unit>
                 {
-                    Status = true,
-                    Message = "Transfer recipient deleted successfully",
-                    Data = Unit.Value
+                    status = true,
+                    message = "Transfer recipient deleted successfully",
+                    data = Unit.Value
                 };
             }
             catch (Exception ex)
@@ -166,25 +126,15 @@
 
                 return new BasePaystackResponse<Unit>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = Unit.Value
+                    status = false,
+                    message = ex.Message,
+                    data = Unit.Value
                 };
             }
         }
 
         public async Task<BasePaystackResponse<List<BankData>>> GetBanksList(BankDataQuery query, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<List<BankData>>
-                {
-                    Status = true,
-                    Message = "No test bank",
-                    Data = []
-                };
-            }
-
             string uri = $"bank?country=nigeria&perPage={query.PerPage}&use_cursor=true";
             if (query.UseCursor && !string.IsNullOrEmpty(query.Next))
             {
@@ -199,9 +149,9 @@
                 {
                     return new BasePaystackResponse<List<BankData>>
                     {
-                        Status = false,
-                        Message = "No data received for bank list Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for bank list Paystack",
+                        data = null
                     };
                 }
 
@@ -213,30 +163,15 @@
 
                 return new BasePaystackResponse<List<BankData>>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<InitializeTransactionData>> InitializeTransaction(InitializeTransactionPayload payload, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<InitializeTransactionData>
-                {
-                    Status = true,
-                    Message = "Test transaction initialized",
-                    Data = new InitializeTransactionData
-                    {
-                        AuthorizationUrl = "https://test.paystack.co/authorize",
-                        AccessCode = Guid.NewGuid().ToString(),
-                        Reference = Guid.NewGuid().ToString()
-                    }
-                };
-            }
-
             string uri = "transaction/initialize";
 
             try
@@ -249,9 +184,9 @@
                 {
                     return new BasePaystackResponse<InitializeTransactionData>
                     {
-                        Status = false,
-                        Message = "No data received for transaction initialization from Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for transaction initialization from Paystack",
+                        data = null
                     };
                 }
 
@@ -263,29 +198,15 @@
 
                 return new BasePaystackResponse<InitializeTransactionData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<TransferFundData>> TransferFund(TransferFundPayload payload, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<TransferFundData>
-                {
-                    Status = true,
-                    Message = "Test fund transfer successful",
-                    Data = new TransferFundData
-                    {
-                        Reference = Guid.NewGuid().ToString(),
-                        Status = "success"
-                    }
-                };
-            }
-
             string uri = "transfer";
 
             try
@@ -298,9 +219,9 @@
                 {
                     return new BasePaystackResponse<TransferFundData>
                     {
-                        Status = false,
-                        Message = "No data received for fund transfer from Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for fund transfer from Paystack",
+                        data = null
                     };
                 }
 
@@ -312,29 +233,15 @@
 
                 return new BasePaystackResponse<TransferFundData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<VerifyAccountNumberData>> VerifyAccountNumberData(VerifyAccountNumberQuery query, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<VerifyAccountNumberData>
-                {
-                    Status = true,
-                    Message = "Successfully retrieved test account",
-                    Data = new VerifyAccountNumberData
-                    {
-                        AccountNumber = "0248090000",
-                        AccountName = "Test Account Name"
-                    }
-                };
-            }
-
             string uri = $"bank/resolve?account_number={query.AccountNumber}&bank_code={query.BankCode}";
 
             try
@@ -345,9 +252,9 @@
                 {
                     return new BasePaystackResponse<VerifyAccountNumberData>
                     {
-                        Status = false,
-                        Message = "No data received for account verification from Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for account verification from Paystack",
+                        data = null
                     };
                 }
 
@@ -359,34 +266,15 @@
 
                 return new BasePaystackResponse<VerifyAccountNumberData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }
 
         public async Task<BasePaystackResponse<VerifyTransactionData>> VerifyTransaction(string reference, CancellationToken cancellationToken = default)
         {
-            if (!_isPaystackEnabled)
-            {
-                return new BasePaystackResponse<VerifyTransactionData>
-                {
-                    Status = true,
-                    Message = "Test transaction verified",
-                    Data = new VerifyTransactionData
-                    {
-                        Amount = 10000,
-                        Currency = "NGN",
-                        TransactionDate = DateTime.UtcNow,
-                        Status = "success",
-                        Reference = reference,
-                        Domain = "test",
-                        GatewayResponse = "Test gateway response"
-                    }
-                };
-            }
-
             string uri = $"transaction/verify/{reference}";
 
             try
@@ -397,9 +285,9 @@
                 {
                     return new BasePaystackResponse<VerifyTransactionData>
                     {
-                        Status = false,
-                        Message = "No data received for transaction verification from Paystack",
-                        Data = null
+                        status = false,
+                        message = "No data received for transaction verification from Paystack",
+                        data = null
                     };
                 }
 
@@ -411,9 +299,9 @@
 
                 return new BasePaystackResponse<VerifyTransactionData>
                 {
-                    Status = false,
-                    Message = ex.Message,
-                    Data = null
+                    status = false,
+                    message = ex.Message,
+                    data = null
                 };
             }
         }

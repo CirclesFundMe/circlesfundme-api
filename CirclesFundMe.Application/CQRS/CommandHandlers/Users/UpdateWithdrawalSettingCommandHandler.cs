@@ -37,7 +37,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
                     BankCode = bank.Code
                 }, cancellationToken);
 
-                if (accountVerificationResponse.Status == false || accountVerificationResponse.Data == null)
+                if (accountVerificationResponse.status == false || accountVerificationResponse.data == null)
                 {
                     return BaseResponse<bool>.BadRequest("Unable to verify account number.");
                 }
@@ -46,20 +46,20 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
 
                 BasePaystackResponse<AddRecipientData> res = await _paystackClient.AddTransferRecipient(new AddTransferRecipientPayload
                 {
-                    Name = accountVerificationResponse.Data.AccountName,
-                    AccountNumber = accountVerificationResponse.Data.AccountNumber,
+                    Name = accountVerificationResponse.data.account_name,
+                    AccountNumber = accountVerificationResponse.data.account_number,
                     BankCode = bank.Code
                 }, cancellationToken);
 
-                if (res.Status == false || res.Data == null || res.Data.RecipientCode == null)
+                if (res.status == false || res.data == null || res.data.recipient_code == null)
                 {
                     return BaseResponse<bool>.BadRequest("Unable to add transfer recipient.");
                 }
 
-                withdrawalSetting.AccountNumber = accountVerificationResponse.Data.AccountNumber;
-                withdrawalSetting.AccountName = accountVerificationResponse.Data.AccountName;
+                withdrawalSetting.AccountNumber = accountVerificationResponse.data.account_number;
+                withdrawalSetting.AccountName = accountVerificationResponse.data.account_name;
                 withdrawalSetting.BankCode = bank.Code;
-                withdrawalSetting.PaystackRecipientCode = res.Data.RecipientCode;
+                withdrawalSetting.PaystackRecipientCode = res.data.recipient_code;
 
                 try
                 {
@@ -72,7 +72,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
                 {
                     _logger.LogError(ex, "An error occurred while updating the withdrawal setting for User ID: {UserId}", withdrawalSetting.UserId);
 
-                    await _paystackClient.DeleteTransferRecipient(res.Data.RecipientCode, cancellationToken);
+                    await _paystackClient.DeleteTransferRecipient(res.data.recipient_code, cancellationToken);
 
                     return BaseResponse<bool>.BadRequest($"An error occurred while updating the withdrawal setting");
                 }

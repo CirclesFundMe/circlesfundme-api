@@ -29,28 +29,28 @@
                 BankCode = request.BankCode!
             }, cancellationToken);
 
-            if (accountVerificationResponse.Status == false || accountVerificationResponse.Data == null)
+            if (accountVerificationResponse.status == false || accountVerificationResponse.data == null)
             {
                 return BaseResponse<bool>.BadRequest("Unable to verify account number");
             }
 
             BasePaystackResponse<AddRecipientData> res = await _paystackClients.AddTransferRecipient(new AddTransferRecipientPayload
             {
-                Name = accountVerificationResponse.Data.AccountName,
-                AccountNumber = accountVerificationResponse.Data.AccountNumber,
+                Name = accountVerificationResponse.data.account_name,
+                AccountNumber = accountVerificationResponse.data.account_number,
                 BankCode = bank.Code
             }, cancellationToken);
 
-            if (res.Status == false || res.Data == null || res.Data.RecipientCode == null)
+            if (res.status == false || res.data == null || res.data.recipient_code == null)
             {
                 return BaseResponse<bool>.BadRequest("Unable to add transfer recipient");
             }
 
             UserWithdrawalSetting withdrawalSetting = new()
             {
-                PaystackRecipientCode = res.Data.RecipientCode,
-                AccountNumber = accountVerificationResponse.Data.AccountNumber,
-                AccountName = accountVerificationResponse.Data.AccountName,
+                PaystackRecipientCode = res.data.recipient_code,
+                AccountNumber = accountVerificationResponse.data.account_number,
+                AccountName = accountVerificationResponse.data.account_name,
                 BankCode = bank.Code,
                 UserId = _currentUserService.UserId
             };
@@ -75,7 +75,7 @@
             }
             catch (Exception ex)
             {
-                await _paystackClients.DeleteTransferRecipient(res.Data.RecipientCode, cancellationToken);
+                await _paystackClients.DeleteTransferRecipient(res.data.recipient_code, cancellationToken);
                 _logger.LogError(ex, "Error creating withdrawal setting for user {UserId}", _currentUserService.UserId);
                 return BaseResponse<bool>.BadRequest($"An error occurred while creating withdrawal setting");
             }
