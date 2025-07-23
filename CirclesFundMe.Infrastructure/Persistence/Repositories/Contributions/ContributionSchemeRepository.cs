@@ -50,7 +50,8 @@
                 LoanManagementFee = loanManagementFee,
                 PreLoanServiceCharge = preLoanServiceCharge,
                 PostLoanWeeklyContribution = postLoanWeeklyContribution,
-                BaseFee = (decimal)scheme.BaseFee
+                BaseFee = (decimal)scheme.BaseFee,
+                TotalRepayment = totalRepaymentAmount
             }, "Here is your auto breakdown");
         }
 
@@ -98,7 +99,7 @@
             {
                 PrincipalLoan = principalLoan,
                 LoanManagementFee = loanManagementFee,
-                ServiceCharge = (decimal)scheme.ServiceCharge,
+                ServiceCharge = principalLoan + (decimal)scheme.ServiceCharge / 100,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
             };

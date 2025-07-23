@@ -14,5 +14,6 @@
         public string? PreLoanServiceCharge { get; set; }
         public string? PostLoanWeeklyContribution { get; set; }
         public string? EligibleLoan { get; set; }
+        public string? TotalRepayment { get; set; }
     }
 }

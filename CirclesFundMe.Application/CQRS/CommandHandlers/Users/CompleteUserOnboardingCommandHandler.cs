@@ -30,6 +30,12 @@
                 return BaseResponse<bool>.BadRequest("Please select a preferred payment day (either weekday or month day).");
             }
 
+            bool hasAddress = !string.IsNullOrWhiteSpace(request.Address);
+            bool hasBVN = !string.IsNullOrWhiteSpace(request.BVN);
+            bool hasSelfie = request.Selfie != null;
+
+            bool isMandatoryValuesProvided = hasAddress && hasBVN && hasSelfie;
+
             string userId = _currentUserService.UserId;
 
             bool userContributionSchemeExists = await _unitOfWork.UserContributionSchemes.ExistAsync([x => x.UserId == userId && x.ContributionSchemeId == request.ContributionSchemeId], cancellationToken);
@@ -230,7 +236,7 @@
             }
             await _unitOfWork.UserContributionSchemes.AddAsync(userContributionScheme, cancellationToken);
 
-            user.OnboardingStatus = OnboardingStatusEnums.Completed;
+            user.OnboardingStatus = isMandatoryValuesProvided ? OnboardingStatusEnums.Completed : OnboardingStatusEnums.Incomplete;
             user.ModifiedDate = DateTime.UtcNow;
             user.ModifiedBy = _currentUserService.UserId;
 

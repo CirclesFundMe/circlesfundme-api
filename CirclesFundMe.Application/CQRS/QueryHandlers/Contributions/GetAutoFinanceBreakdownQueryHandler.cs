@@ -34,7 +34,8 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
                 LoanManagementFee = formatted["LoanManagementFee"],
                 PreLoanServiceCharge = formatted["PreLoanServiceCharge"],
                 PostLoanWeeklyContribution = formatted["PostLoanWeeklyContribution"],
-                EligibleLoan = formatted["EligibleLoan"]
+                EligibleLoan = formatted["EligibleLoan"],
+                TotalRepayment = formatted["TotalRepayment"]
             };
 
             return BaseResponse<AutoFinanceBreakdownModel>.Success(breakdownModel, "Auto finance breakdown calculated successfully.");

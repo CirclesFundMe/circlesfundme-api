@@ -1,9 +1,11 @@
-﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
+﻿
+namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
 {
-    public class GetMyProfileQueryHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService) : IRequestHandler<GetMyProfileQuery, BaseResponse<UserModel>>
+    public class GetMyProfileQueryHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, UtilityHelper utility) : IRequestHandler<GetMyProfileQuery, BaseResponse<UserModel>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ICurrentUserService _currentUserService = currentUserService;
+        private readonly UtilityHelper _utility = utility;
 
         public async Task<BaseResponse<UserModel>> Handle(GetMyProfileQuery request, CancellationToken cancellationToken)
         {
@@ -45,10 +47,35 @@
                 AllowPushNotifications = user.AllowPushNotifications,
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
-                Gender = user.Gender.ToString()
+                Gender = user.Gender.ToString(),
+                AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
+                    ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
+        }
+
+        private MyAutoLoanDetail GetMyAutoLoanDetail(string? copyOfCurrentBreakdownAtOnboarding, decimal contributionAmount)
+        {
+            AutoFinanceBreakdown? breakdown = copyOfCurrentBreakdownAtOnboarding != null
+                ? _utility.Deserializer<AutoFinanceBreakdown>(copyOfCurrentBreakdownAtOnboarding)
+                : null;
+
+            if (breakdown == null)
+            {
+                return new MyAutoLoanDetail
+                {
+                    CostOfVehicle = 0,
+                    PreLoanContributionAmount = 0,
+                    PostLoanWeeklyContribution = 0
+                };
+            }
+            return new MyAutoLoanDetail
+            {
+                CostOfVehicle = breakdown.CostOfVehicle,
+                PreLoanContributionAmount = contributionAmount,
+                PostLoanWeeklyContribution = breakdown.PostLoanWeeklyContribution
+            };
         }
     }
 }

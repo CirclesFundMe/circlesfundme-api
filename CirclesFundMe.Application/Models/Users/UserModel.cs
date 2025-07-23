@@ -20,5 +20,13 @@
         public bool? AllowPushNotifications { get; set; }
         public bool? AllowEmailNotifications { get; set; }
         public bool IsPaymentSetupComplete { get; set; }
+        public MyAutoLoanDetail? AutoLoanDetail { get; set; }
+    }
+
+    public record MyAutoLoanDetail
+    {
+        public decimal CostOfVehicle { get; set; }
+        public decimal PreLoanContributionAmount { get; set; }
+        public decimal PostLoanWeeklyContribution { get; set; }
     }
 }
