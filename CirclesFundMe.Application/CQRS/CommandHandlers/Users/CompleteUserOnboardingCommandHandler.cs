@@ -205,17 +205,17 @@
                     userContributionScheme.ContributionMonthDay = monthDay;
                 }
 
-                if (request.ContributionAmount == null || request.ContributionAmount <= 0)
+                if (request.ContributionAmount <= 0)
                 {
                     return BaseResponse<bool>.BadRequest("Contribution amount must be greater than zero.");
                 }
 
-                userContributionScheme.ContributionAmount = request.ContributionAmount ?? 0 + preloanServiceCharge;
+                userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
             }
             else
             {
-                RegularFinanceBreakdown? regularFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.ContributionAmount ?? 0, cancellationToken);
+                RegularFinanceBreakdown? regularFinanceBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.ContributionAmount, cancellationToken);
 
                 if (regularFinanceBreakdown == null)
                 {
@@ -231,7 +231,7 @@
                     userContributionScheme.ContributionMonthDay = monthDay;
                 }
 
-                userContributionScheme.ContributionAmount = request.ContributionAmount ?? 0 + regularFinanceBreakdown.ServiceCharge;
+                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
             }
             await _unitOfWork.UserContributionSchemes.AddAsync(userContributionScheme, cancellationToken);

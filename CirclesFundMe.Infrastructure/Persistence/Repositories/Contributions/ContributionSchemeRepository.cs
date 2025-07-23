@@ -99,7 +99,7 @@
             {
                 PrincipalLoan = principalLoan,
                 LoanManagementFee = loanManagementFee,
-                ServiceCharge = principalLoan + (decimal)scheme.ServiceCharge / 100,
+                ServiceCharge = principalLoan * (decimal)scheme.ServiceCharge / 100,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
             };
