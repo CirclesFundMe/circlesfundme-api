@@ -1,11 +1,8 @@
-﻿using CirclesFundMe.Application.HttpClients.Paystack;
-
-namespace CirclesFundMe.API.Controllers.v1
+﻿namespace CirclesFundMe.API.Controllers.v1
 {
-    public class AccountsController(ISender sender, IPaystackClient paystackClient) : BaseControllerV1
+    public class AccountsController(ISender sender) : BaseControllerV1
     {
         private readonly ISender _sender = sender;
-        private readonly IPaystackClient _paystackClient = paystackClient;
 
         [HttpPost("send-onboarding-otp")]
         [ProducesResponseType<BaseResponse<bool>>(200)]
@@ -33,14 +30,6 @@ namespace CirclesFundMe.API.Controllers.v1
         {
             BaseResponse<bool> response = await _sender.Send(command, cancellation);
             return HandleResponse(response);
-        }
-
-        [HttpGet("banks")]
-        [SwaggerOperation(Summary = "Get List of Banks")]
-        public async Task<IActionResult> GetBanks([FromQuery] BankDataQuery query, CancellationToken cancellation)
-        {
-            var response = await _paystackClient.GetBanksList(query, cancellation);
-            return Ok(response);
         }
     }
 }
