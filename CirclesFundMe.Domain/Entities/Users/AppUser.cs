@@ -17,8 +17,7 @@
         public string? RefreshToken { get; set; }
         public bool AllowPushNotifications { get; set; }
         public bool AllowEmailNotifications { get; set; }
-        public bool IsPaymentSetupComplete { get; set; }
-
+        
         public DateTime RefreshTokenExpiryTime { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
@@ -48,7 +47,9 @@
         }
     }
 
+    [NotMapped]
     public class AppUserExtension : AppUser
     {
+        public bool IsPaymentSetupComplete { get; set; }
     }
 }

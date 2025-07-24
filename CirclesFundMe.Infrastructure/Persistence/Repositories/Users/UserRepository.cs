@@ -21,7 +21,6 @@
                     AllowPushNotifications = u.AllowPushNotifications,
                     AllowEmailNotifications = u.AllowEmailNotifications,
                     OnboardingStatus = u.OnboardingStatus,
-                    IsPaymentSetupComplete = u.IsPaymentSetupComplete,
                     DateOfBirth = u.DateOfBirth,
                     Gender = u.Gender,
                     UserContributionScheme = u.UserContributionScheme == null ? null : new UserContributionScheme
@@ -31,9 +30,11 @@
                         {
                             Id = u.UserContributionScheme.ContributionScheme!.Id,
                             Name = u.UserContributionScheme.ContributionScheme.Name,
+                            SchemeType = u.UserContributionScheme.ContributionScheme.SchemeType
                         },
                         ContributionAmount = u.UserContributionScheme.ContributionAmount,
-                        IncomeAmount = u.UserContributionScheme.IncomeAmount
+                        IncomeAmount = u.UserContributionScheme.IncomeAmount,
+                        CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding
                     },
                     WithdrawalSetting = u.WithdrawalSetting == null ? null : new UserWithdrawalSetting
                     {
@@ -42,6 +43,7 @@
                         AccountName = u.WithdrawalSetting.AccountName,
                         BankCode = u.WithdrawalSetting.BankCode
                     },
+                    IsPaymentSetupComplete = u.WithdrawalSetting != null && u.LinkedCard != null,
                 })
                 .FirstOrDefaultAsync(cancellation);
 

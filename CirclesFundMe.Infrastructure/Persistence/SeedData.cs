@@ -163,7 +163,7 @@
                     SchemeType = SchemeTypeEnums.Monthly,
                     ContributionPercent = 30.0,
                     EligibleLoanMultiple = 12,
-                    ServiceCharge = 0.052,
+                    ServiceCharge = 0.208,
                     LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
                 },

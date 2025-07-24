@@ -11,7 +11,7 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
         {
             string userId = _currentUserService.UserId;
 
-            AppUser? user = await _unitOfWork.Users.GetUserByIdAsync(userId, cancellationToken);
+            AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(userId, cancellationToken);
 
             if (user == null)
             {
@@ -73,8 +73,8 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
             return new MyAutoLoanDetail
             {
                 CostOfVehicle = breakdown.CostOfVehicle,
-                PreLoanContributionAmount = contributionAmount,
-                PostLoanWeeklyContribution = breakdown.PostLoanWeeklyContribution
+                PreLoanContributionAmount = Math.Round(contributionAmount, 2),
+                PostLoanWeeklyContribution = Math.Round(breakdown.PostLoanWeeklyContribution, 2)
             };
         }
     }
