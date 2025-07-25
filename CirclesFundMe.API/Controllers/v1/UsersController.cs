@@ -77,5 +77,14 @@
             BaseResponse<bool> response = await _sender.Send(command, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpPost("update-linked-card")]
+        [ProducesResponseType<BaseResponse<InitializeTransactionModel>>(200)]
+        [SwaggerOperation(Summary = "Update Linked Card")]
+        public async Task<IActionResult> UpdateLinkedCard(UpdateLinkedCardCommand command, CancellationToken cancellation)
+        {
+            BaseResponse<InitializeTransactionModel> response = await _sender.Send(command, cancellation);
+            return HandleResponse(response);
+        }
     }
 }

@@ -3,6 +3,8 @@
     public record UserContributionScheme : BaseEntity
     {
         public decimal ContributionAmount { get; set; }
+        public decimal ActualContributionAmount { get; set; }
+        public decimal ChargeAmount { get; set; }
         public decimal IncomeAmount { get; set; }
         public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
         public WeekDayEnums ContributionWeekDay { get; set; }

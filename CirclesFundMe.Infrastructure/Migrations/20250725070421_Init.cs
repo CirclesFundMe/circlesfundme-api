@@ -205,7 +205,6 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     RefreshToken = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     AllowPushNotifications = table.Column<bool>(type: "bit", nullable: false),
                     AllowEmailNotifications = table.Column<bool>(type: "bit", nullable: false),
-                    IsPaymentSetupComplete = table.Column<bool>(type: "bit", nullable: false),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -499,6 +498,35 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserContributions",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AmountIncludingCharges = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserContributions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserContributions_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "CFM",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserContributionSchemes",
                 schema: "CFM",
                 columns: table => new
@@ -506,6 +534,8 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ContributionSchemeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContributionAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ActualContributionAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ChargeAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IncomeAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CopyOfCurrentBreakdownAtOnboarding = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     ContributionWeekDay = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -819,6 +849,12 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserContributions_UserId",
+                schema: "CFM",
+                table: "UserContributions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserContributionSchemes_ContributionSchemeId",
                 schema: "CFM",
                 table: "UserContributionSchemes",
@@ -940,6 +976,10 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserAddresses",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
+                name: "UserContributions",
                 schema: "CFM");
 
             migrationBuilder.DropTable(

@@ -47,12 +47,44 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
                 AllowPushNotifications = user.AllowPushNotifications,
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
+                IsCardLinked = user.IsCardLinked,
+                InstallmentDesc = ComputeInstallmentDesc(user.ContributionsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme!.ContributionWeekDay, user.UserContributionScheme!.ContributionMonthDay),
                 Gender = user.Gender.ToString(),
                 AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
                     ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
+        }
+
+        private string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay)
+        {
+            if (!Enum.IsDefined(schemeType))
+            {
+                return string.Empty;
+            }
+
+            if (schemeType == SchemeTypeEnums.Weekly)
+            {
+                return $"{contributionsCount} of 52";
+            }
+            else if (schemeType == SchemeTypeEnums.Monthly)
+            {
+                return $"{contributionsCount} of 12";
+            }
+            else if (schemeType == SchemeTypeEnums.AutoFinance)
+            {
+                if (Enum.IsDefined(weekDay))
+                {
+                    return $"{contributionsCount} of 208 ({weekDay})";
+                }
+                else if (Enum.IsDefined(monthDay))
+                {
+                    return $"{contributionsCount} of 48 ({monthDay})";
+                }
+            }
+
+            return string.Empty;
         }
 
         private MyAutoLoanDetail GetMyAutoLoanDetail(string? copyOfCurrentBreakdownAtOnboarding, decimal contributionAmount)

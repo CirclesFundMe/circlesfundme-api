@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CirclesFundMe.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250722230339_Init")]
+    [Migration("20250725070421_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -705,9 +705,6 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPaymentSetupComplete")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -896,6 +893,52 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.ToTable("UserAddresses", "CFM");
                 });
 
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Users.UserContribution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountIncludingCharges")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserContributions", "CFM");
+                });
+
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Users.UserContributionScheme", b =>
                 {
                     b.Property<string>("UserId")
@@ -903,6 +946,12 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
                     b.Property<Guid>("ContributionSchemeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ActualContributionAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ChargeAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ContributionAmount")
                         .HasPrecision(18, 2)
@@ -1461,6 +1510,16 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Users.UserContribution", b =>
+                {
+                    b.HasOne("CirclesFundMe.Domain.Entities.Users.AppUser", "User")
+                        .WithMany("UserContributions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Users.UserContributionScheme", b =>
                 {
                     b.HasOne("CirclesFundMe.Domain.Entities.Contributions.ContributionScheme", "ContributionScheme")
@@ -1587,6 +1646,8 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Navigation("UserAddress");
 
                     b.Navigation("UserContributionScheme");
+
+                    b.Navigation("UserContributions");
 
                     b.Navigation("UserDocuments");
 

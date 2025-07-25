@@ -16,6 +16,8 @@
         public string? ProfilePictureUrl { get; set; }
         public string? OnboardingStatus { get; set; }
         public string? Gender { get; set; }
+        public bool IsCardLinked { get; set; }
+        public string? InstallmentDesc { get; set; }
 
         public bool? AllowPushNotifications { get; set; }
         public bool? AllowEmailNotifications { get; set; }

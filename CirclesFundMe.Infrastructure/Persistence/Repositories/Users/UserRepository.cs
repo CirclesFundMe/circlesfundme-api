@@ -34,7 +34,9 @@
                         },
                         ContributionAmount = u.UserContributionScheme.ContributionAmount,
                         IncomeAmount = u.UserContributionScheme.IncomeAmount,
-                        CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding
+                        CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding,
+                        ContributionWeekDay = u.UserContributionScheme.ContributionWeekDay,
+                        ContributionMonthDay = u.UserContributionScheme.ContributionMonthDay
                     },
                     WithdrawalSetting = u.WithdrawalSetting == null ? null : new UserWithdrawalSetting
                     {
@@ -44,6 +46,8 @@
                         BankCode = u.WithdrawalSetting.BankCode
                     },
                     IsPaymentSetupComplete = u.WithdrawalSetting != null && u.LinkedCard != null,
+                    IsCardLinked = u.LinkedCard != null,
+                    ContributionsCount = u.UserContributions.Count
                 })
                 .FirstOrDefaultAsync(cancellation);
 

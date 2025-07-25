@@ -6,7 +6,7 @@
         public string? Description { get; set; }
         public SchemeTypeEnums SchemeType { get; set; }
         public double MinimumVehicleCost { get; set; }
-        
+
         public double ContributionPercent { get; set; }
         public double EligibleLoanMultiple { get; set; }
         public double ServiceCharge { get; set; }
@@ -53,7 +53,8 @@
         public decimal LoanManagementFee { get; set; }
         public decimal ServiceCharge { get; set; }
         public SchemeTypeEnums SchemeType { get; set; }
-        public int LoanMultiple {  get; set; }
+        public int LoanMultiple { get; set; }
         public decimal EligibleLoan => PrincipalLoan - LoanManagementFee;
+        public decimal TotalRepayment { get; set; }
     }
 }

@@ -11,6 +11,7 @@
         IUserKYCRepository UserKYC { get; }
         IUserContributionSchemeRepository UserContributionSchemes { get; }
         IUserWithdrawalSettingRepository UserWithdrawalSettings { get; }
+        IUserContributionRepository UserContributions { get; }
         #endregion
 
         #region Contributions

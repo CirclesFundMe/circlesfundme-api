@@ -93,15 +93,20 @@
             }
 
             decimal principalLoan = amount * (decimal)scheme.EligibleLoanMultiple;
+            decimal serviceCharge = principalLoan * (decimal)scheme.ServiceCharge / 100;
+            decimal totalServiceCharge = scheme.SchemeType == SchemeTypeEnums.Weekly
+                ? serviceCharge * 52
+                : serviceCharge * 12;
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
 
             return new RegularFinanceBreakdown
             {
                 PrincipalLoan = principalLoan,
                 LoanManagementFee = loanManagementFee,
-                ServiceCharge = principalLoan * (decimal)scheme.ServiceCharge / 100,
+                ServiceCharge = serviceCharge,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
+                TotalRepayment = principalLoan + totalServiceCharge + loanManagementFee
             };
         }
     }

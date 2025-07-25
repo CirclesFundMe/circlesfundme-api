@@ -39,6 +39,7 @@
         public virtual ICollection<Notification> Notifications { get; set; } = [];
         public virtual ICollection<UserDocument> UserDocuments { get; set; } = [];
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
+        public virtual ICollection<UserContribution> UserContributions { get; set; } = [];
 
         public void UpdateAuditFields(string userId)
         {
@@ -51,5 +52,7 @@
     public class AppUserExtension : AppUser
     {
         public bool IsPaymentSetupComplete { get; set; }
+        public bool IsCardLinked { get; set; }
+        public int ContributionsCount { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 ﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
 {
-    public class PaystackWebhookCommandHandler(IUnitOfWork unitOfWork, ILogger<PaystackWebhookCommandHandler> logger, UtilityHelper utility) : IRequestHandler<PaystackWebhookCommand, BaseResponse<bool>>
+    public class PaystackWebhookCommandHandler(IUnitOfWork unitOfWork, ILogger<PaystackWebhookCommandHandler> logger, UtilityHelper utility, IOptions<AppSettings> options) : IRequestHandler<PaystackWebhookCommand, BaseResponse<bool>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<PaystackWebhookCommandHandler> _logger = logger;
         private readonly UtilityHelper _utility = utility;
+        private readonly AppSettings _appSettings = options.Value;
 
         public async Task<BaseResponse<bool>> Handle(PaystackWebhookCommand request, CancellationToken cancellationToken)
         {
@@ -39,6 +40,13 @@
             {
                 _logger.LogError("User ID not found in metadata for reference: {Reference}", data.reference);
                 return BaseResponse<bool>.BadRequest("User ID not found in metadata");
+            }
+
+            UserContributionScheme? userContributionScheme = await _unitOfWork.UserContributionSchemes.GetOneAsync([ucs => ucs.UserId == currentUserId], cancellationToken);
+            if (userContributionScheme == null)
+            {
+                _logger.LogError("UserContributionScheme not found for user ID: {UserId}", currentUserId);
+                return BaseResponse<bool>.NotFound("UserContributionScheme not found");
             }
 
             Payment? payment = await _unitOfWork.Payments.GetByPrimaryKey(data.reference, cancellationToken);
@@ -86,8 +94,28 @@
                 };
                 await _unitOfWork.LinkedCards.AddAsync(linkedCard, cancellationToken);
             }
+            else
+            {
+                linkedCard.AuthorizationCode = data.authorization?.authorization_code;
+                linkedCard.Last4Digits = data.authorization?.last4;
+                linkedCard.CardType = data.authorization?.card_type;
+                linkedCard.ExpiryMonth = data.authorization?.exp_month;
+                linkedCard.ExpiryYear = data.authorization?.exp_year;
+                linkedCard.Bin = data.authorization?.bin;
 
-            // Get Wallet
+                _unitOfWork.LinkedCards.Update(linkedCard);
+            }
+
+            decimal amountToCreditUser = payment.Amount - userContributionScheme.ChargeAmount;
+
+            await _unitOfWork.UserContributions.AddAsync(new UserContribution
+            {
+                Amount = amountToCreditUser,
+                AmountIncludingCharges = payment.Amount,
+                UserId = currentUserId
+            }, cancellationToken);
+
+            // Get User Wallet
             Wallet? wallet = await _unitOfWork.Wallets.GetOneAsync([w => w.UserId == currentUserId, w => w.Type == WalletTypeEnums.Contribution], cancellationToken);
             if (wallet == null)
             {
@@ -102,8 +130,8 @@
                 Narration = $"Contribution",
                 TransactionType = TransactionTypeEnums.Credit,
                 BalanceBeforeTransaction = wallet.Balance,
-                Amount = payment.Amount,
-                BalanceAfterTransaction = wallet.Balance + payment.Amount,
+                Amount = amountToCreditUser,
+                BalanceAfterTransaction = wallet.Balance + amountToCreditUser,
                 TransactionDate = DateTime.UtcNow,
                 TransactionTime = DateTime.UtcNow.TimeOfDay,
                 WalletId = wallet.Id,
@@ -111,8 +139,35 @@
 
             await _unitOfWork.Transactions.AddAsync(transaction, cancellationToken);
 
-            wallet.Balance += payment.Amount;
+            wallet.Balance += amountToCreditUser;
             _unitOfWork.Wallets.Update(wallet);
+
+            // Get Collection Wallet
+            Wallet? collectionWallet = await _unitOfWork.Wallets.GetByPrimaryKey(_appSettings.GLWalletId, cancellationToken);
+            if (collectionWallet == null)
+            {
+                _logger.LogError("Collection wallet not found with ID: {GLWalletId}", _appSettings.GLWalletId);
+                return BaseResponse<bool>.NotFound("Collection wallet not found");
+            }
+
+            // Create Collection Transaction
+            Transaction collectionTransaction = new()
+            {
+                TransactionReference = data.reference,
+                Narration = $"Contribution Charge",
+                TransactionType = TransactionTypeEnums.Credit,
+                BalanceBeforeTransaction = collectionWallet.Balance,
+                Amount = userContributionScheme.ChargeAmount,
+                BalanceAfterTransaction = collectionWallet.Balance + userContributionScheme.ChargeAmount,
+                TransactionDate = DateTime.UtcNow,
+                TransactionTime = DateTime.UtcNow.TimeOfDay,
+                WalletId = collectionWallet.Id,
+            };
+
+            await _unitOfWork.Transactions.AddAsync(collectionTransaction, cancellationToken);
+
+            collectionWallet.Balance += userContributionScheme.ChargeAmount;
+            _unitOfWork.Wallets.Update(collectionWallet);
 
             bool isSaved = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 

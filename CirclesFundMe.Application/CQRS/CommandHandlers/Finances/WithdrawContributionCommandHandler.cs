@@ -30,7 +30,11 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 return BaseResponse<bool>.BadRequest("You do not have a contribution wallet. Please contact support.");
             }
 
-            decimal withdrawalCharge = _appSettings.WithdrawalCharge;
+            decimal withdrawalCharge = 0;
+            if (_appSettings.EnableWithdrawalCharge)
+            {
+                withdrawalCharge = _appSettings.WithdrawalCharge;
+            }
 
             decimal amountToSendCustomer = request.DeductChargeFromBalance
                 ? request.Amount

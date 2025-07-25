@@ -210,6 +210,8 @@
                     return BaseResponse<bool>.BadRequest("Contribution amount must be greater than zero.");
                 }
 
+                userContributionScheme.ActualContributionAmount = request.ContributionAmount;
+                userContributionScheme.ChargeAmount = preloanServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
             }
@@ -231,6 +233,8 @@
                     userContributionScheme.ContributionMonthDay = monthDay;
                 }
 
+                userContributionScheme.ActualContributionAmount = request.ContributionAmount;
+                userContributionScheme.ChargeAmount = regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
             }

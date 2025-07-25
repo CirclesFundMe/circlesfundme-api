@@ -6,6 +6,7 @@
         public required MailSettings MailSettings { get; set; }
         public Guid GLWalletId { get; set; }
         public required decimal WithdrawalCharge { get; set; }
+        public bool EnableWithdrawalCharge { get; set; }
         public List<AdminContact> AdminContacts { get; set; } = [];
     }
 

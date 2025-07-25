@@ -114,6 +114,7 @@
     public record MetaDataObj
     {
         public string? userId { get; set; }
+        public bool updateCard { get; set; } = false;
     }
 
     #region Shared

@@ -7,6 +7,7 @@
             base.Configure(builder);
             builder.ToTable("UserContributionSchemes");
             builder.HasKey(x => new { x.UserId, x.ContributionSchemeId });
+            builder.HasIndex(x => x.UserId).IsUnique(true);
 
             builder.Property(x => x.ContributionAmount)
                 .HasPrecision(18, 2)

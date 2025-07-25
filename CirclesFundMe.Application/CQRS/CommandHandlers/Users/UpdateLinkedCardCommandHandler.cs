@@ -1,13 +1,13 @@
-﻿
-namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
+﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Users
 {
-    public class MakeInitialContributionCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient) : IRequestHandler<MakeInitialContributionCommand, BaseResponse<InitializeTransactionModel>>
+    public class UpdateLinkedCardCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient, IOTPService oTPService) : IRequestHandler<UpdateLinkedCardCommand, BaseResponse<InitializeTransactionModel>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly IPaystackClient _paystackClient = paystackClient;
+        private readonly IOTPService _oTPService = oTPService;
 
-        public async Task<BaseResponse<InitializeTransactionModel>> Handle(MakeInitialContributionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<InitializeTransactionModel>> Handle(UpdateLinkedCardCommand request, CancellationToken cancellationToken)
         {
             AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user == null)
@@ -15,9 +15,15 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 return BaseResponse<InitializeTransactionModel>.NotFound("User not found");
             }
 
-            if (user.IsCardLinked)
+            (bool otpValid, string message) = await _oTPService.ValidateOtp(_currentUserService.UserEmail, request.Otp, cancellationToken);
+            if (!otpValid)
             {
-                return BaseResponse<InitializeTransactionModel>.BadRequest("Card is already linked. Please use the update card option to change your card details.");
+                return BaseResponse<InitializeTransactionModel>.BadRequest(message);
+            }
+
+            if (!user.IsCardLinked)
+            {
+                return BaseResponse<InitializeTransactionModel>.BadRequest("No card linked to this user. Please link a card first.");
             }
 
             decimal amountToContribute = (user.UserContributionScheme?.ContributionAmount ?? 0) * 100; // In Kobo
@@ -29,7 +35,7 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 Metadata = new MetaDataObj
                 {
                     userId = user.Id,
-                    updateCard = false
+                    updateCard = true
                 }
             };
 
