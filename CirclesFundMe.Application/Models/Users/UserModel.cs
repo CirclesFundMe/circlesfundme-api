@@ -30,5 +30,6 @@
         public decimal CostOfVehicle { get; set; }
         public decimal PreLoanContributionAmount { get; set; }
         public decimal PostLoanWeeklyContribution { get; set; }
+        public decimal TotalRepayment { get; set; }
     }
 }

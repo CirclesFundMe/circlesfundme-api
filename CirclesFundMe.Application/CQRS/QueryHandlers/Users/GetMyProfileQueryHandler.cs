@@ -99,14 +99,16 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
                 {
                     CostOfVehicle = 0,
                     PreLoanContributionAmount = 0,
-                    PostLoanWeeklyContribution = 0
+                    PostLoanWeeklyContribution = 0,
+                    TotalRepayment = 0
                 };
             }
             return new MyAutoLoanDetail
             {
                 CostOfVehicle = breakdown.CostOfVehicle,
                 PreLoanContributionAmount = Math.Round(contributionAmount, 2),
-                PostLoanWeeklyContribution = Math.Round(breakdown.PostLoanWeeklyContribution, 2)
+                PostLoanWeeklyContribution = Math.Round(breakdown.PostLoanWeeklyContribution, 2),
+                TotalRepayment = Math.Round(breakdown.TotalRepayment, 2)
             };
         }
     }
