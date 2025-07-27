@@ -46,12 +46,25 @@
         {
             try
             {
+                TResult? result = default;
+
                 _logger.LogInformation("Sending POST request to {Uri}", uri);
 
                 HttpResponseMessage response = await _httpClient.PostAsync(uri, data, cancellationToken);
                 string responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<TResult>(_serializerOptions, cancellationToken);
+
+                try
+                {
+                    result = await response.Content.ReadFromJsonAsync<TResult>(_serializerOptions, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error deserializing response - {ex.Message}");
+                }
+
+                return result;
             }
             catch (HttpRequestException ex)
             {

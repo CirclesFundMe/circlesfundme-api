@@ -77,7 +77,6 @@ namespace CirclesFundMe.Application.HttpClients.Paystack
         public string? reason { get; set; }
         public string? reference { get; set; }
         public string? status { get; set; }
-        public string? recipient { get; set; }
         public string? transfer_code { get; set; }
     }
 
