@@ -177,7 +177,7 @@
                 {
                     Title = "You made a withdrawal",
                     Type = RecentActivityTypeEnums.Withdrawal,
-                    Data = payment.ToString(),
+                    Data = payment.Amount.ToString(),
                     UserId = currentUserId,
                 }));
 
@@ -355,7 +355,7 @@
             {
                 Title = "You made a contribution",
                 Type = RecentActivityTypeEnums.Contribution,
-                Data = payment.ToString(),
+                Data = payment.Amount.ToString(),
                 UserId = currentUserId,
             }));
 

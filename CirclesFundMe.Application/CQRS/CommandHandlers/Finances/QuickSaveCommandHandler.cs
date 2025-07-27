@@ -1,23 +1,17 @@
-﻿
-namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
+﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
 {
-    public class MakeInitialContributionCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient) : IRequestHandler<MakeInitialContributionCommand, BaseResponse<InitializeTransactionModel>>
+    public class QuickSaveCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient) : IRequestHandler<QuickSaveCommand, BaseResponse<InitializeTransactionModel>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly IPaystackClient _paystackClient = paystackClient;
 
-        public async Task<BaseResponse<InitializeTransactionModel>> Handle(MakeInitialContributionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<InitializeTransactionModel>> Handle(QuickSaveCommand request, CancellationToken cancellationToken)
         {
             AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user == null)
             {
                 return BaseResponse<InitializeTransactionModel>.NotFound("User not found");
-            }
-
-            if (user.IsCardLinked)
-            {
-                return BaseResponse<InitializeTransactionModel>.BadRequest("Card is already linked. You can use quick save or update card.");
             }
 
             decimal amountToContribute = (user.UserContributionScheme?.ContributionAmount ?? 0) * 100; // In Kobo

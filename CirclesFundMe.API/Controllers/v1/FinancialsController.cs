@@ -55,6 +55,16 @@
             return HandleResponse(response);
         }
 
+        [HttpPost("quick-save")]
+        [ProducesResponseType<BaseResponse<InitializeTransactionModel>>(200)]
+        [SwaggerOperation(Summary = "Quick Save")]
+        [Authorize]
+        public async Task<IActionResult> QuickSave([FromBody] QuickSaveCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<InitializeTransactionModel> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
+
         [HttpPost("paystack-webhook")]
         [ProducesResponseType<BaseResponse<bool>>(200)]
         [SwaggerOperation(Summary = "Paystack Webhook")]
