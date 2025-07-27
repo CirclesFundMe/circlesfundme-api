@@ -9,5 +9,6 @@
         public string? EligibleLoan { get; set; }
         public string? EligibleLoanDescription { get; set; }
         public string? ServiceCharge { get; set; }
+        public string? TotalRepayment { get; set; }
     }
 }
