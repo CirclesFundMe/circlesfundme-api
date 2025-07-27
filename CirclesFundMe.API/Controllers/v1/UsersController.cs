@@ -86,5 +86,14 @@
             BaseResponse<InitializeTransactionModel> response = await _sender.Send(command, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpGet("my-recent-activities")]
+        [ProducesResponseType<BaseResponse<PagedList<RecentActivityModel>>>(200)]
+        [SwaggerOperation(Summary = "Get My Recent Activities")]
+        public async Task<IActionResult> GetMyRecentActivities([FromQuery] RecentActivityParams @params, CancellationToken cancellation)
+        {
+            BaseResponse<PagedList<RecentActivityModel>> response = await _sender.Send(new GetMyRecentActivityQuery { Params = @params }, cancellation);
+            return HandleResponse(response);
+        }
     }
 }

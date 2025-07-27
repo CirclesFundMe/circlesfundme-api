@@ -12,6 +12,7 @@
         IUserContributionSchemeRepository UserContributionSchemes { get; }
         IUserWithdrawalSettingRepository UserWithdrawalSettings { get; }
         IUserContributionRepository UserContributions { get; }
+        IRecentActivityRepository RecentActivities { get; }
         #endregion
 
         #region Contributions

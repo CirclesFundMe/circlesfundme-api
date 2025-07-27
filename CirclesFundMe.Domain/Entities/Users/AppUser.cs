@@ -40,6 +40,7 @@
         public virtual ICollection<UserDocument> UserDocuments { get; set; } = [];
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public virtual ICollection<UserContribution> UserContributions { get; set; } = [];
+        public virtual ICollection<RecentActivity> RecentActivities { get; set; } = [];
 
         public void UpdateAuditFields(string userId)
         {

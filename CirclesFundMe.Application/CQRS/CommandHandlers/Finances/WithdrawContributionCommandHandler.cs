@@ -51,83 +51,43 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
 
             string sessionId = UtilityHelper.GenerateRandomUnique30DigitSessionID();
 
-            BasePaystackResponse<TransferFundData> transferResponse = await _paystackClient.TransferFund(new TransferFundPayload
+            TransferFundPayload payload = new()
             {
-                Amount = amountToSendCustomer * 100, // In Kobo
-                Recipient = userWithdrawalSetting.PaystackRecipientCode,
-                Reason = "Contribution Withdrawal",
-                Reference = Guid.NewGuid().ToString("N")
-            }, cancellationToken);
-
-            if (transferResponse.status == false || transferResponse.data == null)
-            {
-                return BaseResponse<bool>.BadRequest("Unable to process withdrawal. Please try again later.");
-            }
-
-            // Create the debit transaction record
-            Transaction debitTransaction = new()
-            {
-                TransactionReference = transferResponse.data.reference,
-                Narration = "Contribution Withdrawal",
-                TransactionType = TransactionTypeEnums.Debit,
-                BalanceBeforeTransaction = userContributionWallet.Balance,
-                Amount = totalAmountToWithdraw,
-                BalanceAfterTransaction = userContributionWallet.Balance - totalAmountToWithdraw,
-                TransactionDate = DateTime.UtcNow,
-                TransactionTime = DateTime.UtcNow.TimeOfDay,
-                SessionId = sessionId,
-                WalletId = userContributionWallet.Id
-            };
-
-            // Create the credit transaction record for the charge clearance wallet
-            Transaction creditTransaction = new()
-            {
-                TransactionReference = transferResponse.data.reference,
-                Narration = "Contribution Withdrawal Charge",
-                TransactionType = TransactionTypeEnums.Credit,
-                BalanceBeforeTransaction = chargeClearanceWallet.Balance,
-                Amount = withdrawalCharge,
-                BalanceAfterTransaction = chargeClearanceWallet.Balance + withdrawalCharge,
-                TransactionDate = DateTime.UtcNow,
-                TransactionTime = DateTime.UtcNow.TimeOfDay,
-                SessionId = sessionId,
-                WalletId = chargeClearanceWallet.Id
-            };
-
-            // Update the wallets
-            userContributionWallet.Balance -= totalAmountToWithdraw;
-            chargeClearanceWallet.Balance += withdrawalCharge;
-
-            try
-            {
-                // Add transactions to the unit of work
-                await _unitOfWork.Transactions.AddAsync(debitTransaction, cancellationToken);
-                await _unitOfWork.Transactions.AddAsync(creditTransaction, cancellationToken);
-
-                // Update wallets in the unit of work
-                _unitOfWork.Wallets.Update(userContributionWallet);
-                _unitOfWork.Wallets.Update(chargeClearanceWallet);
-
-                // Save changes
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-                // Enqueue notification job
-                _queueService.EnqueueFireAndForgetJob<CFMJobs>(j => j.SendNotification(new List<CreateNotificationModel>
+                amount = amountToSendCustomer * 100, // In Kobo
+                recipient = userWithdrawalSetting.PaystackRecipientCode,
+                reason = "Contribution Withdrawal",
+                reference = Guid.NewGuid().ToString("N"),
+                metadata = new MetaDataObj
                 {
-                    new()
-                    {
-                        Title = "Your contribution withdrawal was successful",
-                        Type = NotificationTypeEnums.Info,
-                        ObjectId = userContributionWallet.UserId,
-                        UserId = _currentUserService.UserId
-                    }
-                }));
+                    userId = _currentUserService.UserId,
+                    amount_with_charge = totalAmountToWithdraw.ToString()
+                }
+            };
 
-                return BaseResponse<bool>.Success(true, "Withdrawal processed successfully.");
-            }
-            catch (Exception ex)
+            Payment payment = new()
             {
-                return BaseResponse<bool>.BadRequest($"An error occurred while processing your withdrawal: {ex.Message}");
+                Reference = payload.reference,
+                Amount = payload.amount / 100, // Convert back to Naira
+                ChargeAmount = withdrawalCharge,
+                TotalAmount = totalAmountToWithdraw,
+                Currency = payload.currency ?? "NGN",
+                PaymentStatus = PaymentStatusEnums.Awaiting,
+                PaymentType = PaymentTypeEnums.Outflow,
+                UserId = _currentUserService.UserId,
+            };
+
+            await _unitOfWork.Payments.AddAsync(payment, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            BasePaystackResponse<TransferFundData> transferResponse = await _paystackClient.TransferFund(payload, cancellationToken);
+
+            if (transferResponse.status == false)
+            {
+                return BaseResponse<bool>.BadRequest("Unable to process withdrawal");
+            }
+            else
+            {
+                return BaseResponse<bool>.Success(true, "Withdrawal request processed successfully");
             }
         }
     }

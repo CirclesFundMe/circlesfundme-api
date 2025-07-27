@@ -99,6 +99,8 @@
                 : serviceCharge * 12;
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
 
+            decimal eligibleLoan = principalLoan - loanManagementFee;
+
             return new RegularFinanceBreakdown
             {
                 PrincipalLoan = principalLoan,
@@ -106,7 +108,7 @@
                 ServiceCharge = serviceCharge,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
-                TotalRepayment = principalLoan + totalServiceCharge + loanManagementFee
+                TotalRepayment = eligibleLoan,
             };
         }
     }

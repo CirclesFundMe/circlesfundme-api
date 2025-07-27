@@ -2,10 +2,13 @@
 {
     public record Payment : BaseEntity
     {
+        public PaymentTypeEnums PaymentType { get; set; }
         public string? AccessCode { get; set; }
         public string? AuthorizationUrl { get; set; }
         public string? Reference { get; set; }
-        public decimal Amount { get; set; } = 0;
+        public decimal Amount { get; set; }
+        public decimal ChargeAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string? Currency { get; set; }
         public DateTime TransactionDate { get; set; }
         public string? Status { get; set; }

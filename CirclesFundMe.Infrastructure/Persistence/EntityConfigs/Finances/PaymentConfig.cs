@@ -11,6 +11,10 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
             builder.HasIndex(p => p.Reference)
                 .IsUnique();
 
+            builder.Property(p => p.PaymentType)
+                .HasConversion<EnumToStringConverter<PaymentTypeEnums>>()
+                .HasMaxLength(50);
+
             builder.Property(p => p.AccessCode)
                 .HasMaxLength(256);
 
@@ -21,6 +25,9 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
                 .HasMaxLength(256);
 
             builder.Property(p => p.Amount)
+                .HasColumnType("decimal(18,2)");
+
+            builder.Property(p => p.ChargeAmount)
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(p => p.Currency)

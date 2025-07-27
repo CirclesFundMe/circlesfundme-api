@@ -1,4 +1,7 @@
-﻿namespace CirclesFundMe.Application.HttpClients.Paystack
+﻿using Microsoft.VisualBasic;
+using Org.BouncyCastle.Cms;
+
+namespace CirclesFundMe.Application.HttpClients.Paystack
 {
     public record BankData
     {
@@ -111,10 +114,40 @@
         public AuthorizationData? authorization { get; set; }
     }
 
+    public class TransferWebhookData
+    {
+        public decimal amount { get; set; }
+        public DateTime createdAt { get; set; }
+        public string? currency { get; set; }
+        public string? domain { get; set; }
+        public object? failures { get; set; }
+        public string? reason { get; set; }
+        public string? reference { get; set; }
+        public string? source { get; set; }
+        public string? status { get; set; }
+        public string? transfer_code { get; set; }
+        public DateTime transferred_at { get; set; }
+        public DateTime updatedAt { get; set; }
+        public RecipientData? recipient { get; set; }
+        public string? gateway_response { get; set; }
+    }
+
+    public class RecipientData
+    {
+        public bool active { get; set; }
+        public DateTime createdAt { get; set; }
+        public string? name { get; set; }
+        public string? recipient_code { get; set; }
+        public string? type { get; set; }
+        public MetaDataObj? metadata { get; set; }
+        public DateTime updatedAt { get; set; }
+    }
+
     public record MetaDataObj
     {
         public string? userId { get; set; }
         public bool updateCard { get; set; } = false;
+        public string? amount_with_charge { get; set; }
     }
 
     #region Shared

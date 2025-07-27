@@ -68,23 +68,13 @@
 
     public record TransferFundPayload
     {
-        [JsonProperty("source")]
-        public string? Source { get; set; } = "balance";
-
-        [JsonProperty("amount")]
-        public decimal Amount { get; set; }
-
-        [JsonProperty("recipient")]
-        public string? Recipient { get; set; }
-
-        [JsonProperty("currency")]
-        public string? Currency { get; set; } = "NGN";
-
-        [JsonProperty("reference")]
-        public string? Reference { get; set; }
-
-        [JsonProperty("reason")]
-        public string? Reason { get; set; }
+        public string? source { get; set; } = "balance";
+        public decimal amount { get; set; }
+        public string? recipient { get; set; }
+        public string? currency { get; set; } = "NGN";
+        public string? reference { get; set; }
+        public string? reason { get; set; }
+        public object? metadata { get; set; }
     }
 
     public record ChargeAuthorizationPayload

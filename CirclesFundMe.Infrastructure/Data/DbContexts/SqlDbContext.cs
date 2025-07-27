@@ -11,6 +11,7 @@
         public DbSet<UserKYC> UserKYCs { get; set; }
         public DbSet<UserWithdrawalSetting> UserWithdrawalSettings { get; set; }
         public DbSet<UserContribution> UserContributions { get; set; }
+        public DbSet<RecentActivity> RecentActivities { get; set; }
         #endregion
 
         #region Contributions

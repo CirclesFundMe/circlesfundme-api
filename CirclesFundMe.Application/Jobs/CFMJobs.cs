@@ -187,5 +187,32 @@
                 _logger.LogError(ex, "An error occurred while sending Contact Us mail.");
             }
         }
+
+        public async Task CreateRecentActivity(RecentActivity recentActivity)
+        {
+            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            SqlDbContext dbContext = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
+
+            try
+            {
+                await _utility.ExecuteWithRetryAsync(async () =>
+                {
+                    if (recentActivity == null)
+                    {
+                        _logger.LogWarning("RecentActivity is null. Skipping creation.");
+                        return;
+                    }
+
+                    await dbContext.RecentActivities.AddAsync(recentActivity, CancellationToken.None);
+                    await dbContext.SaveChangesAsync(CancellationToken.None);
+
+                    _logger.LogInformation("Recent activity created successfully for user {UserId}", recentActivity.UserId);
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating recent activity for user {UserId}", recentActivity.UserId);
+            }
+        }
     }
 }

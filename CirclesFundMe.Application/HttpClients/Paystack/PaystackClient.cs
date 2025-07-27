@@ -225,7 +225,12 @@
                     };
                 }
 
-                return response;
+                return new BasePaystackResponse<TransferFundData>
+                {
+                    status = response.status,
+                    message = response.message,
+                    data = response.data
+                };
             }
             catch (Exception ex)
             {
