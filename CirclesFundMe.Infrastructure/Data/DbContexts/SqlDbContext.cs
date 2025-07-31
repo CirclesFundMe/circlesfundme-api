@@ -34,6 +34,10 @@
         public DbSet<ContactUsMail> ContactUsMails { get; set; }
         #endregion
 
+        #region Loans
+        public DbSet<LoanApplication> LoanApplications { get; set; }
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

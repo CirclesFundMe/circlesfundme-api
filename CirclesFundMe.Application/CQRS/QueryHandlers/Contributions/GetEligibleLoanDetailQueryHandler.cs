@@ -1,21 +1,21 @@
 ﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.Contributions
 {
-    public class GetEligibleLoanDetailQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetEligibleLoanDetailQuery, BaseResponse<EligibleLoanDetailModel>>
+    public class GetEligibleLoanDetailQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetEligibleLoanDetailQuery, BaseResponse<RegularLoanBreakdownModel>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
-        public async Task<BaseResponse<EligibleLoanDetailModel>> Handle(GetEligibleLoanDetailQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<RegularLoanBreakdownModel>> Handle(GetEligibleLoanDetailQuery request, CancellationToken cancellationToken)
         {
             RegularFinanceBreakdown? financeBreakdown = await _unitOfWork.ContributionSchemes.GetRegularFinanceBreakdown(request.ContributionSchemeId, request.Amount, cancellationToken);
 
             if (financeBreakdown == null)
             {
-                return BaseResponse<EligibleLoanDetailModel>.NotFound("Unable to get finance breakdown. Invalid parameter(s)");
+                return BaseResponse<RegularLoanBreakdownModel>.NotFound("Unable to get finance breakdown. Invalid parameter(s)");
             }
 
             string weekOrMonth = financeBreakdown.SchemeType == SchemeTypeEnums.Weekly ? "week" : "month";
 
-            EligibleLoanDetailModel eligibleLoanDetail = new()
+            RegularLoanBreakdownModel eligibleLoanDetail = new()
             {
                 PrincipalLoan = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.PrincipalLoan),
                 PrincipalLoanDescription = FormServiceValueDescription(financeBreakdown),
@@ -27,7 +27,7 @@
                 TotalRepayment = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.TotalRepayment)
             };
 
-            return BaseResponse<EligibleLoanDetailModel>.Success(eligibleLoanDetail, "Eligible loan details retrieved successfully.");
+            return BaseResponse<RegularLoanBreakdownModel>.Success(eligibleLoanDetail, "Eligible loan details retrieved successfully.");
         }
 
         private static string FormServiceValueDescription(RegularFinanceBreakdown breakdown)

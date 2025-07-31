@@ -1,6 +1,6 @@
 ﻿namespace CirclesFundMe.Application.Models.Contributions
 {
-    public record EligibleLoanDetailModel
+    public record RegularLoanBreakdownModel
     {
         public string? PrincipalLoan { get; set; }
         public string? PrincipalLoanDescription { get; set; }

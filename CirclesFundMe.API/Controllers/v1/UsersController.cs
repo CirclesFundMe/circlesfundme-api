@@ -95,5 +95,14 @@
             BaseResponse<PagedList<RecentActivityModel>> response = await _sender.Send(new GetMyRecentActivityQuery { Params = @params }, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpGet("my-eligible-loan")]
+        [ProducesResponseType<BaseResponse<object>>(200)]
+        [SwaggerOperation(Summary = "View My Eligible Loan")]
+        public async Task<IActionResult> ViewMyEligibleLoan(CancellationToken cancellation)
+        {
+            BaseResponse<object> response = await _sender.Send(new ViewMyEligibleLoanQuery(), cancellation);
+            return HandleResponse(response);
+        }
     }
 }

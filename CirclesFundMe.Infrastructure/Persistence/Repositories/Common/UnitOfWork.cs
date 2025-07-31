@@ -39,6 +39,10 @@
         private IContactUsMailRepository? _contactUsMails;
         #endregion
 
+        #region Loans
+        private ILoanApplicationRepository? _loanApplications;
+        #endregion
+
         // Repositories
         #region Users
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
@@ -71,6 +75,10 @@
 
         #region Utility
         public IContactUsMailRepository ContactUsMails => _contactUsMails ??= new ContactUsMailRepository(_sqlDbContext.ContactUsMails);
+        #endregion
+
+        #region Loans
+        public ILoanApplicationRepository LoanApplications => _loanApplications ??= new LoanApplicationRepository(_sqlDbContext.LoanApplications);
         #endregion
 
         #region Required Methods

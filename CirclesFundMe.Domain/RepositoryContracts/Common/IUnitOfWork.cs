@@ -1,4 +1,6 @@
-﻿namespace CirclesFundMe.Domain.RepositoryContracts.Common
+﻿using CirclesFundMe.Domain.RepositoryContracts.Loans;
+
+namespace CirclesFundMe.Domain.RepositoryContracts.Common
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -33,6 +35,10 @@
 
         #region Utility
         IContactUsMailRepository ContactUsMails { get; }
+        #endregion
+
+        #region Loans
+        ILoanApplicationRepository LoanApplications { get; }
         #endregion
 
         #region Required Contracts
