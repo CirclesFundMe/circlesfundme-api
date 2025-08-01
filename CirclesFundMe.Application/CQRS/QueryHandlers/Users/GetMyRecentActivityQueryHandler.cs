@@ -16,7 +16,8 @@
                     Id = x.Id,
                     Title = x.Title,
                     Type = x.Type,
-                    Data = x.Data
+                    Data = x.Data,
+                    CreatedAt = x.CreatedDate
                 }).ToList();
 
             return new()
