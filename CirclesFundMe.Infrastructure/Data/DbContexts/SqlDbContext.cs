@@ -1,4 +1,6 @@
-﻿namespace CirclesFundMe.Infrastructure.Data.DbContexts
+﻿using CirclesFundMe.Domain.Entities.AdminPortal;
+
+namespace CirclesFundMe.Infrastructure.Data.DbContexts
 {
     public class SqlDbContext(DbContextOptions<SqlDbContext> options) : IdentityDbContext<AppUser>(options)
     {
@@ -36,6 +38,10 @@
 
         #region Loans
         public DbSet<LoanApplication> LoanApplications { get; set; }
+        #endregion
+
+        #region Admin Portal
+        public DbSet<MessageTemplate> MessageTemplates { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

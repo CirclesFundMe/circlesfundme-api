@@ -48,6 +48,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 
         #region Admin Portal
         private IUserManagementRepository? _userManagement;
+        private IMessageTemplateRepository? _messageTemplates;
         #endregion
 
         // Repositories
@@ -90,6 +91,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 
         #region Admin Portal
         public IUserManagementRepository UserManagement => _userManagement ??= new UserManagementRepository(_sqlDbContext);
+        public IMessageTemplateRepository MessageTemplates => _messageTemplates ??= new MessageTemplateRepository(_sqlDbContext.MessageTemplates);
         #endregion
 
         #region Required Methods

@@ -8,6 +8,21 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
     {
         private readonly SqlDbContext _context = context;
 
+        public async Task<bool> DeactivateUser(string userId, CancellationToken cancellation)
+        {
+            AppUser? user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId && u.UserContributionScheme != null, cancellation);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.IsDeleted = true;
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync(cancellation) > 0;
+        }
+
         public async Task<PagedList<AppUserAdmin>> GetUsersAsync(AdminUserParams @params, CancellationToken cancellation)
         {
             IQueryable<AppUser> query = _context.Users
@@ -58,6 +73,21 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
                 .ToListAsync(cancellation);
 
             return new PagedList<AppUserAdmin>(items, totalCount, @params.PageNumber, @params.PageSize);
+        }
+
+        public async Task<bool> ReactivateUser(string userId, CancellationToken cancellation)
+        {
+            AppUser? user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId && u.UserContributionScheme != null, cancellation);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.IsDeleted = false;
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync(cancellation) > 0;
         }
     }
 }

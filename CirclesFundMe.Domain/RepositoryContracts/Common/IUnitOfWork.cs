@@ -44,6 +44,7 @@ namespace CirclesFundMe.Domain.RepositoryContracts.Common
 
         #region Admin Portal
         IUserManagementRepository UserManagement { get; }
+        IMessageTemplateRepository MessageTemplates { get; }
         #endregion
 
         #region Required Contracts
