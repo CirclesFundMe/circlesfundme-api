@@ -56,5 +56,6 @@
         public int LoanMultiple { get; set; }
         public decimal EligibleLoan => PrincipalLoan - LoanManagementFee;
         public decimal TotalRepayment { get; set; }
+        public decimal RepaymentTerm { get; set; }
     }
 }

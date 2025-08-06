@@ -98,6 +98,11 @@
                 ? serviceCharge * 52
                 : serviceCharge * 12;
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
+            decimal totalRepayment = principalLoan + totalServiceCharge;
+
+            decimal repaymentTerm = scheme.SchemeType == SchemeTypeEnums.Weekly
+                ? totalRepayment / 52
+                : totalRepayment / 12;
 
             return new RegularFinanceBreakdown
             {
@@ -106,7 +111,8 @@
                 ServiceCharge = serviceCharge,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
-                TotalRepayment = principalLoan + totalServiceCharge,
+                TotalRepayment = totalRepayment,
+                RepaymentTerm = repaymentTerm
             };
         }
     }

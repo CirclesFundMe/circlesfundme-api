@@ -24,7 +24,8 @@
                 EligibleLoan = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.EligibleLoan),
                 EligibleLoanDescription = "Principal Loan - Loan Mgt. Fee",
                 ServiceCharge = $"{UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.ServiceCharge)}/{weekOrMonth}",
-                TotalRepayment = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.TotalRepayment)
+                TotalRepayment = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.TotalRepayment),
+                RepaymentTerm = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.RepaymentTerm),
             };
 
             return BaseResponse<RegularLoanBreakdownModel>.Success(eligibleLoanDetail, "Eligible loan details retrieved successfully.");
