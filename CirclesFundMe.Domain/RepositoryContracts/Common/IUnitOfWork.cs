@@ -1,4 +1,5 @@
-﻿using CirclesFundMe.Domain.RepositoryContracts.Loans;
+﻿using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
+using CirclesFundMe.Domain.RepositoryContracts.Loans;
 
 namespace CirclesFundMe.Domain.RepositoryContracts.Common
 {
@@ -39,6 +40,10 @@ namespace CirclesFundMe.Domain.RepositoryContracts.Common
 
         #region Loans
         ILoanApplicationRepository LoanApplications { get; }
+        #endregion
+
+        #region Admin Portal
+        IUserManagementRepository UserManagement { get; }
         #endregion
 
         #region Required Contracts

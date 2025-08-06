@@ -5,15 +5,6 @@
     {
         private readonly ISender _sender = sender;
 
-        [HttpGet]
-        [ProducesResponseType<BaseResponse<PagedList<UserModel>>>(200)]
-        [SwaggerOperation(Summary = "Get all Users")]
-        public async Task<IActionResult> GetUsers([FromQuery] UserParams @params, CancellationToken cancellation)
-        {
-            BaseResponse<PagedList<UserModel>> response = await _sender.Send(new GetUsersQuery { Params = @params }, cancellation);
-            return HandleResponse(response);
-        }
-
         [HttpGet("{id}")]
         [ProducesResponseType<BaseResponse<UserModel>>(200)]
         [SwaggerOperation(Summary = "Get a User by ID")]

@@ -1,4 +1,7 @@
-﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
+﻿using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
+using CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal;
+
+namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 {
     public class UnitOfWork(SqlDbContext sqlDbContext) : IUnitOfWork
     {
@@ -43,6 +46,10 @@
         private ILoanApplicationRepository? _loanApplications;
         #endregion
 
+        #region Admin Portal
+        private IUserManagementRepository? _userManagement;
+        #endregion
+
         // Repositories
         #region Users
         public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
@@ -79,6 +86,10 @@
 
         #region Loans
         public ILoanApplicationRepository LoanApplications => _loanApplications ??= new LoanApplicationRepository(_sqlDbContext.LoanApplications);
+        #endregion
+
+        #region Admin Portal
+        public IUserManagementRepository UserManagement => _userManagement ??= new UserManagementRepository(_sqlDbContext);
         #endregion
 
         #region Required Methods

@@ -57,4 +57,17 @@
         public bool IsCardLinked { get; set; }
         public int ContributionsCount { get; set; }
     }
+
+    [NotMapped]
+    public class AppUserAdmin
+    {
+        public string? UserId { get; set; }
+        public string? Name { get; set; }
+        public DateTime? DateJoined { get; set; }
+        public SchemeTypeEnums SchemeType { get; set; }
+        public string? Scheme { get; set; }
+        public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
+        public decimal TotalContribution { get; set; }
+        public decimal TotalRepaidAmount { get; set; }
+    }
 }
