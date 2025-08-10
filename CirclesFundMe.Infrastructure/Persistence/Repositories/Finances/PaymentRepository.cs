@@ -25,7 +25,8 @@
                     Date = p.CreatedDate,
                     Action = p.PaymentType == PaymentTypeEnums.Inflow ? "Contribution" : "Withdrawal",
                     Amount = p.Amount,
-                    Charge = p.ChargeAmount
+                    Charge = p.ChargeAmount,
+                    Status = p.PaymentStatus
                 })
                 .ToListAsync(cancellation);
 
