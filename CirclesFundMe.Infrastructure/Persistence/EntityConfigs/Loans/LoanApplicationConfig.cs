@@ -17,9 +17,17 @@
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 
+            builder.Property(x => x.CurrentEligibleAmount)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
             builder.Property(x => x.ApprovedAmount)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
+
+            builder.Property(x => x.Scheme)
+                .HasConversion<EnumToStringConverter<SchemeTypeEnums>>()
+                .HasMaxLength(50);
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.LoanApplications)

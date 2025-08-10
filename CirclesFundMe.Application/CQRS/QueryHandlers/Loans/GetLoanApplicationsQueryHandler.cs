@@ -12,7 +12,12 @@
             {
                 Id = la.Id,
                 Status = la.Status.ToString(),
+                Scheme = la.Scheme.ToString(),
+                RequestedAmount = la.RequestedAmount,
                 ApprovedAmount = la.ApprovedAmount,
+                EligibleLoanAmount = la.CurrentEligibleAmount,
+                AmountRepaid = 0,
+                DateApplied = la.CreatedDate,
                 ApplicantDetail = new LoanApplicantDetail
                 {
                     FirstName = la.User?.FirstName,
