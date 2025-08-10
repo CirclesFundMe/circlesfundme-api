@@ -23,4 +23,14 @@
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }
     }
+
+    [NotMapped]
+    public record PaymentAdmin
+    {
+        public DateTime Date { get; set; }
+        public string? Action { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Charge { get; set; }
+        public PaymentStatusEnums Status { get; set; }
+    }
 }

@@ -1,9 +1,4 @@
-﻿using CirclesFundMe.Application.CQRS.Commands.AdminPortal;
-using CirclesFundMe.Application.CQRS.Queries.AdminPortal;
-using CirclesFundMe.Application.Models.AdminPortal;
-using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;
-
-namespace CirclesFundMe.API.Controllers.v1.AdminPortal
+﻿namespace CirclesFundMe.API.Controllers.v1.AdminPortal
 {
     [Authorize(Roles = $"{Roles.Admin}")]
     public class AdminUserManagementController(ISender sender) : BaseControllerV1
@@ -34,6 +29,15 @@ namespace CirclesFundMe.API.Controllers.v1.AdminPortal
         public async Task<IActionResult> ReactivateUser(string userId, CancellationToken cancellation)
         {
             BaseResponse<bool> response = await _sender.Send(new ReactivateUserCommand { UserId = userId }, cancellation);
+            return HandleResponse(response);
+        }
+
+        [HttpGet("users/{userId}/payments")]
+        [ProducesResponseType<BaseResponse<PagedList<PaymentAdminModel>>>(200)]
+        [SwaggerOperation(Summary = "Get User Payments")]
+        public async Task<IActionResult> GetUserPayments(string userId, [FromQuery] PaymentParams queryParams, CancellationToken cancellation)
+        {
+            BaseResponse<PagedList<PaymentAdminModel>> response = await _sender.Send(new GetUserPaymentsQuery { UserId = userId, Params = queryParams }, cancellation);
             return HandleResponse(response);
         }
     }

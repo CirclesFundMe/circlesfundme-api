@@ -45,6 +45,19 @@
                         AccountName = u.WithdrawalSetting.AccountName,
                         BankCode = u.WithdrawalSetting.BankCode
                     },
+                    UserDocuments = u.UserDocuments.Select(d => new UserDocument
+                    {
+                        Id = d.Id,
+                        DocumentType = d.DocumentType,
+                        DocumentUrl = d.DocumentUrl,
+                        CreatedDate = d.CreatedDate
+                    }).ToList(),
+                    UserKYC = u.UserKYC == null ? null : new UserKYC
+                    {
+                        Id = u.UserKYC.Id,
+                        BVN = u.UserKYC.BVN,
+                        CreatedDate = u.UserKYC.CreatedDate
+                    },
                     IsPaymentSetupComplete = u.WithdrawalSetting != null && u.LinkedCard != null,
                     IsCardLinked = u.LinkedCard != null,
                     ContributionsCount = u.UserContributions.Count

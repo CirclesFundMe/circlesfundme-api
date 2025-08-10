@@ -40,6 +40,12 @@
                     AccountName = user.WithdrawalSetting.AccountName,
                     BankCode = user.WithdrawalSetting.BankCode
                 } : null,
+                UserDocuments = user.UserDocuments.Select(doc => new UserDocumentModel
+                {
+                    DocumentType = doc.DocumentType.ToString(),
+                    DocumentUrl = doc.DocumentUrl,
+                    DocumentName = doc.DocumentName,
+                }).ToList(),
                 ContributionAmount = user.UserContributionScheme?.ContributionAmount,
                 IncomeAmount = user.UserContributionScheme?.IncomeAmount,
                 Email = user.Email,
@@ -47,7 +53,8 @@
                 OnboardingStatus = user.OnboardingStatus.ToString(),
                 AllowPushNotifications = user.AllowPushNotifications,
                 AllowEmailNotifications = user.AllowEmailNotifications,
-                Gender = user.Gender.ToString()
+                Gender = user.Gender.ToString(),
+                BVN = user.UserKYC?.BVN,
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

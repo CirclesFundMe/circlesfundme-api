@@ -23,6 +23,8 @@
         public bool? AllowEmailNotifications { get; set; }
         public bool IsPaymentSetupComplete { get; set; }
         public MyAutoLoanDetail? AutoLoanDetail { get; set; }
+        public List<UserDocumentModel> UserDocuments { get; set; } = [];
+        public string? BVN {  get; set; }
     }
 
     public record MyAutoLoanDetail

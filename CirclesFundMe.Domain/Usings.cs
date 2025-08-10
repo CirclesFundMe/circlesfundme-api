@@ -26,3 +26,4 @@ global using CirclesFundMe.Domain.RepositoryContracts.Utility;
 global using CirclesFundMe.Domain.Enums.Loans;
 global using CirclesFundMe.Domain.Entities.Loans;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Loans;
+global using CirclesFundMe.Domain.Pagination.QueryParams.Finances;

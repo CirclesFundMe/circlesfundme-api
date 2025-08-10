@@ -13,6 +13,10 @@
                 .HasConversion<EnumToStringConverter<LoanApplicationStatusEnums>>()
                 .HasMaxLength(50);
 
+            builder.Property(x => x.RequestedAmount)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
             builder.Property(x => x.ApprovedAmount)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();

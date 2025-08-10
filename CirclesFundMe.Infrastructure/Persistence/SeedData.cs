@@ -83,6 +83,24 @@
                     TimeZone = "Africa/Lagos",
                     OnboardingStatus = OnboardingStatusEnums.Completed,
                     Gender = GenderEnums.Male
+                },
+                new AppUser
+                {
+                    FirstName = "Dami",
+                    LastName = "Ogunboyejo",
+                    MiddleName = "",
+                    DateOfBirth = new DateTime(1993, 10, 21),
+                    Email = "demilademichael18@gmail.com",
+                    PhoneNumber = "08144001908",
+                    UserName = "demilademichael18@gmail.com",
+                    EmailConfirmed = true,
+                    CFMAccountId = account.Id,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedBy = "System",
+                    UserType = UserTypeEnums.Staff,
+                    TimeZone = "Africa/Lagos",
+                    OnboardingStatus = OnboardingStatusEnums.Completed,
+                    Gender = GenderEnums.Male
                 }
             ];
 
@@ -96,7 +114,7 @@
 
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRolesAsync(user, [Roles.Admin, Roles.SuperAdmin, Roles.Member]);
+                        await userManager.AddToRolesAsync(user, [Roles.Admin]);
                     }
 
                     Wallet wallet = new()

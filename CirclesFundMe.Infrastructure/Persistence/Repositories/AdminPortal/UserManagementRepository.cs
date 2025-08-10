@@ -42,7 +42,13 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
                     query = query.Where(u => u.IsDeleted);
                     break;
                 case AdminUserStatus.PendingKYC:
-                    query = query.Where(u => u.UserKYC == null || (u.UserKYC != null && (u.UserKYC.BVN == null)));
+                    query = query.Where(u =>
+                            u.UserKYC == null
+                            || string.IsNullOrEmpty(u.UserKYC.BVN)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.Selfie)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.UtilityBill)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.GovernmentIssuedId)
+                        );
                     break;
                 default:
                     break;

@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
+﻿namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
 {
     public class MakeInitialContributionCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient) : IRequestHandler<MakeInitialContributionCommand, BaseResponse<InitializeTransactionModel>>
     {

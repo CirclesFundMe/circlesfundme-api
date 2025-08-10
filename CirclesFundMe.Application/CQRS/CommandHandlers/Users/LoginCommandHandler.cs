@@ -16,6 +16,11 @@
                 return BaseResponse<LoginModel>.Unauthorized("Incorrect email or password");
             }
 
+            if (user.IsDeleted)
+            {
+                return BaseResponse<LoginModel>.Unauthorized("Your account has been deactivated. Please contact support.");
+            }
+
             bool passwordIsCorrect = await _userManager.CheckPasswordAsync(user, request.Password!);
 
             if (!passwordIsCorrect)

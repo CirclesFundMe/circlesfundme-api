@@ -1,7 +1,4 @@
-﻿using CirclesFundMe.Application.CQRS.Queries.AdminPortal;
-using CirclesFundMe.Application.Models.AdminPortal;
-
-namespace CirclesFundMe.Application.CQRS.QueryHandlers.AdminPortal
+﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.AdminPortal
 {
     public class GetAdminUsersQueryHandler(IUnitOfWork unitOfWork, UtilityHelper utility) : IRequestHandler<GetAdminUsersQuery, BaseResponse<PagedList<AdminUserModel>>>
     {
