@@ -16,11 +16,18 @@
                 return BaseResponse<bool>.BadRequest("You already have an unapproved loan application.");
             }
 
+            decimal cumulativeContribution = await _unitOfWork.UserContributions.CumulativeUserContribution(_currentUserId, cancellationToken);
+
             UserContributionScheme? userContributionScheme = await _unitOfWork.UserContributionSchemes.ViewMyEligibleLoan(_currentUserId, cancellationToken);
 
             if (userContributionScheme == null)
             {
                 return BaseResponse<bool>.NotFound("You are not eligible for a loan at this time.");
+            }
+
+            if (cumulativeContribution < userContributionScheme.MinimumContributionToQualifyForLoan)
+            {
+                return BaseResponse<bool>.BadRequest($"You need to contribute at least {userContributionScheme.MinimumContributionToQualifyForLoan:N2} to qualify for a loan.");
             }
 
             decimal eligibleAmount = 0;

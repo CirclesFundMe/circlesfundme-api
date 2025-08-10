@@ -214,6 +214,7 @@
                 userContributionScheme.ChargeAmount = preloanServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
+                userContributionScheme.MinimumContributionToQualifyForLoan = autoFinanceBreakdown.DownPayment;
             }
             else
             {
@@ -237,6 +238,7 @@
                 userContributionScheme.ChargeAmount = regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
+                userContributionScheme.MinimumContributionToQualifyForLoan = regularFinanceBreakdown.DownPayment;
             }
             await _unitOfWork.UserContributionSchemes.AddAsync(userContributionScheme, cancellationToken);
 

@@ -57,5 +57,6 @@
         public decimal EligibleLoan => PrincipalLoan - LoanManagementFee;
         public decimal TotalRepayment { get; set; }
         public decimal RepaymentTerm { get; set; }
+        public decimal DownPayment { get; set; }
     }
 }

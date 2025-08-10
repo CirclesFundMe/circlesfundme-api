@@ -97,6 +97,7 @@
             decimal totalServiceCharge = scheme.SchemeType == SchemeTypeEnums.Weekly
                 ? serviceCharge * 52
                 : serviceCharge * 12;
+            decimal downPayment = principalLoan * (decimal)scheme.DownPaymentPercent / 100;
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
             decimal totalRepayment = principalLoan + totalServiceCharge;
 
@@ -112,7 +113,8 @@
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
                 TotalRepayment = totalRepayment,
-                RepaymentTerm = repaymentTerm
+                RepaymentTerm = repaymentTerm,
+                DownPayment = downPayment
             };
         }
     }

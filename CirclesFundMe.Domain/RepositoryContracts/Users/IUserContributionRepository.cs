@@ -2,5 +2,6 @@
 {
     public interface IUserContributionRepository : IRepositoryBase<UserContribution>
     {
+        Task<decimal> CumulativeUserContribution(string userId, CancellationToken cancellation);
     }
 }

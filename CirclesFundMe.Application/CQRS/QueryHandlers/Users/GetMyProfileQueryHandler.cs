@@ -57,7 +57,7 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
         }
 
-        private string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay)
+        private static string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay)
         {
             if (!Enum.IsDefined(schemeType))
             {
