@@ -38,6 +38,8 @@ namespace CirclesFundMe.Infrastructure.Data.DbContexts
 
         #region Loans
         public DbSet<LoanApplication> LoanApplications { get; set; }
+        public DbSet<ApprovedLoan> ApprovedLoans { get; set; }
+        public DbSet<LoanRepayment> LoanRepayments { get; set; }
         #endregion
 
         #region Admin Portal

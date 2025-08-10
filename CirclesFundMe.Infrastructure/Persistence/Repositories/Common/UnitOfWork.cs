@@ -1,7 +1,4 @@
-﻿using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
-using CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal;
-
-namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
+﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 {
     public class UnitOfWork(SqlDbContext sqlDbContext) : IUnitOfWork
     {
@@ -44,11 +41,14 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 
         #region Loans
         private ILoanApplicationRepository? _loanApplications;
+        private IApprovedLoanRepository? _approvedLoans;
+        private ILoanRepaymentRepository? _loanRepayments;
         #endregion
 
         #region Admin Portal
         private IUserManagementRepository? _userManagement;
         private IMessageTemplateRepository? _messageTemplates;
+        private IDashboardRepository? _dashboard;
         #endregion
 
         // Repositories
@@ -87,11 +87,14 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 
         #region Loans
         public ILoanApplicationRepository LoanApplications => _loanApplications ??= new LoanApplicationRepository(_sqlDbContext.LoanApplications);
+        public IApprovedLoanRepository ApprovedLoans => _approvedLoans ??= new ApprovedLoanRepository(_sqlDbContext);
+        public ILoanRepaymentRepository LoanRepayments => _loanRepayments ??= new LoanRepaymentRepository(_sqlDbContext);
         #endregion
 
         #region Admin Portal
         public IUserManagementRepository UserManagement => _userManagement ??= new UserManagementRepository(_sqlDbContext);
         public IMessageTemplateRepository MessageTemplates => _messageTemplates ??= new MessageTemplateRepository(_sqlDbContext.MessageTemplates);
+        public IDashboardRepository Dashboard => _dashboard ??= new DashboardRepository(_sqlDbContext);
         #endregion
 
         #region Required Methods

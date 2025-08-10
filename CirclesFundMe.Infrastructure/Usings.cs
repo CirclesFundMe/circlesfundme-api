@@ -43,3 +43,8 @@ global using CirclesFundMe.Domain.RepositoryContracts.Loans;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Loans;
 global using CirclesFundMe.Infrastructure.Persistence.Repositories.Loans;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Finances;
+global using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
+global using CirclesFundMe.Domain.Entities.AdminPortal;
+global using CirclesFundMe.Domain.Enums.AdminPortal;
+global using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;
+global using CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal;

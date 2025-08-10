@@ -21,10 +21,6 @@
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 
-            builder.Property(x => x.ApprovedAmount)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
-
             builder.Property(x => x.Scheme)
                 .HasConversion<EnumToStringConverter<SchemeTypeEnums>>()
                 .HasMaxLength(50);

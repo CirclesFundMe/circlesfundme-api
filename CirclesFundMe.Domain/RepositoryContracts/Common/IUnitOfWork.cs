@@ -40,11 +40,14 @@ namespace CirclesFundMe.Domain.RepositoryContracts.Common
 
         #region Loans
         ILoanApplicationRepository LoanApplications { get; }
+        IApprovedLoanRepository ApprovedLoans { get; }
+        ILoanRepaymentRepository LoanRepayments { get; }
         #endregion
 
         #region Admin Portal
         IUserManagementRepository UserManagement { get; }
         IMessageTemplateRepository MessageTemplates { get; }
+        IDashboardRepository Dashboard { get; }
         #endregion
 
         #region Required Contracts

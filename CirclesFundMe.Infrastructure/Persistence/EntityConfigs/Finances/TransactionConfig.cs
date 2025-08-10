@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
 {
     public record TransactionConfig : BaseEntityConfig<Transaction>
     {
@@ -9,6 +8,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Finances
             builder.ToTable("Transactions");
 
             builder.HasIndex(p => p.TransactionReference);
+            builder.HasIndex(p => p.WalletId);
+            builder.HasIndex(p => p.TransactionDate);
 
             builder.Property(p => p.TransactionReference)
                 .HasMaxLength(256);

@@ -4,5 +4,6 @@
     {
         public LoanApplicationStatusEnums Status { get; set; }
         public SchemeTypeEnums SchemeType { get; set; }
+        public string? UserId { get; set; }
     }
 }

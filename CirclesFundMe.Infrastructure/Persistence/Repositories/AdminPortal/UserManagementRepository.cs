@@ -1,8 +1,4 @@
-﻿using CirclesFundMe.Domain.Enums.AdminPortal;
-using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;
-using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
-
-namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
+﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
 {
     public class UserManagementRepository(SqlDbContext context) : IUserManagementRepository
     {

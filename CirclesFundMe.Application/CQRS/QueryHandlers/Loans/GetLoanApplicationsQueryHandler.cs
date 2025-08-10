@@ -6,7 +6,7 @@
 
         public async Task<BaseResponse<PagedList<LoanApplicationModel>>> Handle(GetLoanApplicationsQuery request, CancellationToken cancellationToken)
         {
-            PagedList<LoanApplication> loanApplications = await _unitOfWork.LoanApplications.GetLoanApplications(request.LoanApplicationParams, cancellationToken);
+            PagedList<LoanApplicationExtension> loanApplications = await _unitOfWork.LoanApplications.GetLoanApplications(request.LoanApplicationParams, cancellationToken);
 
             List<LoanApplicationModel> loanApplicationModels = loanApplications.Select(la => new LoanApplicationModel
             {
@@ -14,9 +14,9 @@
                 Status = la.Status.ToString(),
                 Scheme = la.Scheme.ToString(),
                 RequestedAmount = la.RequestedAmount,
-                ApprovedAmount = la.ApprovedAmount,
                 EligibleLoanAmount = la.CurrentEligibleAmount,
-                AmountRepaid = 0,
+                AmountRepaid = la.AmountRepaid,
+                ApprovedAmount = la.ApprovedAmount,
                 DateApplied = la.CreatedDate,
                 ApplicantDetail = new LoanApplicantDetail
                 {

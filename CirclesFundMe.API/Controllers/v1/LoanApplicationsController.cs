@@ -14,6 +14,15 @@
             return HandleResponse(response);
         }
 
+        [HttpGet("{loanApplicationId:guid}")]
+        [ProducesResponseType<BaseResponse<LoanApplicationDetailModel>>(200)]
+        [SwaggerOperation(Summary = "Get Loan Application By Id")]
+        public async Task<IActionResult> GetLoanApplicationById(Guid loanApplicationId, CancellationToken cancellationToken)
+        {
+            BaseResponse<LoanApplicationDetailModel> response = await _sender.Send(new GetLoanApplicationByIdQuery() { LoanApplicationId = loanApplicationId }, cancellationToken);
+            return HandleResponse(response);
+        }
+
         [HttpPost("create")]
         [ProducesResponseType<BaseResponse<bool>>(200)]
         [SwaggerOperation(Summary = "Create Loan Application")]

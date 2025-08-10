@@ -62,8 +62,7 @@
                 RequestedAmount = request.RequestedLoanAmount ?? eligibleAmount,
                 CurrentEligibleAmount = eligibleAmount,
                 Scheme = userContributionScheme.ContributionScheme!.SchemeType,
-                Breakdown = userContributionScheme.CopyOfCurrentBreakdownAtOnboarding,
-                ApprovedAmount = 0
+                Breakdown = userContributionScheme.CopyOfCurrentBreakdownAtOnboarding
             };
 
             await _unitOfWork.LoanApplications.AddAsync(loanApplication, cancellationToken);
