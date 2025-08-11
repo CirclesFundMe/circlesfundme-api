@@ -13,8 +13,14 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
                 .IsRequired();
 
             builder.Property(x => x.RepaymentDate)
-                .HasColumnType("datetime")
-                .IsRequired();
+                .HasColumnType("datetime");
+
+            builder.Property(x => x.Status)
+                .HasConversion<EnumToStringConverter<LoanRepaymentStatusEnums>>()
+                .HasMaxLength(50);
+
+            builder.Property(x => x.DueDate)
+                .HasColumnType("datetime");
 
             builder.HasOne(x => x.User)
                 .WithMany()

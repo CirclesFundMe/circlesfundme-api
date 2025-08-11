@@ -25,6 +25,9 @@
                 .HasConversion<EnumToStringConverter<SchemeTypeEnums>>()
                 .HasMaxLength(50);
 
+            builder.Property(x => x.RejectionReason)
+                .HasMaxLength(500);
+
             builder.HasOne(x => x.User)
                 .WithMany(x => x.LoanApplications)
                 .HasForeignKey(x => x.UserId)

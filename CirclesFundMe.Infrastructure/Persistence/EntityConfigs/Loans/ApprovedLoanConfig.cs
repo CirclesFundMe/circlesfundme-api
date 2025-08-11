@@ -8,6 +8,10 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
             base.Configure(builder);
             builder.ToTable("ApprovedLoans");
 
+            builder.Property(x => x.Status)
+                .HasConversion<EnumToStringConverter<ApprovedLoanStatusEnums>>()
+                .HasMaxLength(50);
+
             builder.Property(x => x.ApprovedAmount)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
