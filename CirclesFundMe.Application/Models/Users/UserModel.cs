@@ -17,6 +17,7 @@
         public string? OnboardingStatus { get; set; }
         public string? Gender { get; set; }
         public bool IsCardLinked { get; set; }
+        public string? PreInstallmentDesc { get; set; }
         public string? InstallmentDesc { get; set; }
 
         public bool? AllowPushNotifications { get; set; }
@@ -25,6 +26,7 @@
         public MyAutoLoanDetail? AutoLoanDetail { get; set; }
         public List<UserDocumentModel> UserDocuments { get; set; } = [];
         public string? BVN {  get; set; }
+        public bool IsEligibleForLoan { get; set; }
     }
 
     public record MyAutoLoanDetail

@@ -36,7 +36,8 @@
                         IncomeAmount = u.UserContributionScheme.IncomeAmount,
                         CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding,
                         ContributionWeekDay = u.UserContributionScheme.ContributionWeekDay,
-                        ContributionMonthDay = u.UserContributionScheme.ContributionMonthDay
+                        ContributionMonthDay = u.UserContributionScheme.ContributionMonthDay,
+                        CountToQualifyForLoan = u.UserContributionScheme.CountToQualifyForLoan,
                     },
                     WithdrawalSetting = u.WithdrawalSetting == null ? null : new UserWithdrawalSetting
                     {
@@ -60,7 +61,9 @@
                     },
                     IsPaymentSetupComplete = u.WithdrawalSetting != null && u.LinkedCard != null,
                     IsCardLinked = u.LinkedCard != null,
-                    ContributionsCount = u.UserContributions.Count
+                    ContributionsCount = u.UserContributions.Count,
+                    IsEligibleForLoan = u.UserContributionScheme != null && 
+                                        u.UserContributions.Count >= u.UserContributionScheme.CountToQualifyForLoan
                 })
                 .FirstOrDefaultAsync(cancellation);
 

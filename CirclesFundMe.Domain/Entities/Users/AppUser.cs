@@ -56,6 +56,7 @@
         public bool IsPaymentSetupComplete { get; set; }
         public bool IsCardLinked { get; set; }
         public int ContributionsCount { get; set; }
+        public bool IsEligibleForLoan { get; set; }
     }
 
     [NotMapped]

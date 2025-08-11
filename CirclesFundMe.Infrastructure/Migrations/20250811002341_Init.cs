@@ -139,6 +139,29 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MessageTemplates",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Body = table.Column<string>(type: "nvarchar(max)", maxLength: 2147483647, nullable: true),
+                    Channel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserOtps",
                 schema: "CFM",
                 columns: table => new
@@ -369,6 +392,39 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoanApplications",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RequestedAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CurrentEligibleAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Scheme = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Breakdown = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoanApplications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LoanApplications_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "CFM",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Notifications",
                 schema: "CFM",
                 columns: table => new
@@ -435,9 +491,12 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 columns: table => new
                 {
                     Reference = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    PaymentType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     AccessCode = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     AuthorizationUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ChargeAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -467,6 +526,36 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         principalSchema: "CFM",
                         principalTable: "Users",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecentActivities",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecentActivities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecentActivities_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "CFM",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -538,6 +627,8 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     ChargeAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IncomeAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CopyOfCurrentBreakdownAtOnboarding = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    MinimumContributionToQualifyForLoan = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CountToQualifyForLoan = table.Column<int>(type: "int", nullable: false),
                     ContributionWeekDay = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     ContributionMonthDay = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -702,6 +793,36 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApprovedLoans",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ApprovedAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LoanApplicationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovedLoans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApprovedLoans_LoanApplications_LoanApplicationId",
+                        column: x => x.LoanApplicationId,
+                        principalSchema: "CFM",
+                        principalTable: "LoanApplications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 schema: "CFM",
                 columns: table => new
@@ -736,6 +857,52 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "LoanRepayments",
+                schema: "CFM",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    RepaymentDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ApprovedLoanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoanRepayments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LoanRepayments_ApprovedLoans_ApprovedLoanId",
+                        column: x => x.ApprovedLoanId,
+                        principalSchema: "CFM",
+                        principalTable: "ApprovedLoans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LoanRepayments_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "CFM",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApprovedLoans_LoanApplicationId",
+                schema: "CFM",
+                table: "ApprovedLoans",
+                column: "LoanApplicationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -798,6 +965,24 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LoanApplications_UserId",
+                schema: "CFM",
+                table: "LoanApplications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoanRepayments_ApprovedLoanId",
+                schema: "CFM",
+                table: "LoanRepayments",
+                column: "ApprovedLoanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoanRepayments_UserId",
+                schema: "CFM",
+                table: "LoanRepayments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notifications_AppUserId",
                 schema: "CFM",
                 table: "Notifications",
@@ -827,6 +1012,18 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 schema: "CFM",
                 table: "Payments",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecentActivities_UserId",
+                schema: "CFM",
+                table: "RecentActivities",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_TransactionDate",
+                schema: "CFM",
+                table: "Transactions",
+                column: "TransactionDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_TransactionReference",
@@ -963,11 +1160,23 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 schema: "CFM");
 
             migrationBuilder.DropTable(
+                name: "LoanRepayments",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
+                name: "MessageTemplates",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
                 name: "Notifications",
                 schema: "CFM");
 
             migrationBuilder.DropTable(
                 name: "Payments",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
+                name: "RecentActivities",
                 schema: "CFM");
 
             migrationBuilder.DropTable(
@@ -1007,6 +1216,10 @@ namespace CirclesFundMe.Infrastructure.Migrations
                 schema: "CFM");
 
             migrationBuilder.DropTable(
+                name: "ApprovedLoans",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
                 name: "Wallets",
                 schema: "CFM");
 
@@ -1016,6 +1229,10 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Banks",
+                schema: "CFM");
+
+            migrationBuilder.DropTable(
+                name: "LoanApplications",
                 schema: "CFM");
 
             migrationBuilder.DropTable(

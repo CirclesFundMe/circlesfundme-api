@@ -239,6 +239,7 @@
                 userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = regularFinanceBreakdown.DownPayment;
+                userContributionScheme.CountToQualifyForLoan = regularFinanceBreakdown.CountToQualifyForLoan;
             }
             await _unitOfWork.UserContributionSchemes.AddAsync(userContributionScheme, cancellationToken);
 

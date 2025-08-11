@@ -58,5 +58,6 @@
         public decimal TotalRepayment { get; set; }
         public decimal RepaymentTerm { get; set; }
         public decimal DownPayment { get; set; }
+        public int CountToQualifyForLoan { get; set; }
     }
 }

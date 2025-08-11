@@ -105,6 +105,10 @@
                 ? totalRepayment / 52
                 : totalRepayment / 12;
 
+            int countToQualifyForLoan = scheme.SchemeType == SchemeTypeEnums.Weekly
+                ? 12 // 12 weeks
+                : 3; // 3 months
+
             return new RegularFinanceBreakdown
             {
                 PrincipalLoan = principalLoan,
@@ -114,7 +118,8 @@
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
                 TotalRepayment = totalRepayment,
                 RepaymentTerm = repaymentTerm,
-                DownPayment = downPayment
+                DownPayment = downPayment,
+                CountToQualifyForLoan = countToQualifyForLoan,
             };
         }
     }

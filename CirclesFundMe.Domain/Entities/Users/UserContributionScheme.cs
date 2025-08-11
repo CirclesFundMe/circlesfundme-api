@@ -8,6 +8,7 @@
         public decimal IncomeAmount { get; set; }
         public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
         public decimal MinimumContributionToQualifyForLoan { get; set; }
+        public int CountToQualifyForLoan { get; set; }
         public WeekDayEnums ContributionWeekDay { get; set; }
         public MonthDayEnums ContributionMonthDay { get; set; }
 

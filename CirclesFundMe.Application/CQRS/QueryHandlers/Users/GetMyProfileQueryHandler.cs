@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
+﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
 {
     public class GetMyProfileQueryHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, UtilityHelper utility) : IRequestHandler<GetMyProfileQuery, BaseResponse<UserModel>>
     {
@@ -48,20 +47,42 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Users
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
                 IsCardLinked = user.IsCardLinked,
-                InstallmentDesc = ComputeInstallmentDesc(user.ContributionsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme!.ContributionWeekDay, user.UserContributionScheme!.ContributionMonthDay),
+                PreInstallmentDesc = ComputePreInstallment(user.IsEligibleForLoan, user.ContributionsCount, user.UserContributionScheme!.CountToQualifyForLoan),
+                InstallmentDesc = ComputeInstallmentDesc(user.ContributionsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme!.ContributionWeekDay, user.UserContributionScheme!.ContributionMonthDay, user.IsEligibleForLoan),
                 Gender = user.Gender.ToString(),
                 AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
-                    ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null
+                    ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null,
+                IsEligibleForLoan = user.IsEligibleForLoan,
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
         }
 
-        private static string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay)
+        private static string ComputePreInstallment(bool isEligible, int contributionsCount, int countToQualifyForLoan)
+        {
+            if (!isEligible)
+            {
+                return "Not eligible for loan";
+            }
+
+            if (contributionsCount < countToQualifyForLoan)
+            {
+                return $"{contributionsCount} of {countToQualifyForLoan}";
+            }
+
+            return string.Empty;
+        }
+
+        private static string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay, bool isEligible)
         {
             if (!Enum.IsDefined(schemeType))
             {
                 return string.Empty;
+            }
+
+            if (!isEligible)
+            {
+                contributionsCount = 0; // Reset contributions count if not eligible for loan
             }
 
             if (schemeType == SchemeTypeEnums.Weekly)

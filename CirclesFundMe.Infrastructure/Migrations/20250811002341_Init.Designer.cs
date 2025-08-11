@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CirclesFundMe.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250810193740_MinConToQualify")]
-    partial class MinConToQualify
+    [Migration("20250811002341_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -488,6 +488,8 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TransactionDate");
+
                     b.HasIndex("TransactionReference");
 
                     b.HasIndex("WalletId");
@@ -562,7 +564,7 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.ToTable("Wallets", "CFM");
                 });
 
-            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanApplication", b =>
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.ApprovedLoan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -570,6 +572,53 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
                     b.Property<decimal>("ApprovedAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LoanApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoanApplicationId")
+                        .IsUnique();
+
+                    b.ToTable("ApprovedLoans", "CFM");
+                });
+
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanApplication", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Breakdown")
                         .HasColumnType("nvarchar(max)");
@@ -601,6 +650,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("RequestedAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -622,6 +674,64 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("LoanApplications", "CFM");
+                });
+
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanRepayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ApprovedLoanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RepaymentDate")
+                        .IsRequired()
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprovedLoanId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LoanRepayments", "CFM");
                 });
 
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Notifications.Notification", b =>
@@ -1151,6 +1261,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<int>("CountToQualifyForLoan")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -1658,12 +1771,41 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.ApprovedLoan", b =>
+                {
+                    b.HasOne("CirclesFundMe.Domain.Entities.Loans.LoanApplication", "LoanApplication")
+                        .WithOne("ApprovedLoan")
+                        .HasForeignKey("CirclesFundMe.Domain.Entities.Loans.ApprovedLoan", "LoanApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LoanApplication");
+                });
+
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanApplication", b =>
                 {
                     b.HasOne("CirclesFundMe.Domain.Entities.Users.AppUser", "User")
                         .WithMany("LoanApplications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanRepayment", b =>
+                {
+                    b.HasOne("CirclesFundMe.Domain.Entities.Loans.ApprovedLoan", "ApprovedLoan")
+                        .WithMany("LoanRepayments")
+                        .HasForeignKey("ApprovedLoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CirclesFundMe.Domain.Entities.Users.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ApprovedLoan");
 
                     b.Navigation("User");
                 });
@@ -1838,6 +1980,16 @@ namespace CirclesFundMe.Infrastructure.Migrations
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Finances.Wallet", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.ApprovedLoan", b =>
+                {
+                    b.Navigation("LoanRepayments");
+                });
+
+            modelBuilder.Entity("CirclesFundMe.Domain.Entities.Loans.LoanApplication", b =>
+                {
+                    b.Navigation("ApprovedLoan");
                 });
 
             modelBuilder.Entity("CirclesFundMe.Domain.Entities.Users.AppUser", b =>

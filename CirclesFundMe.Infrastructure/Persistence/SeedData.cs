@@ -172,6 +172,7 @@
                     ServiceCharge = 0.052,
                     LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
+                    DownPaymentPercent = 23.0
                 },
                 new ContributionScheme
                 {
@@ -184,6 +185,7 @@
                     ServiceCharge = 0.208,
                     LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
+                    DownPaymentPercent = 25.0
                 },
                 new ContributionScheme
                 {
