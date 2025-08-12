@@ -71,6 +71,7 @@
                     TotalRepaidAmount = 0,
                     CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme != null ?
                         u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding : null,
+                    IsDeleted = u.IsDeleted
                 })
                 .ToListAsync(cancellation);
 

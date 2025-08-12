@@ -63,7 +63,8 @@
                     IsCardLinked = u.LinkedCard != null,
                     ContributionsCount = u.UserContributions.Count,
                     IsEligibleForLoan = u.UserContributionScheme != null && 
-                                        u.UserContributions.Count >= u.UserContributionScheme.CountToQualifyForLoan
+                                        u.UserContributions.Count >= u.UserContributionScheme.CountToQualifyForLoan,
+                    IsDeleted = u.IsDeleted
                 })
                 .FirstOrDefaultAsync(cancellation);
 

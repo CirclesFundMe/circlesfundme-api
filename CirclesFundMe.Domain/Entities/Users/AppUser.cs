@@ -17,7 +17,7 @@
         public string? RefreshToken { get; set; }
         public bool AllowPushNotifications { get; set; }
         public bool AllowEmailNotifications { get; set; }
-        
+
         public DateTime RefreshTokenExpiryTime { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
@@ -70,5 +70,6 @@
         public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
         public decimal TotalContribution { get; set; }
         public decimal TotalRepaidAmount { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

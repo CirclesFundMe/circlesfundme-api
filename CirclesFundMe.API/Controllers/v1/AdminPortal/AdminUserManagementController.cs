@@ -40,5 +40,14 @@
             BaseResponse<PagedList<PaymentAdminModel>> response = await _sender.Send(new GetUserPaymentsQuery { UserId = userId, Params = queryParams }, cancellation);
             return HandleResponse(response);
         }
+
+        [HttpGet("admin-profile")]
+        [ProducesResponseType<BaseResponse<AdminProfileModel>>(200)]
+        [SwaggerOperation(Summary = "Get Admin Profile")]
+        public async Task<IActionResult> GetAdminProfile(CancellationToken cancellation)
+        {
+            BaseResponse<AdminProfileModel> response = await _sender.Send(new GetAdminProfileQuery(), cancellation);
+            return HandleResponse(response);
+        }
     }
 }

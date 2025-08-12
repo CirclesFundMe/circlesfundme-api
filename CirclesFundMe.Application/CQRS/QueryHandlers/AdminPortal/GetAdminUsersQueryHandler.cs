@@ -17,7 +17,8 @@
                 Scheme = user.Scheme,
                 TotalContribution = user.TotalContribution,
                 EligibleLoan = ExtractEligibleLoan(user.SchemeType, user.CopyOfCurrentBreakdownAtOnboarding!),
-                TotalRepaidAmount = user.TotalRepaidAmount
+                TotalRepaidAmount = user.TotalRepaidAmount,
+                IsActive = !user.IsDeleted
             }).ToList();
 
             return new BaseResponse<PagedList<AdminUserModel>>

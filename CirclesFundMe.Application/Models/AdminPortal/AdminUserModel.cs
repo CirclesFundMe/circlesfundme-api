@@ -9,5 +9,6 @@
         public decimal TotalContribution { get; set; }
         public decimal EligibleLoan { get; set; }
         public decimal TotalRepaidAmount { get; set; }
+        public bool IsActive { get; set; }
     }
 }

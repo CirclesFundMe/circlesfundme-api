@@ -55,6 +55,7 @@
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 Gender = user.Gender.ToString(),
                 BVN = user.UserKYC?.BVN,
+                IsActive = !user.IsDeleted
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");

@@ -27,6 +27,7 @@
         public List<UserDocumentModel> UserDocuments { get; set; } = [];
         public string? BVN {  get; set; }
         public bool IsEligibleForLoan { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public record MyAutoLoanDetail
