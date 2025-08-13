@@ -17,7 +17,8 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.AdminPortal
                 Target = c.Target.ToString(),
                 Channel = c.Channel.ToString(),
                 Status = c.Status.ToString(),
-                ScheduledAt = c.ScheduledAt
+                ScheduledAt = c.ScheduledAt,
+                TotalRecipients = c.TotalRecipients
             }).ToList();
 
             return new BaseResponse<PagedList<CommunicationModel>>
