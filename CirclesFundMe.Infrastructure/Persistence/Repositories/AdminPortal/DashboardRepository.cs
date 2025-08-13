@@ -7,6 +7,8 @@
         public async Task<DashboardStatistics> GetDashboardStatisticsAsync(CancellationToken cancellationToken)
         {
             int totalPendingKYCs = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.UserType != UserTypeEnums.Staff)
                 .CountAsync(u => u.UserKYC == null
                                             || string.IsNullOrEmpty(u.UserKYC.BVN)
                                             || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.Selfie)
@@ -14,12 +16,17 @@
                                             || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.GovernmentIssuedId), cancellationToken);
 
             int totalActiveLoans = await _context.ApprovedLoans
+                .AsNoTracking()
                 .CountAsync(l => l.Status == ApprovedLoanStatusEnums.Active, cancellationToken);
 
             int totalOverduePayments = await _context.LoanRepayments
+                .AsNoTracking()
                 .CountAsync(p => p.Status == LoanRepaymentStatusEnums.Overdue, cancellationToken);
 
-            int totalUsers = await _context.Users.CountAsync(cancellationToken);
+            int totalUsers = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.UserType != UserTypeEnums.Staff)
+                .CountAsync(cancellationToken);
 
             return new DashboardStatistics
             {

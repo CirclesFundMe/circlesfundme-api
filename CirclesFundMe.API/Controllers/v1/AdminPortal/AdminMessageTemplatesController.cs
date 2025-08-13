@@ -1,8 +1,4 @@
-﻿using CirclesFundMe.Application.CQRS.Commands.AdminPortal;
-using CirclesFundMe.Application.CQRS.Queries.AdminPortal;
-using CirclesFundMe.Application.Models.AdminPortal;
-
-namespace CirclesFundMe.API.Controllers.v1.AdminPortal
+﻿namespace CirclesFundMe.API.Controllers.v1.AdminPortal
 {
     [Authorize(Roles = $"{Roles.Admin}")]
     public class AdminMessageTemplatesController(ISender sender) : BaseControllerV1

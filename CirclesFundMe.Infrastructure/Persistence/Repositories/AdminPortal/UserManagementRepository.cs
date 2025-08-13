@@ -1,4 +1,5 @@
-﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
+﻿
+namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
 {
     public class UserManagementRepository(SqlDbContext context) : IUserManagementRepository
     {
@@ -32,7 +33,14 @@
             switch (@params.Status)
             {
                 case AdminUserStatus.Active:
-                    query = query.Where(u => !u.IsDeleted);
+                    query = query.Where(u =>
+                            u.IsDeleted == false
+                            && u.UserKYC != null
+                                && !string.IsNullOrEmpty(u.UserKYC.BVN)
+                                && u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.Selfie)
+                                && u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.UtilityBill)
+                                && u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.GovernmentIssuedId)
+                                );
                     break;
                 case AdminUserStatus.Deactivated:
                     query = query.Where(u => u.IsDeleted);
@@ -76,6 +84,45 @@
                 .ToListAsync(cancellation);
 
             return new PagedList<AppUserAdmin>(items, totalCount, @params.PageNumber, @params.PageSize);
+        }
+
+        public async Task<IEnumerable<AppUser>> GetUsersByCommunicationTarget(CommunicationTarget target)
+        {
+            IQueryable<AppUser> query = _context.Users
+                .AsNoTracking();
+
+            switch (target)
+            {
+                case CommunicationTarget.All:
+                    query = query.Where(u => !u.IsDeleted);
+                    break;
+                case CommunicationTarget.PendingKYCMembers:
+                    query = query.Where(u =>
+                            u.UserKYC == null
+                            || string.IsNullOrEmpty(u.UserKYC.BVN)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.Selfie)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.UtilityBill)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.GovernmentIssuedId)
+                    );
+                    break;
+                case CommunicationTarget.ActiveBorrowers:
+                    break;
+                case CommunicationTarget.OverdueRepaymentMembers:
+                    break;
+                default:
+                    query = query.Where(u => u.IsDeleted);
+                    break;
+            }
+
+            return await query
+                .Select(u => new AppUser
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                })
+                .ToListAsync();
         }
 
         public async Task<bool> ReactivateUser(string userId, CancellationToken cancellation)

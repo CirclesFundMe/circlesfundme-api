@@ -1,5 +1,6 @@
 ﻿namespace CirclesFundMe.API.Controllers.v1.AdminPortal
 {
+    [Authorize(Roles = $"{Roles.Admin}")]
     public class AdminDashboardController(ISender sender) : BaseControllerV1
     {
         private readonly ISender _sender = sender;

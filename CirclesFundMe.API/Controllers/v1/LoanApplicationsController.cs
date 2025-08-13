@@ -31,5 +31,25 @@
             BaseResponse<bool> response = await _sender.Send(new CreateLoanApplicationCommand(), cancellationToken);
             return HandleResponse(response);
         }
+
+        [HttpPost("reject")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Reject Loan Application")]
+        [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> RejectLoanApplication([FromBody] RejectLoanApplicationCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("waitlist")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Waitlist Loan Application")]
+        [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> WaitlistLoanApplication([FromBody] WaitlistLoanApplicationCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
     }
 }

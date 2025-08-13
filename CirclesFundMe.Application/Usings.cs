@@ -79,3 +79,7 @@ global using CirclesFundMe.Application.Models.AdminPortal;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Finances;
 global using CirclesFundMe.Domain.Entities.AdminPortal;
 global using CirclesFundMe.Domain.Pagination.QueryParams;
+global using CirclesFundMe.Domain.Enums.AdminPortal;
+global using CirclesFundMe.Application.CQRS.Commands.AdminPortal;
+global using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;
+global using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;

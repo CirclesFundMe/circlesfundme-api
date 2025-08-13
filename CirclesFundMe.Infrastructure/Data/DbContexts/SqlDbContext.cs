@@ -1,6 +1,4 @@
-﻿using CirclesFundMe.Domain.Entities.AdminPortal;
-
-namespace CirclesFundMe.Infrastructure.Data.DbContexts
+﻿namespace CirclesFundMe.Infrastructure.Data.DbContexts
 {
     public class SqlDbContext(DbContextOptions<SqlDbContext> options) : IdentityDbContext<AppUser>(options)
     {
@@ -44,6 +42,8 @@ namespace CirclesFundMe.Infrastructure.Data.DbContexts
 
         #region Admin Portal
         public DbSet<MessageTemplate> MessageTemplates { get; set; }
+        public DbSet<Communication> Communications { get; set; }
+        public DbSet<CommunicationRecipient> CommunicationRecipients { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

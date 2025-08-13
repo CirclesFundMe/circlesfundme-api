@@ -35,6 +35,52 @@
             }
             return result;
         }
+        public async Task<List<bool>> SendEmailBatchAsync(List<EmailMessage> messages)
+        {
+            var results = new List<bool>();
+            int batchSize = 100;
+
+            for (int i = 0; i < messages.Count; i += batchSize)
+            {
+                var batch = messages.Skip(i).Take(batchSize).ToList();
+
+                using var client = new SmtpClient();
+                try
+                {
+                    await client.ConnectAsync(_mailSettings.SmtpServer, 26, false);
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    await client.AuthenticateAsync(_mailSettings.EmailUsername, _mailSettings.EmailPassword);
+
+                    foreach (var message in batch)
+                    {
+                        try
+                        {
+                            var emailMsg = CreateEmailMessage(message);
+                            await client.SendAsync(emailMsg);
+                            results.Add(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError($"Error sending email to {message.To.Address} - {ex.Message}\n");
+                            results.Add(false);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Batch SMTP error - {ex.Message}\n");
+                    // Mark all in batch as failed
+                    results.AddRange(Enumerable.Repeat(false, batch.Count));
+                }
+                finally
+                {
+                    await client.DisconnectAsync(true);
+                    client.Dispose();
+                }
+            }
+            return results;
+        }
+
         private MimeMessage CreateEmailMessage(EmailMessage message)
         {
             MimeMessage emailMsg = new();

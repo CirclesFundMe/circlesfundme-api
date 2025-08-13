@@ -4,11 +4,21 @@
     {
         private readonly SqlDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task<AppUserExtension?> GetUserByIdAsync(string id, CancellationToken cancellation)
+        public async Task<AppUserExtension?> GetUserByIdAsync(string id, CancellationToken cancellation, bool isAdmin = false)
         {
-            AppUserExtension? user = await _context.Users
-                .AsNoTrackingWithIdentityResolution()
-                .Where(u => u.Id == id && !u.IsDeleted)
+            IQueryable<AppUser> query = _context.Users
+                .AsNoTrackingWithIdentityResolution();
+
+            if (!isAdmin)
+            {
+                query = query.Where(u => u.Id == id && !u.IsDeleted);
+            }
+            else
+            {
+                query = query.Where(u => u.Id == id);
+            }
+
+            AppUserExtension? user = await query
                 .Select(u => new AppUserExtension
                 {
                     Id = u.Id,

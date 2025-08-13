@@ -29,3 +29,4 @@ global using CirclesFundMe.Domain.Pagination.QueryParams.Loans;
 global using CirclesFundMe.Domain.Pagination.QueryParams.Finances;
 global using CirclesFundMe.Domain.Entities.AdminPortal;
 global using CirclesFundMe.Domain.Enums.AdminPortal;
+global using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;

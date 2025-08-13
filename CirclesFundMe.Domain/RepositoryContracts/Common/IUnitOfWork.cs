@@ -48,6 +48,8 @@ namespace CirclesFundMe.Domain.RepositoryContracts.Common
         IUserManagementRepository UserManagement { get; }
         IMessageTemplateRepository MessageTemplates { get; }
         IDashboardRepository Dashboard { get; }
+        ICommunicationRepository Communications { get; }
+        ICommunicationRecipientRepository CommunicationRecipients { get; }
         #endregion
 
         #region Required Contracts

@@ -7,6 +7,8 @@
             services.AddDbContext<SqlDbContext>(options =>
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

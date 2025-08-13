@@ -63,6 +63,12 @@ RecurringJob.AddOrUpdate<PaystackJobs>(
     "0 0 * * *" // Every day at midnight
 );
 
+RecurringJob.AddOrUpdate<CommunicationJobs>(
+    "ProcessCommunicationQueue",
+    job => job.ProcessCommunicationQueue(),
+    "* * * * *"
+);
+
 app.Run();
 #endregion
 /*

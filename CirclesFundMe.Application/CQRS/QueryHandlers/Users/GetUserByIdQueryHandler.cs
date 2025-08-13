@@ -12,7 +12,7 @@
                 return BaseResponse<UserModel>.Forbidden("You do not have permission to access this user.");
             }
 
-            AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(request.UserId, cancellationToken);
+            AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(request.UserId, cancellationToken, _currentUserService.IsAdmin);
 
             if (user == null)
             {

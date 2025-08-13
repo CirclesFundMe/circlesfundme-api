@@ -49,6 +49,8 @@
         private IUserManagementRepository? _userManagement;
         private IMessageTemplateRepository? _messageTemplates;
         private IDashboardRepository? _dashboard;
+        private ICommunicationRepository? _communications;
+        private ICommunicationRecipientRepository? _communicationRecipients;
         #endregion
 
         // Repositories
@@ -95,6 +97,8 @@
         public IUserManagementRepository UserManagement => _userManagement ??= new UserManagementRepository(_sqlDbContext);
         public IMessageTemplateRepository MessageTemplates => _messageTemplates ??= new MessageTemplateRepository(_sqlDbContext.MessageTemplates);
         public IDashboardRepository Dashboard => _dashboard ??= new DashboardRepository(_sqlDbContext);
+        public ICommunicationRepository Communications => _communications ??= new CommunicationRepository(_sqlDbContext);
+        public ICommunicationRecipientRepository CommunicationRecipients => _communicationRecipients ??= new CommunicationRecipientRepository(_sqlDbContext);
         #endregion
 
         #region Required Methods
