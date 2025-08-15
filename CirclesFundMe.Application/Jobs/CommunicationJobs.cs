@@ -126,5 +126,50 @@
                 _logger.LogError(ex, "An error occurred while processing the communication queue.");
             }
         }
+
+        public async Task ProcessKYCReminderQueue(string userId)
+        {
+            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            SqlDbContext _context = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
+            IUnitOfWork _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            EmailService _emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
+
+            try
+            {
+                await _utility.ExecuteWithRetryAsync(async () =>
+                {
+                    AppUser? user = await _unitOfWork.Users.GetUserByIdMiniAsync(userId, CancellationToken.None);
+                    if (user == null)
+                    {
+                        _logger.LogWarning("User with ID {UserId} not found for KYC reminder.", userId);
+                        return;
+                    }
+
+                    bool hasPendingKYC = await _unitOfWork.UserManagement.DoesHavPendingKYC(userId, CancellationToken.None);
+                    if (!hasPendingKYC)
+                    {
+                        _logger.LogInformation("User with ID {UserId} does not have pending KYC.", userId);
+                        return;
+                    }
+
+                    MessageTemplate? messageTemplate = await _unitOfWork.MessageTemplates.GetTemplateByTypeAsync(MessageTemplateType.PendingKYCReminder, CancellationToken.None);
+                    if (messageTemplate == null)
+                    {
+                        _logger.LogWarning("Message template for KYC reminder not found.");
+                        return;
+                    }
+
+                    StringBuilder sb = new(messageTemplate.Body);
+                    sb.Replace("[Name]", user.FirstName);
+
+                    EmailMessage emailMessage = new(user.Email!, "Complete Your Pending KYC", sb.ToString(), null);
+                    _ = await _emailService.SendEmail(emailMessage);
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing the KYC reminder queue.");
+            }
+        }
     }
 }

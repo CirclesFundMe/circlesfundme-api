@@ -86,6 +86,19 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
             return new PagedList<AppUserAdmin>(items, totalCount, @params.PageNumber, @params.PageSize);
         }
 
+        public async Task<bool> DoesHavPendingKYC(string userId, CancellationToken cancellation)
+        {
+            return await _context.Users
+                .AnyAsync(u =>
+                            u.Id == userId
+                            && (u.UserKYC == null
+                            || string.IsNullOrEmpty(u.UserKYC.BVN)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.Selfie)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.UtilityBill)
+                            || !u.UserDocuments.Any(d => d.DocumentType == UserDocumentTypeEnums.GovernmentIssuedId)),
+                                                                                                                                                                     cancellation);
+        }
+
         public async Task<IEnumerable<AppUser>> GetUsersByCommunicationTarget(CommunicationTarget target)
         {
             IQueryable<AppUser> query = _context.Users

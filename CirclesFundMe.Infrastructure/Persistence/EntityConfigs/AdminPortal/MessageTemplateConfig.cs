@@ -1,7 +1,4 @@
-﻿using CirclesFundMe.Domain.Entities.AdminPortal;
-using CirclesFundMe.Domain.Enums.AdminPortal;
-
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.AdminPortal
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.AdminPortal
 {
     public record MessageTemplateConfig : BaseEntityConfig<MessageTemplate>
     {
@@ -9,6 +6,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.AdminPortal
         {
             base.Configure(builder);
             builder.ToTable("MessageTemplates");
+
+            builder.HasIndex(x => x.Type).IsUnique();
 
             builder.Property(x => x.Name)
                 .HasMaxLength(100);

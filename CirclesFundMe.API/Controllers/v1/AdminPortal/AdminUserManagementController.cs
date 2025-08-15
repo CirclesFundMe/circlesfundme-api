@@ -49,5 +49,14 @@
             BaseResponse<AdminProfileModel> response = await _sender.Send(new GetAdminProfileQuery(), cancellation);
             return HandleResponse(response);
         }
+
+        [HttpPost("send-kyc-reminder/{userId}")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Send KYC Reminder to User")]
+        public async Task<IActionResult> SendKYCReminder(string userId, CancellationToken cancellation)
+        {
+            BaseResponse<bool> response = await _sender.Send(new SendKYCReminderCommand { UserId = userId }, cancellation);
+            return HandleResponse(response);
+        }
     }
 }

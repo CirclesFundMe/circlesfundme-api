@@ -3,5 +3,6 @@
     public enum MessageTemplateType
     {
         LoanRepaymentReminder = 1,
+        PendingKYCReminder
     }
 }
