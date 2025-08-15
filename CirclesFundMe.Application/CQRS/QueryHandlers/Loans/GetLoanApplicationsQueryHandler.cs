@@ -21,7 +21,8 @@
                 ApplicantDetail = new LoanApplicantDetail
                 {
                     FirstName = la.User?.FirstName,
-                    LastName = la.User?.LastName
+                    LastName = la.User?.LastName,
+                    ImageUrl = la.User?.ProfilePictureUrl
                 }
             }).ToList();
 

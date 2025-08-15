@@ -102,6 +102,7 @@
                         FirstName = x.User.FirstName,
                         LastName = x.User.LastName,
                         Email = x.User.Email,
+                        ProfilePictureUrl = x.User.ProfilePictureUrl,
                         UserContributionScheme = x.User.UserContributionScheme != null ? new UserContributionScheme
                         {
                             Id = x.User.UserContributionScheme.Id,
