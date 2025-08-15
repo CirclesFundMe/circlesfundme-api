@@ -45,6 +45,8 @@
                 UserId = user.Id,
             };
 
+            payment.BasicValidate();
+
             await _unitOfWork.Payments.AddAsync(payment, cancellationToken);
             bool isSaved = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 

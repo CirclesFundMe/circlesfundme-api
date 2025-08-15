@@ -76,6 +76,8 @@ namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
                 UserId = _currentUserService.UserId,
             };
 
+            payment.BasicValidate();
+
             await _unitOfWork.Payments.AddAsync(payment, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

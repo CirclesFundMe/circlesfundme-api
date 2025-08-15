@@ -47,7 +47,7 @@
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
                 IsCardLinked = user.IsCardLinked,
-                PreInstallmentDesc = ComputePreInstallment(user.IsEligibleForLoan, user.ContributionsCount, user.UserContributionScheme!.CountToQualifyForLoan),
+                PreInstallmentDesc = ComputePreInstallment(user.ContributionsCount, user.UserContributionScheme!.CountToQualifyForLoan),
                 InstallmentDesc = ComputeInstallmentDesc(user.ContributionsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme!.ContributionWeekDay, user.UserContributionScheme!.ContributionMonthDay, user.IsEligibleForLoan),
                 Gender = user.Gender.ToString(),
                 AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
@@ -58,13 +58,8 @@
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
         }
 
-        private static string ComputePreInstallment(bool isEligible, int contributionsCount, int countToQualifyForLoan)
+        private static string ComputePreInstallment(int contributionsCount, int countToQualifyForLoan)
         {
-            if (!isEligible)
-            {
-                return "Not eligible for loan";
-            }
-
             if (contributionsCount < countToQualifyForLoan)
             {
                 return $"{contributionsCount} of {countToQualifyForLoan}";

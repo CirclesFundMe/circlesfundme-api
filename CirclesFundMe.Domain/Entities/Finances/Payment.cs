@@ -22,6 +22,12 @@
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }
+
+        public void BasicValidate()
+        {
+            if (!Enum.IsDefined(typeof(PaymentTypeEnums), PaymentType))
+                throw new ArgumentException("Invalid payment type specified.", nameof(PaymentType));
+        }
     }
 
     [NotMapped]

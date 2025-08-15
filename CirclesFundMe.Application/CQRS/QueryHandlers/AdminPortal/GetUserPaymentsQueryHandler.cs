@@ -22,6 +22,7 @@
             {
                 Message = "User payments retrieved successfully.",
                 Data = PagedList<PaymentAdminModel>.ToPagedList(res, userPayments.TotalCount, userPayments.CurrentPage, userPayments.PageSize),
+                MetaData = PagedListHelper<PaymentAdmin>.GetPaginationInfo(userPayments)
             };
         }
     }

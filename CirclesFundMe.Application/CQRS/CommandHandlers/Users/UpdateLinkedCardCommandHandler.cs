@@ -53,6 +53,7 @@
                 Amount = amountToContribute / 100, // Convert back to Naira
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,
+                PaymentType = PaymentTypeEnums.Inflow,
                 UserId = user.Id,
             };
 
