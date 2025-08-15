@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Users
 {
-    public class UserContributionSchemeRepository(DbSet<UserContributionScheme> userContributionSchemes) : RepositoryBase<UserContributionScheme>(userContributionSchemes), IUserContributionSchemeRepository
+    public class UserContributionSchemeRepository(SqlDbContext context) : RepositoryBase<UserContributionScheme>(context.UserContributionSchemes), IUserContributionSchemeRepository
     {
-        private readonly DbSet<UserContributionScheme> _userContributionSchemes = userContributionSchemes;
+        private readonly DbSet<UserContributionScheme> _userContributionSchemes = context.UserContributionSchemes;
 
         public async Task<UserContributionScheme?> ViewMyEligibleLoan(string userId, CancellationToken cancellation)
         {

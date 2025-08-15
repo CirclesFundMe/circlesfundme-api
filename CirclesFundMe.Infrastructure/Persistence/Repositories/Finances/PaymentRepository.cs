@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Finances
 {
-    public class PaymentRepository(DbSet<Payment> payments) : RepositoryBase<Payment>(payments), IPaymentRepository
+    public class PaymentRepository(SqlDbContext context) : RepositoryBase<Payment>(context.Payments), IPaymentRepository
     {
-        private readonly DbSet<Payment> _payments = payments;
+        private readonly DbSet<Payment> _payments = context.Payments;
         public async Task<PagedList<PaymentAdmin>> GetUserPaymentsForAdmin(string userId, PaymentParams @params, CancellationToken cancellation)
         {
             IQueryable<Payment> query = _payments

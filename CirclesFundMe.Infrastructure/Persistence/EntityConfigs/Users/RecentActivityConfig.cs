@@ -7,6 +7,8 @@
             base.Configure(builder);
             builder.ToTable("RecentActivities");
 
+            builder.HasIndex(x => x.UserId);
+
             builder.Property(x => x.Title)
                 .HasMaxLength(100)
                 .IsRequired(true);

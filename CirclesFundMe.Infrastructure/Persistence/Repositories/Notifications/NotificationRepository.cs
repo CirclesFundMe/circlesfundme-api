@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Notifications
 {
-    public class NotificationRepository(DbSet<Notification> notifications, SqlDbContext context) : RepositoryBase<Notification>(notifications), INotificationRepository
+    public class NotificationRepository(SqlDbContext context) : RepositoryBase<Notification>(context.Notifications), INotificationRepository
     {
-        private readonly DbSet<Notification> _notifications = notifications;
+        private readonly DbSet<Notification> _notifications = context.Notifications;
         private readonly SqlDbContext _context = context;
 
         public async Task<PagedList<Notification>> GetNotifications(string userId, NotificationParams @params, CancellationToken cancellation)

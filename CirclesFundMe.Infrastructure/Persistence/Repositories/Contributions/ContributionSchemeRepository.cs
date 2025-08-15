@@ -1,9 +1,9 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Contributions
 {
-    public class ContributionSchemeRepository(DbSet<ContributionScheme> contributionSchemes)
-        : RepositoryBase<ContributionScheme>(contributionSchemes), IContributionSchemeRepository
+    public class ContributionSchemeRepository(SqlDbContext context)
+        : RepositoryBase<ContributionScheme>(context.ContributionSchemes), IContributionSchemeRepository
     {
-        private readonly DbSet<ContributionScheme> _contributionSchemes = contributionSchemes;
+        private readonly DbSet<ContributionScheme> _contributionSchemes = context.ContributionSchemes;
 
         public async Task<(AutoFinanceBreakdown? breakdown, string? message)> GetAutoFinanceBreakdown(decimal costOfVehicle, CancellationToken cancellation)
         {

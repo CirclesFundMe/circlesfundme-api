@@ -1,104 +1,104 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Common
 {
-    public class UnitOfWork(SqlDbContext sqlDbContext) : IUnitOfWork
+    public class UnitOfWork(SqlDbContext sqlDbContext, IServiceProvider sp) : IUnitOfWork
     {
         // Fields
         private readonly SqlDbContext _sqlDbContext = sqlDbContext;
         private IDbContextTransaction? _transaction;
 
         #region Users
-        private IUserRepository? _users;
-        private ICFMAccountRepository? _accounts;
-        private IUserOtpRepository? _userOtps;
-        private IUserDocumentRepository? _userDocuments;
-        private IUserAddressRepository? _userAddresses;
-        private IUserContributionSchemeRepository? _userContributionSchemes;
-        private IUserKYCRepository? _userKYC;
-        private IUserWithdrawalSettingRepository? _userWithdrawalSettings;
-        private IUserContributionRepository? _userContributions;
-        private IRecentActivityRepository? _recentActivities;
+        private readonly Lazy<IUserRepository> _users = NewLazy<IUserRepository>(sp);
+        private readonly Lazy<ICFMAccountRepository> _accounts = NewLazy<ICFMAccountRepository>(sp);
+        private readonly Lazy<IUserOtpRepository> _userOtps = NewLazy<IUserOtpRepository>(sp);
+        private readonly Lazy<IUserDocumentRepository> _userDocuments = NewLazy<IUserDocumentRepository>(sp);
+        private readonly Lazy<IUserAddressRepository> _userAddresses = NewLazy<IUserAddressRepository>(sp);
+        private readonly Lazy<IUserContributionSchemeRepository> _userContributionSchemes = NewLazy<IUserContributionSchemeRepository>(sp);
+        private readonly Lazy<IUserKYCRepository> _userKYC = NewLazy<IUserKYCRepository>(sp);
+        private readonly Lazy<IUserWithdrawalSettingRepository> _userWithdrawalSettings = NewLazy<IUserWithdrawalSettingRepository>(sp);
+        private readonly Lazy<IUserContributionRepository> _userContributions = NewLazy<IUserContributionRepository>(sp);
+        private readonly Lazy<IRecentActivityRepository> _recentActivities = NewLazy<IRecentActivityRepository>(sp);
         #endregion
 
         #region Contributions
-        private IContributionSchemeRepository? _contributionSchemes;
+        private readonly Lazy<IContributionSchemeRepository> _contributionSchemes = NewLazy<IContributionSchemeRepository>(sp);
         #endregion
 
         #region Notifications
-        private INotificationRepository? _notifications;
+        private readonly Lazy<INotificationRepository> _notifications = NewLazy<INotificationRepository>(sp);
         #endregion
 
         #region Finances
-        private IBankRepository? _banks;
-        private IWalletRepository? _wallets;
-        private ITransactionRepository? _transactions;
-        private IPaymentRepository? _payments;
-        private ILinkedCardRepository? _linkedCards;
+        private readonly Lazy<IBankRepository> _banks = NewLazy<IBankRepository>(sp);
+        private readonly Lazy<IWalletRepository> _wallets = NewLazy<IWalletRepository>(sp);
+        private readonly Lazy<ITransactionRepository> _transactions = NewLazy<ITransactionRepository>(sp);
+        private readonly Lazy<IPaymentRepository> _payments = NewLazy<IPaymentRepository>(sp);
+        private readonly Lazy<ILinkedCardRepository> _linkedCards = NewLazy<ILinkedCardRepository>(sp);
         #endregion
 
         #region Utility
-        private IContactUsMailRepository? _contactUsMails;
+        private readonly Lazy<IContactUsMailRepository> _contactUsMails = NewLazy<IContactUsMailRepository>(sp);
         #endregion
 
         #region Loans
-        private ILoanApplicationRepository? _loanApplications;
-        private IApprovedLoanRepository? _approvedLoans;
-        private ILoanRepaymentRepository? _loanRepayments;
+        private readonly Lazy<ILoanApplicationRepository> _loanApplications = NewLazy<ILoanApplicationRepository>(sp);
+        private readonly Lazy<IApprovedLoanRepository> _approvedLoans = NewLazy<IApprovedLoanRepository>(sp);
+        private readonly Lazy<ILoanRepaymentRepository> _loanRepayments = NewLazy<ILoanRepaymentRepository>(sp);
         #endregion
 
         #region Admin Portal
-        private IUserManagementRepository? _userManagement;
-        private IMessageTemplateRepository? _messageTemplates;
-        private IDashboardRepository? _dashboard;
-        private ICommunicationRepository? _communications;
-        private ICommunicationRecipientRepository? _communicationRecipients;
+        private readonly Lazy<IUserManagementRepository> _userManagement = NewLazy<IUserManagementRepository>(sp);
+        private readonly Lazy<IMessageTemplateRepository> _messageTemplates = NewLazy<IMessageTemplateRepository>(sp);
+        private readonly Lazy<IDashboardRepository> _dashboard = NewLazy<IDashboardRepository>(sp);
+        private readonly Lazy<ICommunicationRepository> _communications = NewLazy<ICommunicationRepository>(sp);
+        private readonly Lazy<ICommunicationRecipientRepository> _communicationRecipients = NewLazy<ICommunicationRecipientRepository>(sp);
         #endregion
 
         // Repositories
         #region Users
-        public IUserRepository Users => _users ??= new UserRepository(_sqlDbContext);
-        public ICFMAccountRepository Accounts => _accounts ??= new CFMAccountRepository(_sqlDbContext.CFMAccounts);
-        public IUserOtpRepository UserOtps => _userOtps ??= new UserOtpRepository(_sqlDbContext.UserOtps);
-        public IUserDocumentRepository UserDocuments => _userDocuments ??= new UserDocumentRepository(_sqlDbContext.UserDocuments);
-        public IUserAddressRepository UserAddresses => _userAddresses ??= new UserAddressRepository(_sqlDbContext.UserAddresses);
-        public IUserContributionSchemeRepository UserContributionSchemes => _userContributionSchemes ??= new UserContributionSchemeRepository(_sqlDbContext.UserContributionSchemes);
-        public IUserKYCRepository UserKYC => _userKYC ??= new UserKYCRepository(_sqlDbContext.UserKYCs);
-        public IUserWithdrawalSettingRepository UserWithdrawalSettings => _userWithdrawalSettings ??= new UserWithdrawalSettingRepository(_sqlDbContext.UserWithdrawalSettings);
-        public IUserContributionRepository UserContributions => _userContributions ??= new UserContributionRepository(_sqlDbContext.UserContributions);
-        public IRecentActivityRepository RecentActivities => _recentActivities ??= new RecentActivityRepository(_sqlDbContext.RecentActivities);
+        public IUserRepository Users => _users.Value;
+        public ICFMAccountRepository Accounts => _accounts.Value;
+        public IUserOtpRepository UserOtps => _userOtps.Value;
+        public IUserDocumentRepository UserDocuments => _userDocuments.Value;
+        public IUserAddressRepository UserAddresses => _userAddresses.Value;
+        public IUserContributionSchemeRepository UserContributionSchemes => _userContributionSchemes.Value;
+        public IUserKYCRepository UserKYC => _userKYC.Value;
+        public IUserWithdrawalSettingRepository UserWithdrawalSettings => _userWithdrawalSettings.Value;
+        public IUserContributionRepository UserContributions => _userContributions.Value;
+        public IRecentActivityRepository RecentActivities => _recentActivities.Value;
         #endregion
 
         #region Contributions
-        public IContributionSchemeRepository ContributionSchemes => _contributionSchemes ??= new ContributionSchemeRepository(_sqlDbContext.ContributionSchemes);
+        public IContributionSchemeRepository ContributionSchemes => _contributionSchemes.Value;
         #endregion
 
         #region Notifications
-        public INotificationRepository Notifications => _notifications ??= new NotificationRepository(_sqlDbContext.Notifications, _sqlDbContext);
+        public INotificationRepository Notifications => _notifications.Value;
         #endregion
 
         #region Finances
-        public IBankRepository Banks => _banks ??= new BankRepository(_sqlDbContext.Banks);
-        public IWalletRepository Wallets => _wallets ??= new WalletRepository(_sqlDbContext.Wallets);
-        public ITransactionRepository Transactions => _transactions ??= new TransactionRepository(_sqlDbContext.Transactions);
-        public IPaymentRepository Payments => _payments ??= new PaymentRepository(_sqlDbContext.Payments);
-        public ILinkedCardRepository LinkedCards => _linkedCards ??= new LinkedCardRepository(_sqlDbContext.LinkedCards);
+        public IBankRepository Banks => _banks.Value;
+        public IWalletRepository Wallets => _wallets.Value;
+        public ITransactionRepository Transactions => _transactions.Value;
+        public IPaymentRepository Payments => _payments.Value;
+        public ILinkedCardRepository LinkedCards => _linkedCards.Value;
         #endregion
 
         #region Utility
-        public IContactUsMailRepository ContactUsMails => _contactUsMails ??= new ContactUsMailRepository(_sqlDbContext.ContactUsMails);
+        public IContactUsMailRepository ContactUsMails => _contactUsMails.Value;
         #endregion
 
         #region Loans
-        public ILoanApplicationRepository LoanApplications => _loanApplications ??= new LoanApplicationRepository(_sqlDbContext.LoanApplications);
-        public IApprovedLoanRepository ApprovedLoans => _approvedLoans ??= new ApprovedLoanRepository(_sqlDbContext);
-        public ILoanRepaymentRepository LoanRepayments => _loanRepayments ??= new LoanRepaymentRepository(_sqlDbContext);
+        public ILoanApplicationRepository LoanApplications => _loanApplications.Value;
+        public IApprovedLoanRepository ApprovedLoans => _approvedLoans.Value;
+        public ILoanRepaymentRepository LoanRepayments => _loanRepayments.Value;
         #endregion
 
         #region Admin Portal
-        public IUserManagementRepository UserManagement => _userManagement ??= new UserManagementRepository(_sqlDbContext);
-        public IMessageTemplateRepository MessageTemplates => _messageTemplates ??= new MessageTemplateRepository(_sqlDbContext.MessageTemplates);
-        public IDashboardRepository Dashboard => _dashboard ??= new DashboardRepository(_sqlDbContext);
-        public ICommunicationRepository Communications => _communications ??= new CommunicationRepository(_sqlDbContext);
-        public ICommunicationRecipientRepository CommunicationRecipients => _communicationRecipients ??= new CommunicationRecipientRepository(_sqlDbContext);
+        public IUserManagementRepository UserManagement => _userManagement.Value;
+        public IMessageTemplateRepository MessageTemplates => _messageTemplates.Value;
+        public IDashboardRepository Dashboard => _dashboard.Value;
+        public ICommunicationRepository Communications => _communications.Value;
+        public ICommunicationRecipientRepository CommunicationRecipients => _communicationRecipients.Value;
         #endregion
 
         #region Required Methods
@@ -135,11 +135,23 @@
             }
         }
 
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
-            _sqlDbContext.Dispose();
-            _transaction?.Dispose();
+            if (_sqlDbContext != null)
+            {
+                return _sqlDbContext.DisposeAsync();
+            }
+
+            if (_transaction != null)
+            {
+                return _transaction.DisposeAsync();
+            }
+
+            return ValueTask.CompletedTask;
         }
+
+        private static Lazy<T> NewLazy<T>(IServiceProvider sp) where T : notnull =>
+            new(sp.GetRequiredService<T>, LazyThreadSafetyMode.ExecutionAndPublication);
         #endregion
     }
 }

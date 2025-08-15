@@ -1,6 +1,6 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Finances
 {
-    public class LinkedCardRepository(DbSet<LinkedCard> linkedCards) : RepositoryBase<LinkedCard>(linkedCards), ILinkedCardRepository
+    public class LinkedCardRepository(SqlDbContext context) : RepositoryBase<LinkedCard>(context.LinkedCards), ILinkedCardRepository
     {
     }
 }

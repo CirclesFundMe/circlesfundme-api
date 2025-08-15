@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Users
 {
-    public class CFMAccountRepository(DbSet<CFMAccount> accounts) : RepositoryBase<CFMAccount>(accounts), ICFMAccountRepository
+    public class CFMAccountRepository(SqlDbContext context) : RepositoryBase<CFMAccount>(context.CFMAccounts), ICFMAccountRepository
     {
-        private readonly DbSet<CFMAccount> _accounts = accounts ?? throw new ArgumentNullException(nameof(accounts));
+        private readonly DbSet<CFMAccount> _accounts = context.CFMAccounts;
 
         public async Task<PagedList<CFMAccount>> GetAccounts(CFMAccountParams accountParams, CancellationToken cancellation)
         {

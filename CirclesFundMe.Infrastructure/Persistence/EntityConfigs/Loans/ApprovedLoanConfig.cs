@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
 {
     public record ApprovedLoanConfig : BaseEntityConfig<ApprovedLoan>
     {
@@ -7,6 +6,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
         {
             base.Configure(builder);
             builder.ToTable("ApprovedLoans");
+
+            builder.HasIndex(x => x.UserId);
 
             builder.Property(x => x.Status)
                 .HasConversion<EnumToStringConverter<ApprovedLoanStatusEnums>>()
@@ -20,6 +21,11 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
                 .WithOne(x => x.ApprovedLoan)
                 .HasForeignKey<ApprovedLoan>(x => x.LoanApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.ApprovedLoans)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Finances
 {
-    public class WalletRepository(DbSet<Wallet> wallets) : RepositoryBase<Wallet>(wallets), IWalletRepository
+    public class WalletRepository(SqlDbContext context) : RepositoryBase<Wallet>(context.Wallets), IWalletRepository
     {
-        private readonly DbSet<Wallet> _wallets = wallets;
+        private readonly DbSet<Wallet> _wallets = context.Wallets;
 
         public async Task<IEnumerable<Wallet>> GetMyWallets(string userId, CancellationToken cancellationToken = default)
         {

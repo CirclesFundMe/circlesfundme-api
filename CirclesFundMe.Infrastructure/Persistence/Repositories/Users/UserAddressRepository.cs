@@ -1,6 +1,6 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Users
 {
-    public class UserAddressRepository(DbSet<UserAddress> userAddresses) : RepositoryBase<UserAddress>(userAddresses), IUserAddressRepository
+    public class UserAddressRepository(SqlDbContext context) : RepositoryBase<UserAddress>(context.UserAddresses), IUserAddressRepository
     {
     }
 }

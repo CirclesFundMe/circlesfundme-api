@@ -1,6 +1,6 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Users
 {
-    public class UserOtpRepository(DbSet<UserOtp> userOtps) : RepositoryBase<UserOtp>(userOtps), IUserOtpRepository
+    public class UserOtpRepository(SqlDbContext context) : RepositoryBase<UserOtp>(context.UserOtps), IUserOtpRepository
     {
     }
 }

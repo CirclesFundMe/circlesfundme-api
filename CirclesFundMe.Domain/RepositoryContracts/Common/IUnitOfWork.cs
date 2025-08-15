@@ -1,9 +1,6 @@
-﻿using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
-using CirclesFundMe.Domain.RepositoryContracts.Loans;
-
-namespace CirclesFundMe.Domain.RepositoryContracts.Common
+﻿namespace CirclesFundMe.Domain.RepositoryContracts.Common
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         #region Users
         ICFMAccountRepository Accounts { get; }

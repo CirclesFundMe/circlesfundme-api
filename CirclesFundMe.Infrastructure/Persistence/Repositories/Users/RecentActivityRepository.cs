@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Users
 {
-    public class RecentActivityRepository(DbSet<RecentActivity> recentActivities) : RepositoryBase<RecentActivity>(recentActivities), IRecentActivityRepository
+    public class RecentActivityRepository(SqlDbContext context) : RepositoryBase<RecentActivity>(context.RecentActivities), IRecentActivityRepository
     {
-        private readonly DbSet<RecentActivity> _recentActivities = recentActivities;
+        private readonly DbSet<RecentActivity> _recentActivities = context.RecentActivities;
 
         public async Task<PagedList<RecentActivity>> GetMyRecentActivities(string userId, RecentActivityParams @params, CancellationToken cancellationToken)
         {

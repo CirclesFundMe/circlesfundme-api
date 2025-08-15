@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Finances
 {
-    public class TransactionRepository(DbSet<Transaction> transactions) : RepositoryBase<Transaction>(transactions), ITransactionRepository
+    public class TransactionRepository(SqlDbContext context) : RepositoryBase<Transaction>(context.Transactions), ITransactionRepository
     {
-        private readonly DbSet<Transaction> _transactions = transactions;
+        private readonly DbSet<Transaction> _transactions = context.Transactions;
 
         public async Task<PagedList<Transaction>> GetTransactionsByWalletId(Guid walletId, TransactionParams transactionParams, CancellationToken cancellation)
         {

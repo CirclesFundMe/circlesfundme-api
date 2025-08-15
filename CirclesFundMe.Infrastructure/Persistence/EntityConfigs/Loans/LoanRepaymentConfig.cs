@@ -1,5 +1,4 @@
-﻿
-namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
+﻿namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
 {
     public record LoanRepaymentConfig : BaseEntityConfig<LoanRepayment>
     {
@@ -7,6 +6,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
         {
             base.Configure(builder);
             builder.ToTable("LoanRepayments");
+
+            builder.HasIndex(x => x.UserId);
 
             builder.Property(x => x.Amount)
                 .HasColumnType("decimal(18,2)")
@@ -23,7 +24,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Loans
                 .HasColumnType("datetime");
 
             builder.HasOne(x => x.User)
-                .WithMany()
+                .WithMany(x => x.LoanRepayments)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

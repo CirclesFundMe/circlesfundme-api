@@ -42,6 +42,8 @@
         public virtual ICollection<UserContribution> UserContributions { get; set; } = [];
         public virtual ICollection<RecentActivity> RecentActivities { get; set; } = [];
         public virtual ICollection<LoanApplication> LoanApplications { get; set; } = [];
+        public virtual ICollection<ApprovedLoan> ApprovedLoans { get; set; } = [];
+        public virtual ICollection<LoanRepayment> LoanRepayments { get; set; } = [];
 
         public void UpdateAuditFields(string userId)
         {

@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.AdminPortal
 {
-    public class MessageTemplateRepository(DbSet<MessageTemplate> templates) : RepositoryBase<MessageTemplate>(templates), IMessageTemplateRepository
+    public class MessageTemplateRepository(SqlDbContext context) : RepositoryBase<MessageTemplate>(context.MessageTemplates), IMessageTemplateRepository
     {
-        private readonly DbSet<MessageTemplate> _templates = templates;
+        private readonly DbSet<MessageTemplate> _templates = context.MessageTemplates;
 
         public async Task<bool> HasTemplateForType(MessageTemplateType messageTemplateType)
         {

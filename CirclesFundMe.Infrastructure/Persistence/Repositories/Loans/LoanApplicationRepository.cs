@@ -1,8 +1,8 @@
 ﻿namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Loans
 {
-    public class LoanApplicationRepository(DbSet<LoanApplication> loans) : RepositoryBase<LoanApplication>(loans), ILoanApplicationRepository
+    public class LoanApplicationRepository(SqlDbContext context) : RepositoryBase<LoanApplication>(context.LoanApplications), ILoanApplicationRepository
     {
-        private readonly DbSet<LoanApplication> _loans = loans;
+        private readonly DbSet<LoanApplication> _loans = context.LoanApplications;
 
         public async Task<LoanApplicationExtension?> GetLoanApplicationById(Guid loanApplicationId, CancellationToken cancellationToken)
         {

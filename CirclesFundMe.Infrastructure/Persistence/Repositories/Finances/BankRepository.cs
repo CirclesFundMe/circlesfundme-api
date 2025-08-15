@@ -1,9 +1,9 @@
 ﻿
 namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Finances
 {
-    public class BankRepository(DbSet<Bank> banks) : RepositoryBase<Bank>(banks), IBankRepository
+    public class BankRepository(SqlDbContext context) : RepositoryBase<Bank>(context.Banks), IBankRepository
     {
-        private readonly DbSet<Bank> _banks = banks;
+        private readonly DbSet<Bank> _banks = context.Banks;
 
         public async Task<IEnumerable<string>> GetBankCodes(CancellationToken cancellationToken = default)
         {
