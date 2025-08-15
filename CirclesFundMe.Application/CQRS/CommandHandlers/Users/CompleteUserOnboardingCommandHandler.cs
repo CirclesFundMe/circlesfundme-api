@@ -168,6 +168,7 @@
 
             UserContributionScheme userContributionScheme = new()
             {
+                Id = Guid.NewGuid(),
                 UserId = user.Id,
                 ContributionSchemeId = request.ContributionSchemeId,
                 IncomeAmount = request.Income ?? 0
@@ -198,11 +199,15 @@
                 {
                     userContributionScheme.ContributionWeekDay = weekDay;
                     preloanServiceCharge /= 4; // Divide by 4 for weekly contributions
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextWeekDay(DateTime.UtcNow, weekDay);
+                    userContributionScheme.IsWeeklyRoutine = true;
                 }
 
                 if (isMonthDayDefined)
                 {
                     userContributionScheme.ContributionMonthDay = monthDay;
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextMonthDay(DateTime.UtcNow, monthDay);
+                    userContributionScheme.IsWeeklyRoutine = false;
                 }
 
                 if (request.ContributionAmount <= 0)
@@ -215,6 +220,7 @@
                 userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = autoFinanceBreakdown.DownPayment;
+                userContributionScheme.CountToQualifyForLoan = (int)Math.Ceiling(autoFinanceBreakdown.DownPayment / userContributionScheme.ActualContributionAmount);
             }
             else
             {
@@ -228,10 +234,14 @@
                 if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Weekly)
                 {
                     userContributionScheme.ContributionWeekDay = weekDay;
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextWeekDay(DateTime.UtcNow, weekDay);
+                    userContributionScheme.IsWeeklyRoutine = true;
                 }
                 else if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Monthly)
                 {
                     userContributionScheme.ContributionMonthDay = monthDay;
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextMonthDay(DateTime.UtcNow, monthDay);
+                    userContributionScheme.IsWeeklyRoutine = false;
                 }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
@@ -261,6 +271,7 @@
                     UserId = user.Id
                 }
             }));
+            _queueService.EnqueueFireAndForgetJob<CoreLoanJobs>(j => j.GenerateUserContributionSchedule(userContributionScheme.Id));
 
             return BaseResponse<bool>.Success(true, "Onboarding completed successfully.");
         }

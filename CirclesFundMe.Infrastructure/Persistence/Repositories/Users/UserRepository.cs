@@ -71,7 +71,10 @@
                     },
                     IsPaymentSetupComplete = u.WithdrawalSetting != null && u.LinkedCard != null,
                     IsCardLinked = u.LinkedCard != null,
-                    ContributionsCount = u.UserContributions.Count,
+                    PaidContributionsCount = u.UserContributions.Count(c => c.IsActive && c.Status == UserContributionStatusEnums.Paid),
+                    TotalContributionsCount = u.UserContributions.Count(c => c.IsActive),
+                    PaidLoanRepaymentsCount = u.LoanRepayments.Count(r => r.IsActive && r.Status == LoanRepaymentStatusEnums.Paid),
+                    TotalLoanRepaymentsCount = u.LoanRepayments.Count(r => r.IsActive),
                     IsEligibleForLoan = u.UserContributionScheme != null && 
                                         u.UserContributions.Count >= u.UserContributionScheme.CountToQualifyForLoan,
                     IsDeleted = u.IsDeleted

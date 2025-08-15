@@ -147,6 +147,7 @@ namespace CirclesFundMe.Application.HttpClients.Paystack
         public string? userId { get; set; }
         public bool updateCard { get; set; } = false;
         public string? amount_with_charge { get; set; }
+        public string? userContributionId { get; set; }
     }
 
     #region Shared

@@ -14,6 +14,8 @@
                 return BaseResponse<InitializeTransactionModel>.NotFound("User not found");
             }
 
+            UserContribution? userContribution = await _unitOfWork.UserContributions.GetNextContributionForPayment(user.Id, cancellationToken);
+
             decimal amountToContribute = (user.UserContributionScheme?.ContributionAmount ?? 0) * 100; // In Kobo
             InitializeTransactionPayload payload = new()
             {
@@ -23,7 +25,8 @@
                 Metadata = new MetaDataObj
                 {
                     userId = user.Id,
-                    updateCard = false
+                    updateCard = false,
+                    userContributionId = userContribution?.Id.ToString()
                 }
             };
 
@@ -38,7 +41,9 @@
                 AccessCode = initializeTransaction.data.access_code,
                 AuthorizationUrl = initializeTransaction.data.authorization_url,
                 Reference = initializeTransaction.data.reference,
-                Amount = amountToContribute / 100, // Convert back to Naira
+                Amount = user.UserContributionScheme?.ActualContributionAmount ?? 0,
+                ChargeAmount = user.UserContributionScheme?.ChargeAmount ?? userContribution?.Charges ?? 0,
+                TotalAmount = (user.UserContributionScheme?.ContributionAmount ?? 0),
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,
                 PaymentType = PaymentTypeEnums.Inflow,

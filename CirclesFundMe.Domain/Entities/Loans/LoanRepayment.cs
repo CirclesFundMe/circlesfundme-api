@@ -6,6 +6,8 @@
         public DateTime? RepaymentDate { get; set; }
         public LoanRepaymentStatusEnums Status { get; set; }
         public DateTime? DueDate { get; set; }
+        public DateTime? PaidDate { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }

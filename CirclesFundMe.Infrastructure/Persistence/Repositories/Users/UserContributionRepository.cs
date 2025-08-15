@@ -15,5 +15,19 @@
                 .Where(c => c.UserId == userId)
                 .SumAsync(c => c.Amount, cancellationToken: cancellation);
         }
+
+        public async Task<UserContribution?> GetNextContributionForPayment(string userId, CancellationToken cancellation)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
+            return await _contributions
+                .AsNoTracking()
+                .Where(c => c.UserId == userId && c.Status == UserContributionStatusEnums.Unpaid)
+                .OrderBy(c => c.DueDate)
+                .FirstOrDefaultAsync(cancellationToken: cancellation);
+        }
     }
 }

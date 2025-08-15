@@ -47,8 +47,8 @@
                 AllowEmailNotifications = user.AllowEmailNotifications,
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
                 IsCardLinked = user.IsCardLinked,
-                PreInstallmentDesc = ComputePreInstallment(user.ContributionsCount, user.UserContributionScheme!.CountToQualifyForLoan),
-                InstallmentDesc = ComputeInstallmentDesc(user.ContributionsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme!.ContributionWeekDay, user.UserContributionScheme!.ContributionMonthDay, user.IsEligibleForLoan),
+                PreInstallmentDesc = $"{user.PaidContributionsCount} of {user.TotalContributionsCount}",
+                InstallmentDesc = $"{user.PaidLoanRepaymentsCount} of {user.TotalLoanRepaymentsCount}",
                 Gender = user.Gender.ToString(),
                 AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
                     ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null,
@@ -56,51 +56,6 @@
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
-        }
-
-        private static string ComputePreInstallment(int contributionsCount, int countToQualifyForLoan)
-        {
-            if (contributionsCount < countToQualifyForLoan)
-            {
-                return $"{contributionsCount} of {countToQualifyForLoan}";
-            }
-
-            return string.Empty;
-        }
-
-        private static string ComputeInstallmentDesc(int contributionsCount, SchemeTypeEnums schemeType, WeekDayEnums weekDay, MonthDayEnums monthDay, bool isEligible)
-        {
-            if (!Enum.IsDefined(schemeType))
-            {
-                return string.Empty;
-            }
-
-            if (!isEligible)
-            {
-                contributionsCount = 0; // Reset contributions count if not eligible for loan
-            }
-
-            if (schemeType == SchemeTypeEnums.Weekly)
-            {
-                return $"{contributionsCount} of 52";
-            }
-            else if (schemeType == SchemeTypeEnums.Monthly)
-            {
-                return $"{contributionsCount} of 12";
-            }
-            else if (schemeType == SchemeTypeEnums.AutoFinance)
-            {
-                if (Enum.IsDefined(weekDay))
-                {
-                    return $"{contributionsCount} of 208 ({weekDay})";
-                }
-                else if (Enum.IsDefined(monthDay))
-                {
-                    return $"{contributionsCount} of 48 ({monthDay})";
-                }
-            }
-
-            return string.Empty;
         }
 
         private MyAutoLoanDetail GetMyAutoLoanDetail(string? copyOfCurrentBreakdownAtOnboarding, decimal contributionAmount)

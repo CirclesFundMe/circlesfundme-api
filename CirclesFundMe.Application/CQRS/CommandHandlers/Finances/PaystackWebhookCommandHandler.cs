@@ -211,6 +211,12 @@
                 return false;
             }
 
+            UserContribution? userContributionPaidFor = default;
+            if (data.metadata?.userContributionId != null)
+            {
+                userContributionPaidFor = await _unitOfWork.UserContributions.GetByPrimaryKey(data.metadata.userContributionId, cancellationToken);
+            }
+
             UserContributionScheme? userContributionScheme = await _unitOfWork.UserContributionSchemes.GetOneAsync([ucs => ucs.UserId == currentUserId], cancellationToken);
             if (userContributionScheme == null)
             {
@@ -277,12 +283,27 @@
 
             decimal amountToCreditUser = payment.Amount - userContributionScheme.ChargeAmount;
 
-            await _unitOfWork.UserContributions.AddAsync(new UserContribution
+            if (userContributionPaidFor == null)
             {
-                Amount = amountToCreditUser,
-                AmountIncludingCharges = payment.Amount,
-                UserId = currentUserId
-            }, cancellationToken);
+                await _unitOfWork.UserContributions.AddAsync(new UserContribution
+                {
+                    Amount = amountToCreditUser,
+                    AmountIncludingCharges = payment.Amount,
+                    Charges = userContributionScheme.ChargeAmount,
+                    Status = UserContributionStatusEnums.Paid,
+                    DueDate = DateTime.UtcNow,
+                    PaidDate = DateTime.UtcNow,
+                    UserId = currentUserId
+                }, cancellationToken);
+            }
+            else
+            {
+                userContributionPaidFor.Status = UserContributionStatusEnums.Paid;
+                userContributionPaidFor.PaidDate = DateTime.UtcNow;
+                _unitOfWork.UserContributions.Update(userContributionPaidFor);
+            }
+
+            UserContribution? nextContribution = await _unitOfWork.UserContributions.GetNextContributionForPayment(currentUserId, cancellationToken);
 
             // Get User Wallet
             Wallet? wallet = await _unitOfWork.Wallets.GetOneAsync([w => w.UserId == currentUserId, w => w.Type == WalletTypeEnums.Contribution], cancellationToken);
@@ -308,7 +329,9 @@
 
             await _unitOfWork.Transactions.AddAsync(transaction, cancellationToken);
 
+            wallet.LastTranDate = DateTime.UtcNow;
             wallet.Balance += amountToCreditUser;
+            wallet.NextTranDate = nextContribution?.DueDate;
             _unitOfWork.Wallets.Update(wallet);
 
             // Get Collection Wallet

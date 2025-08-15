@@ -1,13 +1,12 @@
 ﻿
 namespace CirclesFundMe.Application.CQRS.CommandHandlers.Finances
 {
-    public class WithdrawContributionCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient, IOptions<AppSettings> options, IQueueService queueService) : IRequestHandler<WithdrawContributionCommand, BaseResponse<bool>>
+    public class WithdrawContributionCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IPaystackClient paystackClient, IOptions<AppSettings> options) : IRequestHandler<WithdrawContributionCommand, BaseResponse<bool>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly IPaystackClient _paystackClient = paystackClient;
         private readonly AppSettings _appSettings = options.Value;
-        private readonly IQueueService _queueService = queueService;
 
         public async Task<BaseResponse<bool>> Handle(WithdrawContributionCommand request, CancellationToken cancellationToken)
         {

@@ -8,18 +8,19 @@
 
         public async Task<BaseResponse<InitializeTransactionModel>> Handle(MakeInitialContributionCommand request, CancellationToken cancellationToken)
         {
-            AppUserExtension? user = await _unitOfWork.Users.GetUserByIdAsync(_currentUserService.UserId, cancellationToken);
+            AppUser? user = await _unitOfWork.Users.GetUserByIdMiniAsync(_currentUserService.UserId, cancellationToken);
             if (user == null)
             {
                 return BaseResponse<InitializeTransactionModel>.NotFound("User not found");
             }
 
-            if (user.IsCardLinked)
+            UserContribution? userContribution = await _unitOfWork.UserContributions.GetNextContributionForPayment(user.Id, cancellationToken);
+            if (userContribution == null)
             {
-                return BaseResponse<InitializeTransactionModel>.BadRequest("Card is already linked. You can use quick save or update card.");
+                return BaseResponse<InitializeTransactionModel>.BadRequest("No pending contributions found");
             }
 
-            decimal amountToContribute = (user.UserContributionScheme?.ContributionAmount ?? 0) * 100; // In Kobo
+            decimal amountToContribute = userContribution.AmountIncludingCharges * 100; // In Kobo
             InitializeTransactionPayload payload = new()
             {
                 Email = user.Email,
@@ -28,7 +29,8 @@
                 Metadata = new MetaDataObj
                 {
                     userId = user.Id,
-                    updateCard = false
+                    updateCard = false,
+                    userContributionId = userContribution.Id.ToString()
                 }
             };
 
@@ -38,12 +40,17 @@
                 return BaseResponse<InitializeTransactionModel>.BadRequest(initializeTransaction.message ?? "Error while initializing payment");
             }
 
+            userContribution.Status = UserContributionStatusEnums.Awaiting;
+            _unitOfWork.UserContributions.Update(userContribution);
+
             Payment payment = new()
             {
                 AccessCode = initializeTransaction.data.access_code,
                 AuthorizationUrl = initializeTransaction.data.authorization_url,
                 Reference = initializeTransaction.data.reference,
-                Amount = amountToContribute / 100, // Convert back to Naira
+                Amount = userContribution.Amount,
+                ChargeAmount = userContribution.Charges,
+                TotalAmount = userContribution.AmountIncludingCharges,
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,
                 PaymentType = PaymentTypeEnums.Inflow,

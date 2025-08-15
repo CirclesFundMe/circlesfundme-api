@@ -4,6 +4,49 @@
     {
         private readonly ILogger<UtilityHelper> _logger = logger;
 
+        public static DateTime GetNextWeekDay(DateTime from, WeekDayEnums weekDay)
+        {
+            // Convert to DayOfWeek (matches enum values)
+            int daysToAdd = ((int)weekDay - (int)from.DayOfWeek + 7) % 7;
+            daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // Always next occurrence
+            return from.Date.AddDays(daysToAdd);
+        }
+
+        public static DateTime GetNextMonthDay(DateTime from, MonthDayEnums monthDay)
+        {
+            int year = from.Year;
+            int month = from.Month;
+            int day;
+
+            if (monthDay == MonthDayEnums.EndOfMonth)
+            {
+                // End of this month if today is not last day, else next month
+                int daysInMonth = DateTime.DaysInMonth(year, month);
+                if (from.Day < daysInMonth)
+                    return new DateTime(year, month, daysInMonth);
+
+                // Next month
+                month++;
+                if (month > 12) { month = 1; year++; }
+                daysInMonth = DateTime.DaysInMonth(year, month);
+                return new DateTime(year, month, daysInMonth);
+            }
+            else
+            {
+                day = (int)monthDay;
+                int daysInMonth = DateTime.DaysInMonth(year, month);
+                if (from.Day < day && day <= daysInMonth)
+                    return new DateTime(year, month, day);
+
+                // Next month
+                month++;
+                if (month > 12) { month = 1; year++; }
+                daysInMonth = DateTime.DaysInMonth(year, month);
+                day = Math.Min(day, daysInMonth);
+                return new DateTime(year, month, day);
+            }
+        }
+
         public static string GenerateRandomUnique30DigitSessionID()
         {
             Span<byte> buffer = stackalloc byte[20];

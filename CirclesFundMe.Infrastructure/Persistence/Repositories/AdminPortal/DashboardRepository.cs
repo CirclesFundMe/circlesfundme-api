@@ -21,7 +21,7 @@
 
             int totalOverduePayments = await _context.LoanRepayments
                 .AsNoTracking()
-                .CountAsync(p => p.Status == LoanRepaymentStatusEnums.Overdue, cancellationToken);
+                .CountAsync(p => p.DueDate != null && p.DueDate > DateTime.UtcNow, cancellationToken);
 
             int totalUsers = await _context.Users
                 .AsNoTracking()
