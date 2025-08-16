@@ -95,5 +95,14 @@
             BaseResponse<object> response = await _sender.Send(new ViewMyEligibleLoanQuery(), cancellation);
             return HandleResponse(response);
         }
+
+        [HttpGet("my-loan-history")]
+        [ProducesResponseType<BaseResponse<PagedList<LoanHistoryModel>>>(200)]
+        [SwaggerOperation(Summary = "Get My Loan History")]
+        public async Task<IActionResult> GetMyLoanHistory([FromQuery] ApprovedLoanParams @params, CancellationToken cancellation)
+        {
+            BaseResponse<PagedList<LoanHistoryModel>> response = await _sender.Send(new GetMyLoanHistoryQuery { Params = @params }, cancellation);
+            return HandleResponse(response);
+        }
     }
 }
