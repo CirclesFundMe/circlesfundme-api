@@ -168,7 +168,6 @@
 
             UserContributionScheme userContributionScheme = new()
             {
-                Id = Guid.NewGuid(),
                 UserId = user.Id,
                 ContributionSchemeId = request.ContributionSchemeId,
                 IncomeAmount = request.Income ?? 0
@@ -271,7 +270,7 @@
                     UserId = user.Id
                 }
             }));
-            _queueService.EnqueueFireAndForgetJob<CoreLoanJobs>(j => j.GenerateUserContributionSchedule(userContributionScheme.Id));
+            _queueService.EnqueueFireAndForgetJob<CoreLoanJobs>(j => j.GenerateUserContributionSchedule(userContributionScheme.UserId, userContributionScheme.ContributionSchemeId));
 
             return BaseResponse<bool>.Success(true, "Onboarding completed successfully.");
         }

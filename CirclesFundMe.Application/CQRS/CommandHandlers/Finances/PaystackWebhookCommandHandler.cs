@@ -214,7 +214,7 @@
             UserContribution? userContributionPaidFor = default;
             if (data.metadata?.userContributionId != null)
             {
-                userContributionPaidFor = await _unitOfWork.UserContributions.GetByPrimaryKey(data.metadata.userContributionId, cancellationToken);
+                userContributionPaidFor = await _unitOfWork.UserContributions.GetByPrimaryKey(Guid.Parse(data.metadata.userContributionId), cancellationToken);
             }
 
             UserContributionScheme? userContributionScheme = await _unitOfWork.UserContributionSchemes.GetOneAsync([ucs => ucs.UserId == currentUserId], cancellationToken);

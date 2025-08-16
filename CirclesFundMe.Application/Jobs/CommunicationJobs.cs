@@ -8,7 +8,7 @@
 
         public async Task ProcessCommunicationQueue()
         {
-            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
             SqlDbContext _context = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
             EmailService _emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
             IUserManagementRepository _userManagementRepository = scope.ServiceProvider.GetRequiredService<IUserManagementRepository>();
@@ -129,7 +129,7 @@
 
         public async Task ProcessKYCReminderQueue(string userId)
         {
-            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
             SqlDbContext _context = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
             IUnitOfWork _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             EmailService _emailService = scope.ServiceProvider.GetRequiredService<EmailService>();

@@ -8,9 +8,10 @@
         private readonly UtilityHelper _utility = utility;
         private readonly AppSettings _appSettings = options.Value;
 
-        public async Task GenerateUserContributionSchedule(Guid userContributionSchemeId)
+        public async Task GenerateUserContributionSchedule(string userId, Guid userContributionSchemeId)
         {
-            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
+            IServiceProvider sp = scope.ServiceProvider;
             SqlDbContext dbContext = scope.ServiceProvider.GetRequiredService<SqlDbContext>();
             IUserManagementRepository userManagementRepository = scope.ServiceProvider.GetRequiredService<IUserManagementRepository>();
             IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
@@ -19,7 +20,7 @@
             {
                 await _utility.ExecuteWithRetryAsync(async () =>
                 {
-                    UserContributionScheme? userContributionScheme = await dbContext.UserContributionSchemes.FindAsync(userContributionSchemeId, CancellationToken.None);
+                    UserContributionScheme? userContributionScheme = await unitOfWork.UserContributionSchemes.GetByPrimaryKeys([userId, userContributionSchemeId], CancellationToken.None);
 
                     if (userContributionScheme == null)
                     {
