@@ -50,16 +50,16 @@
                 eligibleAmount = Convert.ToDecimal(breakdown.EligibleLoan);
             }
 
-            if (request.RequestedLoanAmount.HasValue && (request.RequestedLoanAmount > eligibleAmount))
-            {
-                return BaseResponse<bool>.BadRequest($"You can only apply for a loan of up to {eligibleAmount:N2}.");
-            }
+            //if (request.RequestedLoanAmount.HasValue && (request.RequestedLoanAmount > eligibleAmount))
+            //{
+            //    return BaseResponse<bool>.BadRequest($"You can only apply for a loan of up to {eligibleAmount:N2}.");
+            //}
 
             loanApplication = new LoanApplication
             {
                 UserId = _currentUserId,
                 Status = LoanApplicationStatusEnums.Pending,
-                RequestedAmount = request.RequestedLoanAmount ?? eligibleAmount,
+                RequestedAmount = eligibleAmount,
                 CurrentEligibleAmount = eligibleAmount,
                 Scheme = userContributionScheme.ContributionScheme!.SchemeType,
                 Breakdown = userContributionScheme.CopyOfCurrentBreakdownAtOnboarding

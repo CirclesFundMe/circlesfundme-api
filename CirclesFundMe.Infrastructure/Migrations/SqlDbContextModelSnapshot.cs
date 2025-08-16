@@ -840,6 +840,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -848,6 +851,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PaidDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("RepaymentDate")
@@ -1331,6 +1337,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<decimal>("AmountIncludingCharges")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("Charges")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -1345,6 +1354,12 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1355,12 +1370,22 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "DueDate" }, "IX_UserContributions_DueDate");
+
+                    b.HasIndex(new[] { "UserId" }, "IX_UserContributions_UserId");
 
                     b.ToTable("UserContributions", "CFM");
                 });
@@ -1378,6 +1403,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
                     b.Property<decimal>("ChargeAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CommencementDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("ContributionAmount")
                         .HasPrecision(18, 2)
@@ -1422,6 +1450,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsWeeklyRoutine")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("MinimumContributionToQualifyForLoan")

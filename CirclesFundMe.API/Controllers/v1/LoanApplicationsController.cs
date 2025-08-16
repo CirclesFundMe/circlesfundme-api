@@ -51,5 +51,15 @@
             BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
             return HandleResponse(response);
         }
+
+        [HttpPost("approve")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Approve Loan Application")]
+        [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> ApproveLoanApplication([FromBody] ApproveLoanApplicationCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
     }
 }

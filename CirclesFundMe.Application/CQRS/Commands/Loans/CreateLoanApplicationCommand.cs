@@ -2,6 +2,6 @@
 {
     public record CreateLoanApplicationCommand : IRequest<BaseResponse<bool>>
     {
-        public decimal? RequestedLoanAmount { get; set; }
+        //public decimal? RequestedLoanAmount { get; set; }
     }
 }

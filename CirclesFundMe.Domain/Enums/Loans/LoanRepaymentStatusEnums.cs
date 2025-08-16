@@ -4,5 +4,6 @@
     {
         Unpaid = 1,
         Paid = 2,
+        Awaiting = 3,
     }
 }

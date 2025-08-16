@@ -53,8 +53,8 @@
                             } : null
                         } : null
                     } : null,
-                    AmountRepaid = x.ApprovedLoan != null ? x.ApprovedLoan.LoanRepayments.Sum(x => x.Amount) : 0,
-                    TotalContribution = x.User!.UserContributions != null ? x.User.UserContributions.Sum(c => c.Amount) : 0
+                    AmountRepaid = x.ApprovedLoan != null ? x.ApprovedLoan.LoanRepayments.Where(x => x.Status == LoanRepaymentStatusEnums.Paid && x.IsActive).Sum(x => x.Amount) : 0,
+                    TotalContribution = x.User!.UserContributions != null ? x.User.UserContributions.Where(x => x.Status == UserContributionStatusEnums.Paid).Sum(c => c.Amount) : 0
                 })
                 .FirstOrDefaultAsync(cancellationToken);
         }
