@@ -48,7 +48,7 @@
                 IsPaymentSetupComplete = user.IsPaymentSetupComplete,
                 IsCardLinked = user.IsCardLinked,
                 PreInstallmentDesc = $"{user.PaidContributionsCount} of {user.TotalContributionsCount}",
-                InstallmentDesc = $"{user.PaidLoanRepaymentsCount} of {user.TotalLoanRepaymentsCount}",
+                InstallmentDesc = GetInstallmentDesc(user.PaidLoanRepaymentsCount, user.TotalLoanRepaymentsCount, user.UserContributionScheme!.ContributionScheme!.SchemeType, user.UserContributionScheme.IsWeeklyRoutine),
                 Gender = user.Gender.ToString(),
                 AutoLoanDetail = user.UserContributionScheme!.ContributionScheme!.SchemeType == SchemeTypeEnums.AutoFinance
                     ? GetMyAutoLoanDetail(user.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding, user.UserContributionScheme.ContributionAmount) : null,
@@ -56,6 +56,21 @@
             };
 
             return BaseResponse<UserModel>.Success(userModel, "User retrieved successfully.");
+        }
+
+        private static string GetInstallmentDesc(int paidLoanRepaymentsCount, int totalLoanRepaymentsCount, SchemeTypeEnums schemeType, bool isWeeklyRoutine)
+        {
+            if (totalLoanRepaymentsCount > 0)
+            {
+                return $"{paidLoanRepaymentsCount} of {totalLoanRepaymentsCount}";
+            }
+
+            if (schemeType == SchemeTypeEnums.AutoFinance)
+            {
+                return $"{paidLoanRepaymentsCount} of 208";
+            }
+
+            return isWeeklyRoutine ? $"{paidLoanRepaymentsCount} of 52" : $"{paidLoanRepaymentsCount} of 12";
         }
 
         private MyAutoLoanDetail GetMyAutoLoanDetail(string? copyOfCurrentBreakdownAtOnboarding, decimal contributionAmount)

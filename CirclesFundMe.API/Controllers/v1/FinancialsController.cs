@@ -35,6 +35,16 @@
             return HandleResponse(response);
         }
 
+        [HttpGet("has-active-loan")]
+        [ProducesResponseType<BaseResponse<bool>>(200)]
+        [SwaggerOperation(Summary = "Check If User Has Active Loan")]
+        [Authorize]
+        public async Task<IActionResult> HasActiveLoan(CancellationToken cancellationToken)
+        {
+            BaseResponse<bool> response = await _sender.Send(new HasActiveLoanQuery(), cancellationToken);
+            return HandleResponse(response);
+        }
+
         [HttpPost("withdraw-contribution")]
         [ProducesResponseType<BaseResponse<bool>>(200)]
         [SwaggerOperation(Summary = "Withdraw Contribution")]

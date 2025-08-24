@@ -55,7 +55,8 @@
                 RequestedAmount = loan.RequestedAmount,
                 LoanManagementFee = loanManagementFee,
                 RepaymentTerm = repaymentTerm,
-                IsEligible = true // Ideally, nobody can apply for loan if not eligible
+                IsEligible = true, // Ideally, nobody can apply for loan if not eligible
+                Status = loan.Status.ToString()
             };
 
             return BaseResponse<LoanApplicationDetailModel>.Success(loanApplicationDetailModel, "Loan application detail retrieved successfully");

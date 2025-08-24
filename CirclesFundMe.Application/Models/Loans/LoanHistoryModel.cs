@@ -9,5 +9,6 @@
         public int RepaymentCount { get; set; }
         public int TotalRepaymentCount { get; set; }
         public int PercentageRepaid => TotalRepaymentCount == 0 ? 0 : (int)((decimal)RepaymentCount / TotalRepaymentCount * 100);
+        public string? ApplicationStatus { get; set; }
     }
 }

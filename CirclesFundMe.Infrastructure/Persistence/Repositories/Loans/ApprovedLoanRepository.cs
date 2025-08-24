@@ -34,6 +34,7 @@ namespace CirclesFundMe.Infrastructure.Persistence.Repositories.Loans
                     LastRepaymentDate = loan.LoanRepayments.Max(repayment => repayment.RepaymentDate) ?? DateTime.MinValue,
                     RepaymentCount = loan.LoanRepayments.Count(r => r.Status == LoanRepaymentStatusEnums.Paid),
                     TotalRepaymentCount = loan.LoanRepayments.Count(),
+                    ApplicationStatus = loan.LoanApplication != null ? loan.LoanApplication.Status : LoanApplicationStatusEnums.Pending
                 })
                 .ToListAsync(cancellationToken);
 

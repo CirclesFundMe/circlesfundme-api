@@ -16,5 +16,6 @@
         public decimal LoanManagementFee { get; set; }
         public decimal RepaymentTerm { get; set; }
         public bool IsEligible { get; set; }
+        public string? Status { get; set; }
     }
 }

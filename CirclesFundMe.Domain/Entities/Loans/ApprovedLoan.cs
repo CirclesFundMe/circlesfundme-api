@@ -23,5 +23,6 @@
         public DateTime LastRepaymentDate { get; set; }
         public int RepaymentCount { get; set; }
         public int TotalRepaymentCount { get; set; }
+        public LoanApplicationStatusEnums ApplicationStatus { get; set; }
     }
 }

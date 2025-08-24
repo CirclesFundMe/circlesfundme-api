@@ -48,6 +48,7 @@
                         ContributionWeekDay = u.UserContributionScheme.ContributionWeekDay,
                         ContributionMonthDay = u.UserContributionScheme.ContributionMonthDay,
                         CountToQualifyForLoan = u.UserContributionScheme.CountToQualifyForLoan,
+                        IsWeeklyRoutine = u.UserContributionScheme.IsWeeklyRoutine,
                     },
                     WithdrawalSetting = u.WithdrawalSetting == null ? null : new UserWithdrawalSetting
                     {

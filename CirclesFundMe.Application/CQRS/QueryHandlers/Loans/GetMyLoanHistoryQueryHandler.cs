@@ -16,7 +16,8 @@
                 LastRepaymentDate = loan.LastRepaymentDate,
                 Status = loan.Status.ToString(),
                 RepaymentCount = loan.RepaymentCount,
-                TotalRepaymentCount = loan.TotalRepaymentCount
+                TotalRepaymentCount = loan.TotalRepaymentCount,
+                ApplicationStatus = loan.ApplicationStatus.ToString()
             }).ToList();
 
             PagedList<LoanHistoryModel> pagedLoanHistoryModels = new(loanHistoryModels, approvedLoans.TotalCount, approvedLoans.CurrentPage, approvedLoans.PageSize);
