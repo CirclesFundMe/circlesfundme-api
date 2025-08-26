@@ -14,7 +14,7 @@
                 return BaseResponse<bool>.NotFound("Loan application not found.");
             }
 
-            if (loanApplication.Status != LoanApplicationStatusEnums.Pending || loanApplication.Status != LoanApplicationStatusEnums.Waitlist)
+            if (loanApplication.Status != LoanApplicationStatusEnums.Pending && loanApplication.Status != LoanApplicationStatusEnums.Waitlist)
             {
                 return BaseResponse<bool>.BadRequest("This loan application is not in a state that can be approved.");
             }
