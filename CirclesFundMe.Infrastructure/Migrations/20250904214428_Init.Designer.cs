@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CirclesFundMe.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250816022225_Init2")]
-    partial class Init2
+    [Migration("20250904214428_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -300,11 +300,11 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<double>("PostLoanServiceChargePercent")
-                        .HasPrecision(18, 2)
+                        .HasPrecision(18, 6)
                         .HasColumnType("float(18)");
 
                     b.Property<double>("PreLoanServiceChargePercent")
-                        .HasPrecision(18, 2)
+                        .HasPrecision(18, 6)
                         .HasColumnType("float(18)");
 
                     b.Property<double>("ProcessingFeePercent")
@@ -315,10 +315,6 @@ namespace CirclesFundMe.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("ServiceCharge")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("float(18)");
 
                     b.HasKey("Id");
 
@@ -1404,9 +1400,6 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<decimal>("ActualContributionAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("ChargeAmount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("CommencementDate")
                         .HasColumnType("datetime2");
 
@@ -1467,6 +1460,14 @@ namespace CirclesFundMe.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("PostLoanChargeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PreLoanChargeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("UserId", "ContributionSchemeId");
 

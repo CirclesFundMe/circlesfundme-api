@@ -215,7 +215,7 @@
                 }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
-                userContributionScheme.ChargeAmount = preloanServiceCharge;
+                userContributionScheme.PreLoanChargeAmount = preloanServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = autoFinanceBreakdown.DownPayment;
@@ -244,8 +244,9 @@
                 }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
-                userContributionScheme.ChargeAmount = regularFinanceBreakdown.ServiceCharge;
-                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
+                userContributionScheme.PreLoanChargeAmount = regularFinanceBreakdown.PreLoanServiceCharge;
+                userContributionScheme.PostLoanChargeAmount = regularFinanceBreakdown.PostLoanServiceCharge;
+                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.PreLoanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = regularFinanceBreakdown.DownPayment;
                 userContributionScheme.CountToQualifyForLoan = regularFinanceBreakdown.CountToQualifyForLoan;

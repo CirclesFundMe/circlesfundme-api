@@ -13,7 +13,7 @@
                 return BaseResponse<RegularLoanBreakdownModel>.NotFound("Unable to get finance breakdown. Invalid parameter(s)");
             }
 
-            string weekOrMonth = financeBreakdown.SchemeType == SchemeTypeEnums.Weekly ? "week" : "month";
+            string weekMonthOrDaily = FrequencyText(financeBreakdown.SchemeType);
 
             RegularLoanBreakdownModel eligibleLoanDetail = new()
             {
@@ -23,12 +23,24 @@
                 LoanManagementFeeDescription = "Loan Mgt. Fee",
                 EligibleLoan = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.EligibleLoan),
                 EligibleLoanDescription = "Principal Loan - Loan Mgt. Fee",
-                ServiceCharge = $"{UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.ServiceCharge)}/{weekOrMonth}",
+                PreLoanServiceCharge = $"{UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.PreLoanServiceCharge)}/{weekMonthOrDaily}",
+                PostLoanServiceCharge = $"{UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.PostLoanServiceCharge)}/{weekMonthOrDaily}",
                 TotalRepayment = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.TotalRepayment),
                 RepaymentTerm = UtilityHelper.FormatDecimalToNairaWithSymbol(financeBreakdown.RepaymentTerm),
             };
 
             return BaseResponse<RegularLoanBreakdownModel>.Success(eligibleLoanDetail, "Eligible loan details retrieved successfully.");
+        }
+
+        private string FrequencyText(SchemeTypeEnums schemeType)
+        {
+            return schemeType switch
+            {
+                SchemeTypeEnums.Weekly => "week",
+                SchemeTypeEnums.Monthly => "month",
+                SchemeTypeEnums.Daily => "day",
+                _ => "period"
+            };
         }
 
         private static string FormServiceValueDescription(RegularFinanceBreakdown breakdown)

@@ -5,5 +5,6 @@
         Weekly = 1,
         Monthly = 2,
         AutoFinance = 3,
+        Daily = 4
     }
 }

@@ -93,27 +93,31 @@
             }
 
             decimal principalLoan = amount * (decimal)scheme.EligibleLoanMultiple;
-            decimal serviceCharge = principalLoan * (decimal)scheme.ServiceCharge / 100;
-            decimal totalServiceCharge = scheme.SchemeType == SchemeTypeEnums.Weekly
-                ? serviceCharge * 52
-                : serviceCharge * 12;
+
+            decimal preLoanServiceCharge = principalLoan * (decimal)scheme.PreLoanServiceChargePercent / 100;
+
+            decimal postLoanServiceCharge = principalLoan * (decimal)scheme.PostLoanServiceChargePercent / 100;
+
+            decimal totalPreLoanServiceCharge = GetCumulativeCharge(preLoanServiceCharge, scheme.SchemeType);
+
+            decimal totalPostLoanServiceCharge = GetCumulativeCharge(postLoanServiceCharge, scheme.SchemeType);
+
             decimal downPayment = principalLoan * (decimal)scheme.DownPaymentPercent / 100;
+
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
-            decimal totalRepayment = principalLoan + totalServiceCharge;
 
-            decimal repaymentTerm = scheme.SchemeType == SchemeTypeEnums.Weekly
-                ? totalRepayment / 52
-                : totalRepayment / 12;
+            decimal totalRepayment = principalLoan + postLoanServiceCharge;
 
-            int countToQualifyForLoan = scheme.SchemeType == SchemeTypeEnums.Weekly
-                ? 12 // 12 weeks
-                : 3; // 3 months
+            decimal repaymentTerm = totalRepayment / GetLoanTerm(scheme.SchemeType);
+
+            int countToQualifyForLoan = GetLoanQualificationTerm(scheme.SchemeType);
 
             return new RegularFinanceBreakdown
             {
                 PrincipalLoan = principalLoan,
                 LoanManagementFee = loanManagementFee,
-                ServiceCharge = serviceCharge,
+                PreLoanServiceCharge = totalPreLoanServiceCharge,
+                PostLoanServiceCharge = totalPostLoanServiceCharge,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
                 TotalRepayment = totalRepayment,
@@ -121,6 +125,52 @@
                 DownPayment = downPayment,
                 CountToQualifyForLoan = countToQualifyForLoan,
             };
+        }
+
+        private static int GetLoanQualificationTerm(SchemeTypeEnums schemeType)
+        {
+            return schemeType switch
+            {
+                SchemeTypeEnums.Weekly => 12, // 12 weeks to qualify
+                SchemeTypeEnums.Monthly => 3, // 3 months to qualify
+                SchemeTypeEnums.Daily => 90, // 90 days to qualify
+                _ => 1,
+            };
+        }
+
+        private static int GetLoanTerm(SchemeTypeEnums schemeType)
+        {
+            return schemeType switch
+            {
+                SchemeTypeEnums.Weekly => 52, // 52 weeks repayment
+                SchemeTypeEnums.Monthly => 12, // 12 months repayment
+                SchemeTypeEnums.Daily => 365, // 365 days repayment
+                _ => 1,
+            };
+        }
+
+        private static decimal GetCumulativeCharge(decimal unitCharge, SchemeTypeEnums schemeType, bool isPreLoan = false)
+        {
+            if (isPreLoan)
+            {
+                return schemeType switch
+                {
+                    SchemeTypeEnums.Weekly => unitCharge * 12, // 12 weeks to qualify
+                    SchemeTypeEnums.Monthly => unitCharge * 3, // 3 months to qualify
+                    SchemeTypeEnums.Daily => unitCharge * 90, // 90 days to qualify
+                    _ => unitCharge,
+                };
+            }
+            else
+            {
+                return schemeType switch
+                {
+                    SchemeTypeEnums.Weekly => unitCharge * 52, // 40 weeks repayment
+                    SchemeTypeEnums.Monthly => unitCharge * 12, // 12 months repayment
+                    SchemeTypeEnums.Daily => unitCharge * 365, // 365 days repayment
+                    _ => unitCharge,
+                };
+            }
         }
     }
 }

@@ -169,7 +169,9 @@
                     SchemeType = SchemeTypeEnums.Weekly,
                     ContributionPercent = 20.0,
                     EligibleLoanMultiple = 52,
-                    ServiceCharge = 0.052,
+                    //ServiceCharge = 0.052,
+                    PreLoanServiceChargePercent = 0.015,
+                    PostLoanServiceChargePercent = 0.052,
                     LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
                     DownPaymentPercent = 23.0
@@ -182,7 +184,9 @@
                     SchemeType = SchemeTypeEnums.Monthly,
                     ContributionPercent = 30.0,
                     EligibleLoanMultiple = 12,
-                    ServiceCharge = 0.208,
+                    //ServiceCharge = 0.208,
+                    PreLoanServiceChargePercent = 0.06,
+                    PostLoanServiceChargePercent = 0.208,
                     LoanManagementFeePercent = 6.0,
                     DefaultPenaltyPercent = 25.0,
                     DownPaymentPercent = 25.0
@@ -206,7 +210,22 @@
                     EligibleLoanPercent = 90,
                     DownPaymentPercent = 10,
                     BaseFee = 30000.0
-                }
+                },
+                new ContributionScheme
+                {
+                    Id = Guid.Parse("9111a1a0-2223-4786-9698-587b71aafa9f"),
+                    Name = "Daily Contribution Scheme",
+                    Description = "A daily contribution scheme where members contribute everyday.",
+                    SchemeType = SchemeTypeEnums.Daily,
+                    ContributionPercent = 20.0,
+                    EligibleLoanMultiple = 52,
+                    //ServiceCharge = 0.06,
+                    PreLoanServiceChargePercent = 0.002,
+                    PostLoanServiceChargePercent = 0.006933,
+                    LoanManagementFeePercent = 6.0,
+                    DefaultPenaltyPercent = 25.0,
+                    DownPaymentPercent = 24.7
+                },
             ];
 
             foreach (ContributionScheme scheme in contributionSchemes)

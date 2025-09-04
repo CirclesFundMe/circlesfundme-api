@@ -17,6 +17,14 @@
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(x => x.PreLoanChargeAmount)
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            builder.Property(x => x.PostLoanChargeAmount)
+                .HasPrecision(18, 2)
+                .IsRequired();
+
             builder.Property(x => x.CopyOfCurrentBreakdownAtOnboarding)
                 .HasMaxLength(2000)
                 .IsRequired(false);

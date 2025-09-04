@@ -8,7 +8,8 @@
         public string? LoanManagementFeeDescription { get; set; }
         public string? EligibleLoan { get; set; }
         public string? EligibleLoanDescription { get; set; }
-        public string? ServiceCharge { get; set; }
+        public string? PreLoanServiceCharge { get; set; }
+        public string? PostLoanServiceCharge { get; set; }
         public string? TotalRepayment { get; set; }
         public string? RepaymentTerm { get; set; }
     }

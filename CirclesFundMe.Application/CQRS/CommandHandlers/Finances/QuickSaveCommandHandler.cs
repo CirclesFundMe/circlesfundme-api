@@ -42,7 +42,7 @@
                 AuthorizationUrl = initializeTransaction.data.authorization_url,
                 Reference = initializeTransaction.data.reference,
                 Amount = user.UserContributionScheme?.ActualContributionAmount ?? 0,
-                ChargeAmount = user.UserContributionScheme?.ChargeAmount ?? userContribution?.Charges ?? 0,
+                ChargeAmount = user.UserContributionScheme?.PreLoanChargeAmount ?? userContribution?.Charges ?? 0,
                 TotalAmount = (user.UserContributionScheme?.ContributionAmount ?? 0),
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,

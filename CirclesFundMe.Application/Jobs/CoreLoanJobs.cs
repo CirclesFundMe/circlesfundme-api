@@ -39,7 +39,7 @@
                         {
                             Amount = userContributionScheme.ActualContributionAmount,
                             AmountIncludingCharges = userContributionScheme.ContributionAmount,
-                            Charges = userContributionScheme.ChargeAmount,
+                            Charges = userContributionScheme.PreLoanChargeAmount,
                             Status = UserContributionStatusEnums.Unpaid,
                             DueDate = dueDate,
                             UserId = userContributionScheme.UserId

@@ -4,7 +4,8 @@
     {
         public decimal ContributionAmount { get; set; }
         public decimal ActualContributionAmount { get; set; }
-        public decimal ChargeAmount { get; set; }
+        public decimal PreLoanChargeAmount { get; set; }
+        public decimal PostLoanChargeAmount { get; set; }
         public decimal IncomeAmount { get; set; }
         public string? CopyOfCurrentBreakdownAtOnboarding { get; set; }
         public decimal MinimumContributionToQualifyForLoan { get; set; }

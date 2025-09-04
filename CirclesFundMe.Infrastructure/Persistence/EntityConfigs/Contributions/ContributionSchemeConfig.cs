@@ -30,8 +30,8 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
             builder.Property(x => x.EligibleLoanMultiple)
                 .HasPrecision(18, 2);
 
-            builder.Property(x => x.ServiceCharge)
-                .HasPrecision(18, 2);
+            //builder.Property(x => x.ServiceCharge)
+            //    .HasPrecision(18, 2);
 
             builder.Property(x => x.LoanManagementFeePercent)
                 .HasPrecision(18, 2);
@@ -46,10 +46,10 @@ namespace CirclesFundMe.Infrastructure.Persistence.EntityConfigs.Contributions
                 .HasPrecision(18, 2);
 
             builder.Property(x => x.PreLoanServiceChargePercent)
-                .HasPrecision(18, 2);
+                .HasPrecision(18, 6);
 
             builder.Property(x => x.PostLoanServiceChargePercent)
-                .HasPrecision(18, 2);
+                .HasPrecision(18, 6);
 
             builder.Property(x => x.ExtraEnginePercent)
                 .HasPrecision(18, 2);
