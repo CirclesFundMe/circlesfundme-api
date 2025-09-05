@@ -87,7 +87,7 @@
                 return null;
             }
 
-            if (scheme.SchemeType != SchemeTypeEnums.Weekly && scheme.SchemeType != SchemeTypeEnums.Monthly)
+            if (scheme.SchemeType != SchemeTypeEnums.Weekly && scheme.SchemeType != SchemeTypeEnums.Monthly && scheme.SchemeType != SchemeTypeEnums.Daily)
             {
                 return null;
             }
