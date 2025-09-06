@@ -218,7 +218,7 @@
                     Description = "A daily contribution scheme where members contribute everyday.",
                     SchemeType = SchemeTypeEnums.Daily,
                     ContributionPercent = 20.0,
-                    EligibleLoanMultiple = 52,
+                    EligibleLoanMultiple = 365,
                     //ServiceCharge = 0.06,
                     PreLoanServiceChargePercent = 0.002,
                     PostLoanServiceChargePercent = 0.006933,

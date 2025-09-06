@@ -14,9 +14,11 @@
     {
         public required string SmtpFrom { get; set; }
         public required string SmtpServer { get; set; }
+        public required int SmtpPort { get; set; }
         public required string EmailUsername { get; set; }
         public required string EmailPassword { get; set; }
         public bool ActivateMailSending { get; set; }
+        public bool UseSSL { get; set; }
     }
 
     public record CloudinarySettings

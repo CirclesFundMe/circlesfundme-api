@@ -98,15 +98,11 @@
 
             decimal postLoanServiceCharge = principalLoan * (decimal)scheme.PostLoanServiceChargePercent / 100;
 
-            decimal totalPreLoanServiceCharge = GetCumulativeCharge(preLoanServiceCharge, scheme.SchemeType);
-
-            decimal totalPostLoanServiceCharge = GetCumulativeCharge(postLoanServiceCharge, scheme.SchemeType);
-
             decimal downPayment = principalLoan * (decimal)scheme.DownPaymentPercent / 100;
 
             decimal loanManagementFee = principalLoan * (decimal)scheme.LoanManagementFeePercent / 100;
 
-            decimal totalRepayment = principalLoan + postLoanServiceCharge;
+            decimal totalRepayment = principalLoan + (postLoanServiceCharge * (decimal)scheme.EligibleLoanMultiple);
 
             decimal repaymentTerm = totalRepayment / GetLoanTerm(scheme.SchemeType);
 
@@ -116,8 +112,8 @@
             {
                 PrincipalLoan = principalLoan,
                 LoanManagementFee = loanManagementFee,
-                PreLoanServiceCharge = totalPreLoanServiceCharge,
-                PostLoanServiceCharge = totalPostLoanServiceCharge,
+                PreLoanServiceCharge = preLoanServiceCharge,
+                PostLoanServiceCharge = postLoanServiceCharge,
                 SchemeType = scheme.SchemeType,
                 LoanMultiple = (int)scheme.EligibleLoanMultiple,
                 TotalRepayment = totalRepayment,

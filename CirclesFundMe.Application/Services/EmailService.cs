@@ -16,7 +16,7 @@
 
             try
             {
-                await client.ConnectAsync(_mailSettings.SmtpServer, 26, false);
+                await client.ConnectAsync(_mailSettings.SmtpServer, _mailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.SslOnConnect);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
 
                 await client.AuthenticateAsync(_mailSettings.EmailUsername, _mailSettings.EmailPassword);
