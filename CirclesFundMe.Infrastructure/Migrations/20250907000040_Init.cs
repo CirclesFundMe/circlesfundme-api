@@ -703,6 +703,7 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     ContributionMonthDay = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CommencementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsWeeklyRoutine = table.Column<bool>(type: "bit", nullable: false),
+                    IsDailyRoutine = table.Column<bool>(type: "bit", nullable: false),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),

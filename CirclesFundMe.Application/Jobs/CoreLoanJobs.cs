@@ -55,6 +55,11 @@
                         {
                             dueDate = UtilityHelper.GetNextMonthDay(dueDate, userContributionScheme.ContributionMonthDay);
                         }
+
+                        if (userContributionScheme.IsDailyRoutine)
+                        {
+                            dueDate = UtilityHelper.GetNextDay(dueDate);
+                        }
                     }
 
                     await dbContext.UserContributions.AddRangeAsync(contributions, CancellationToken.None);

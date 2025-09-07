@@ -242,6 +242,11 @@
                     userContributionScheme.CommencementDate = UtilityHelper.GetNextMonthDay(DateTime.UtcNow, monthDay);
                     userContributionScheme.IsWeeklyRoutine = false;
                 }
+                else if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Daily)
+                {
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextDay(DateTime.UtcNow);
+                    userContributionScheme.IsDailyRoutine = true;
+                }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
                 userContributionScheme.PreLoanChargeAmount = regularFinanceBreakdown.PreLoanServiceCharge;

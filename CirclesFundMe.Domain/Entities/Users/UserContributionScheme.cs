@@ -14,6 +14,7 @@
         public MonthDayEnums ContributionMonthDay { get; set; }
         public DateTime CommencementDate { get; set; }
         public bool IsWeeklyRoutine { get; set; }
+        public bool IsDailyRoutine { get; set; }
 
         public string? UserId { get; set; }
         public virtual AppUser? User { get; set; }

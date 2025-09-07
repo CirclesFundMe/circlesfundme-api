@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CirclesFundMe.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250904214428_Init")]
+    [Migration("20250907000040_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -1444,6 +1444,9 @@ namespace CirclesFundMe.Infrastructure.Migrations
                     b.Property<decimal>("IncomeAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDailyRoutine")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
