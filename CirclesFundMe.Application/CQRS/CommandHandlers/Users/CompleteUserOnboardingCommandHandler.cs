@@ -25,11 +25,6 @@
                 return BaseResponse<bool>.BadRequest("Invalid month day selected for contribution.");
             }
 
-            if (!isWeekDayDefined && !isMonthDayDefined)
-            {
-                return BaseResponse<bool>.BadRequest("Please select a preferred payment day (either weekday or month day).");
-            }
-
             bool hasAddress = !string.IsNullOrWhiteSpace(request.Address);
             bool hasBVN = !string.IsNullOrWhiteSpace(request.BVN);
             bool hasSelfie = request.Selfie != null;

@@ -51,14 +51,13 @@
                         {
                             dueDate = UtilityHelper.GetNextWeekDay(dueDate, userContributionScheme.ContributionWeekDay);
                         }
+                        else if (userContributionScheme.IsDailyRoutine)
+                        {
+                            dueDate = UtilityHelper.GetNextDay(dueDate);
+                        }
                         else
                         {
                             dueDate = UtilityHelper.GetNextMonthDay(dueDate, userContributionScheme.ContributionMonthDay);
-                        }
-
-                        if (userContributionScheme.IsDailyRoutine)
-                        {
-                            dueDate = UtilityHelper.GetNextDay(dueDate);
                         }
                     }
 
