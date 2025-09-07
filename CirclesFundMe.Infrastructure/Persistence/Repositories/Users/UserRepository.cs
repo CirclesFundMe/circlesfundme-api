@@ -43,6 +43,7 @@
                             SchemeType = u.UserContributionScheme.ContributionScheme.SchemeType
                         },
                         ContributionAmount = u.UserContributionScheme.ContributionAmount,
+                        ActualContributionAmount = u.UserContributionScheme.ActualContributionAmount,
                         IncomeAmount = u.UserContributionScheme.IncomeAmount,
                         CopyOfCurrentBreakdownAtOnboarding = u.UserContributionScheme.CopyOfCurrentBreakdownAtOnboarding,
                         ContributionWeekDay = u.UserContributionScheme.ContributionWeekDay,
