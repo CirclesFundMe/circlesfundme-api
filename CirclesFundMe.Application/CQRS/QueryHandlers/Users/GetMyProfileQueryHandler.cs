@@ -38,7 +38,7 @@
                     AccountName = user.WithdrawalSetting.AccountName,
                     BankCode = user.WithdrawalSetting.BankCode
                 } : null,
-                ContributionAmount = user.UserContributionScheme?.ContributionAmount,
+                ContributionAmount = user.UserContributionScheme?.ActualContributionAmount,
                 IncomeAmount = user.UserContributionScheme?.IncomeAmount,
                 Email = user.Email,
                 ProfilePictureUrl = user.ProfilePictureUrl,
