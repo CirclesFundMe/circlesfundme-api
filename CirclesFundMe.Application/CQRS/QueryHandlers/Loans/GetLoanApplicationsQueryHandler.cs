@@ -1,11 +1,17 @@
 ﻿namespace CirclesFundMe.Application.CQRS.QueryHandlers.Loans
 {
-    public class GetLoanApplicationsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetLoanApplicationsQuery, BaseResponse<PagedList<LoanApplicationModel>>>
+    public class GetLoanApplicationsQueryHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService) : IRequestHandler<GetLoanApplicationsQuery, BaseResponse<PagedList<LoanApplicationModel>>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<BaseResponse<PagedList<LoanApplicationModel>>> Handle(GetLoanApplicationsQuery request, CancellationToken cancellationToken)
         {
+            if (!_currentUserService.IsAdmin)
+            {
+                request.LoanApplicationParams.UserId = _currentUserService.UserId;
+            }
+
             PagedList<LoanApplicationExtension> loanApplications = await _unitOfWork.LoanApplications.GetLoanApplications(request.LoanApplicationParams, cancellationToken);
 
             List<LoanApplicationModel> loanApplicationModels = loanApplications.Select(la => new LoanApplicationModel

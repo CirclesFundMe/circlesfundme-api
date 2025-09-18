@@ -47,6 +47,11 @@
             }
         }
 
+        public static DateTime GetNextDay(DateTime from)
+        {
+            return from.Date.AddDays(1);
+        }
+
         public static string GenerateRandomUnique30DigitSessionID()
         {
             Span<byte> buffer = stackalloc byte[20];

@@ -9,7 +9,7 @@
 
         public double ContributionPercent { get; set; }
         public double EligibleLoanMultiple { get; set; }
-        public double ServiceCharge { get; set; }
+        //public double ServiceCharge { get; set; }
         public double LoanManagementFeePercent { get; set; }
         public double DefaultPenaltyPercent { get; set; }
         public double EquityPercent { get; set; }
@@ -51,7 +51,8 @@
     {
         public decimal PrincipalLoan { get; set; }
         public decimal LoanManagementFee { get; set; }
-        public decimal ServiceCharge { get; set; }
+        public decimal PreLoanServiceCharge { get; set; }
+        public decimal PostLoanServiceCharge { get; set; }
         public SchemeTypeEnums SchemeType { get; set; }
         public int LoanMultiple { get; set; }
         public decimal EligibleLoan => PrincipalLoan - LoanManagementFee;

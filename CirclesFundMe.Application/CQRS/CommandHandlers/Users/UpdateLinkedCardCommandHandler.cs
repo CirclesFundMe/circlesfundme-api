@@ -26,7 +26,15 @@
                 return BaseResponse<InitializeTransactionModel>.BadRequest("No card linked to this user. Please link a card first.");
             }
 
-            decimal amountToContribute = (user.UserContributionScheme?.ContributionAmount ?? 0) * 100; // In Kobo
+            UserContribution? userContribution = await _unitOfWork.UserContributions.GetNextContributionForPayment(user.Id, cancellationToken);
+
+            if (userContribution == null)
+            {
+                return BaseResponse<InitializeTransactionModel>.BadRequest("No pending contributions found");
+            }
+
+            decimal amountToContribute = userContribution.AmountIncludingCharges * 100; // In Kobo
+
             InitializeTransactionPayload payload = new()
             {
                 Email = user.Email,
@@ -35,7 +43,8 @@
                 Metadata = new MetaDataObj
                 {
                     userId = user.Id,
-                    updateCard = true
+                    updateCard = true,
+                    userContributionId = userContribution.Id.ToString()
                 }
             };
 
@@ -45,17 +54,24 @@
                 return BaseResponse<InitializeTransactionModel>.BadRequest(initializeTransaction.message ?? "Error while initializing payment");
             }
 
+            userContribution.Status = UserContributionStatusEnums.Awaiting;
+            _unitOfWork.UserContributions.Update(userContribution);
+
             Payment payment = new()
             {
                 AccessCode = initializeTransaction.data.access_code,
                 AuthorizationUrl = initializeTransaction.data.authorization_url,
                 Reference = initializeTransaction.data.reference,
-                Amount = amountToContribute / 100, // Convert back to Naira
+                Amount = userContribution.Amount,
+                ChargeAmount = userContribution.Charges,
+                TotalAmount = userContribution.AmountIncludingCharges,
                 Currency = payload.Currency ?? "NGN",
                 PaymentStatus = PaymentStatusEnums.Awaiting,
                 PaymentType = PaymentTypeEnums.Inflow,
                 UserId = user.Id,
             };
+
+            payment.BasicValidate();
 
             await _unitOfWork.Payments.AddAsync(payment, cancellationToken);
             bool isSaved = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;

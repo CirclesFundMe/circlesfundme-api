@@ -281,7 +281,7 @@
                 _unitOfWork.LinkedCards.Update(linkedCard);
             }
 
-            decimal amountToCreditUser = payment.Amount - userContributionScheme.ChargeAmount;
+            decimal amountToCreditUser = payment.Amount - userContributionScheme.PreLoanChargeAmount;
 
             if (userContributionPaidFor == null)
             {
@@ -289,7 +289,7 @@
                 {
                     Amount = amountToCreditUser,
                     AmountIncludingCharges = payment.Amount,
-                    Charges = userContributionScheme.ChargeAmount,
+                    Charges = userContributionScheme.PreLoanChargeAmount,
                     Status = UserContributionStatusEnums.Paid,
                     DueDate = DateTime.UtcNow,
                     PaidDate = DateTime.UtcNow,
@@ -349,8 +349,8 @@
                 Narration = $"Contribution Charge",
                 TransactionType = TransactionTypeEnums.Credit,
                 BalanceBeforeTransaction = collectionWallet.Balance,
-                Amount = userContributionScheme.ChargeAmount,
-                BalanceAfterTransaction = collectionWallet.Balance + userContributionScheme.ChargeAmount,
+                Amount = userContributionScheme.PreLoanChargeAmount,
+                BalanceAfterTransaction = collectionWallet.Balance + userContributionScheme.PreLoanChargeAmount,
                 TransactionDate = DateTime.UtcNow,
                 TransactionTime = DateTime.UtcNow.TimeOfDay,
                 WalletId = collectionWallet.Id,
@@ -358,7 +358,7 @@
 
             await _unitOfWork.Transactions.AddAsync(collectionTransaction, cancellationToken);
 
-            collectionWallet.Balance += userContributionScheme.ChargeAmount;
+            collectionWallet.Balance += userContributionScheme.PreLoanChargeAmount;
             _unitOfWork.Wallets.Update(collectionWallet);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

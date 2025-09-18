@@ -38,7 +38,7 @@
                     AccountName = user.WithdrawalSetting.AccountName,
                     BankCode = user.WithdrawalSetting.BankCode
                 } : null,
-                ContributionAmount = user.UserContributionScheme?.ContributionAmount,
+                ContributionAmount = user.UserContributionScheme?.ActualContributionAmount,
                 IncomeAmount = user.UserContributionScheme?.IncomeAmount,
                 Email = user.Email,
                 ProfilePictureUrl = user.ProfilePictureUrl,
@@ -68,6 +68,11 @@
             if (schemeType == SchemeTypeEnums.AutoFinance)
             {
                 return $"{paidLoanRepaymentsCount} of 208";
+            }
+
+            if (schemeType == SchemeTypeEnums.Daily)
+            {
+                return $"{paidLoanRepaymentsCount} of 365";
             }
 
             return isWeeklyRoutine ? $"{paidLoanRepaymentsCount} of 52" : $"{paidLoanRepaymentsCount} of 12";

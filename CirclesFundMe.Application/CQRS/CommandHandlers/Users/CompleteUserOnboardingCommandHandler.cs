@@ -25,11 +25,6 @@
                 return BaseResponse<bool>.BadRequest("Invalid month day selected for contribution.");
             }
 
-            if (!isWeekDayDefined && !isMonthDayDefined)
-            {
-                return BaseResponse<bool>.BadRequest("Please select a preferred payment day (either weekday or month day).");
-            }
-
             bool hasAddress = !string.IsNullOrWhiteSpace(request.Address);
             bool hasBVN = !string.IsNullOrWhiteSpace(request.BVN);
             bool hasSelfie = request.Selfie != null;
@@ -215,7 +210,7 @@
                 }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
-                userContributionScheme.ChargeAmount = preloanServiceCharge;
+                userContributionScheme.PreLoanChargeAmount = preloanServiceCharge;
                 userContributionScheme.ContributionAmount = request.ContributionAmount + preloanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(autoFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = autoFinanceBreakdown.DownPayment;
@@ -242,10 +237,16 @@
                     userContributionScheme.CommencementDate = UtilityHelper.GetNextMonthDay(DateTime.UtcNow, monthDay);
                     userContributionScheme.IsWeeklyRoutine = false;
                 }
+                else if (regularFinanceBreakdown.SchemeType == SchemeTypeEnums.Daily)
+                {
+                    userContributionScheme.CommencementDate = UtilityHelper.GetNextDay(DateTime.UtcNow);
+                    userContributionScheme.IsDailyRoutine = true;
+                }
 
                 userContributionScheme.ActualContributionAmount = request.ContributionAmount;
-                userContributionScheme.ChargeAmount = regularFinanceBreakdown.ServiceCharge;
-                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.ServiceCharge;
+                userContributionScheme.PreLoanChargeAmount = regularFinanceBreakdown.PreLoanServiceCharge;
+                userContributionScheme.PostLoanChargeAmount = regularFinanceBreakdown.PostLoanServiceCharge;
+                userContributionScheme.ContributionAmount = request.ContributionAmount + regularFinanceBreakdown.PreLoanServiceCharge;
                 userContributionScheme.CopyOfCurrentBreakdownAtOnboarding = UtilityHelper.Serializer(regularFinanceBreakdown);
                 userContributionScheme.MinimumContributionToQualifyForLoan = regularFinanceBreakdown.DownPayment;
                 userContributionScheme.CountToQualifyForLoan = regularFinanceBreakdown.CountToQualifyForLoan;

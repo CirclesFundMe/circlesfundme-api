@@ -114,6 +114,7 @@
                             } : null
                         } : null,
                     } : null,
+                    Scheme = x.Scheme,
                     AmountRepaid = x.ApprovedLoan != null ? x.ApprovedLoan.LoanRepayments.Sum(x => x.Amount) : 0
                 })
                 .ToListAsync(cancellationToken);

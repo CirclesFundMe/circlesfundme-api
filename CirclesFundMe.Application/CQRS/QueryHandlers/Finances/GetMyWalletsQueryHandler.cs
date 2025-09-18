@@ -30,6 +30,7 @@ namespace CirclesFundMe.Application.CQRS.QueryHandlers.Finances
                 SchemeTypeEnums.Weekly => "Weekly Contribution",
                 SchemeTypeEnums.Monthly => "Monthly Contribution",
                 SchemeTypeEnums.AutoFinance => "Auto Finance Contribution",
+                SchemeTypeEnums.Daily => "Daily Contribution",
                 _ => "Unknown Scheme"
             };
         }

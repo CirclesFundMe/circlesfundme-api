@@ -39,7 +39,7 @@
                         {
                             Amount = userContributionScheme.ActualContributionAmount,
                             AmountIncludingCharges = userContributionScheme.ContributionAmount,
-                            Charges = userContributionScheme.ChargeAmount,
+                            Charges = userContributionScheme.PreLoanChargeAmount,
                             Status = UserContributionStatusEnums.Unpaid,
                             DueDate = dueDate,
                             UserId = userContributionScheme.UserId
@@ -50,6 +50,10 @@
                         if (userContributionScheme.IsWeeklyRoutine)
                         {
                             dueDate = UtilityHelper.GetNextWeekDay(dueDate, userContributionScheme.ContributionWeekDay);
+                        }
+                        else if (userContributionScheme.IsDailyRoutine)
+                        {
+                            dueDate = UtilityHelper.GetNextDay(dueDate);
                         }
                         else
                         {

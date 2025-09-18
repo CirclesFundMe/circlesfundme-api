@@ -7,7 +7,7 @@
         [HttpGet]
         [ProducesResponseType<BaseResponse<PagedList<LoanApplicationModel>>>(200)]
         [SwaggerOperation(Summary = "Get Loan Applications")]
-        [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         public async Task<IActionResult> GetLoanApplications([FromQuery] LoanApplicationParams loanApplicationParams, CancellationToken cancellationToken)
         {
             BaseResponse<PagedList<LoanApplicationModel>> response = await _sender.Send(new GetLoanApplicationsQuery() { LoanApplicationParams = loanApplicationParams }, cancellationToken);
