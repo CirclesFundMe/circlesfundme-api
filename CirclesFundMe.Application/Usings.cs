@@ -83,3 +83,4 @@ global using CirclesFundMe.Domain.Enums.AdminPortal;
 global using CirclesFundMe.Application.CQRS.Commands.AdminPortal;
 global using CirclesFundMe.Domain.Pagination.QueryParams.AdminPortal;
 global using CirclesFundMe.Domain.RepositoryContracts.AdminPortal;
+global using System.Text.RegularExpressions;

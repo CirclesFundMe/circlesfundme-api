@@ -105,6 +105,7 @@
                 ));
             });
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ICloudinaryDocumentService, CloudinaryDocumentService>();
             #endregion
 
             #region Encryption Configure

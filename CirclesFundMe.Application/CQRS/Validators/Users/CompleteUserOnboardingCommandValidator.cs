@@ -18,43 +18,37 @@
                 .IsInEnum()
                 .WithMessage($"Gender must be one of the following values: {string.Join(", ", Enum.GetNames<GenderEnums>())}.");
 
-            When(x => x.GovernmentIssuedID != null, () =>
+            When(x => !string.IsNullOrEmpty(x.GovernmentIssuedIDUrl), () =>
             {
-                RuleFor(x => x.GovernmentIssuedID)
-                .Must(file => file != null && file.ContentType == "application/pdf")
-                .WithMessage("Government issued ID must be a PDF file.")
-                .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
-                .WithMessage("Government issued ID must not exceed 5MB.");
+                RuleFor(x => x.GovernmentIssuedIDUrl)
+                    .Must(url => Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                    .WithMessage("Government issued ID URL must be a valid URL.");
             });
 
             When(x => !string.IsNullOrEmpty(x.BVN), () =>
             {
                 RuleFor(x => x.BVN)
-                .Matches(@"^\d{11}$").WithMessage("BVN must be exactly 11 digits.");
+                    .Matches(@"^\d{11}$").WithMessage("BVN must be exactly 11 digits.");
             });
 
-            When(x => x.Selfie != null, () =>
+            When(x => !string.IsNullOrEmpty(x.SelfieUrl), () =>
             {
-                RuleFor(x => x.Selfie)
-                .Must(file => file != null && (file.ContentType == "image/png" || file.ContentType == "image/jpeg"))
-                .WithMessage("Selfie must be a PNG or JPEG file.")
-                .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
-                .WithMessage("Selfie must not exceed 5MB.");
+                RuleFor(x => x.SelfieUrl)
+                    .Must(url => Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                    .WithMessage("Selfie URL must be a valid URL.");
             });
 
             When(x => !string.IsNullOrEmpty(x.Address), () =>
             {
                 RuleFor(x => x.Address)
-                .MaximumLength(256).WithMessage("Address cannot exceed 256 characters.");
+                    .MaximumLength(256).WithMessage("Address cannot exceed 256 characters.");
             });
 
-            When(x => x.UtilityBill != null, () =>
+            When(x => !string.IsNullOrEmpty(x.UtilityBillUrl), () =>
             {
-                RuleFor(x => x.UtilityBill)
-                .Must(file => file != null && (file.ContentType == "application/pdf" || file.ContentType == "image/png" || file.ContentType == "image/jpeg"))
-                .WithMessage("Utility bill must be a PDF, PNG, or JPEG file.")
-                .Must(file => file != null && file.Length <= 5 * 1024 * 1024)
-                .WithMessage("Utility bill must not exceed 5MB.");
+                RuleFor(x => x.UtilityBillUrl)
+                    .Must(url => Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                    .WithMessage("Utility bill URL must be a valid URL.");
             });
 
             RuleFor(x => x.ContributionSchemeId)

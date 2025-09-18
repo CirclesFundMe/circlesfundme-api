@@ -12,5 +12,14 @@
             BaseResponse<bool> response = await _sender.Send(command, cancellationToken);
             return HandleResponse(response);
         }
+
+        [HttpPost("upload-document")]
+        [ProducesResponseType<BaseResponse<string>>(200)]
+        [SwaggerOperation(Summary = "Upload a document and get its URL")]
+        public async Task<IActionResult> UploadDocument([FromForm] UploadDocumentCommand command, CancellationToken cancellationToken)
+        {
+            BaseResponse<string> response = await _sender.Send(command, cancellationToken);
+            return HandleResponse(response);
+        }
     }
 }
